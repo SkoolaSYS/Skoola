@@ -1,5 +1,9 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
+	
 	<!--begin::Head-->
 	<head><base href="../../../"/>
 		<title>Register</title>
@@ -22,6 +26,16 @@
 		<link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
 		<!--end::Global Stylesheets Bundle-->
 		@livewireStyles
+
+		@if($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
@@ -69,28 +83,84 @@
                                             <h1 class="text-dark fw-bolder mb-3">Register</h1>
                                             <!--end::Title-->
                                         </div>
-                                        <!--begin::Heading-->
-                                        <!--begin::Input group=-->
-                                        <div class="fv-row mb-3">
-                                        	<!--begin::Name-->
-                                            <input type="text" placeholder="Name" name="name" id="name" class="form-control bg-transparent" required autofocus autocomplete="name" />
-                                        	<!--end::Name-->
-										</div>
-										<!--begin::Input group=-->
-                                        <div class="fv-row mb-3">
-                                            <!--begin::Phone Number-->
-											<input type="text" placeholder="Phone Number" name="phone_num" id="phone_num" class="form-control bg-transparent" required autofocus autocomplete="phone_num" />
-                                            <!--end::Phone Number-->
-                                        </div>
-                                        <!--end::Input group=-->
-										<!--begin::Input group=-->
-                                        <div class="fv-row mb-3">
-                                            <!--begin::Email-->
-                                            <input type="text" placeholder="Email" name="email" class="form-control bg-transparent" required autofocus autocomplete="username" />
-                                            <!--end::Email-->
-                                        </div>
-                                        <!--begin::Input group-->
-									<div class="fv-row mb-8" data-kt-password-meter="true">
+                                        <form action="{{ route('register') }}" method="POST">
+    @csrf
+	<!-- Main Parent / Guardian (Required) -->
+<div id="parent-form">
+    <h3>Parent / Guardian Details</h3>
+    <div class="card-body border-top p-9">
+
+        <!-- Full Name -->
+        <div class="row mb-6">
+            <label class="col-lg-4 col-form-label required">Full Name</label>
+            <div class="col-lg-8 fv-row">
+                <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+            </div>
+        </div>
+
+        <!-- Username -->
+        <div class="row mb-6">
+            <label class="col-lg-4 col-form-label required">Username</label>
+            <div class="col-lg-8 fv-row">
+                <input type="text" name="username" class="form-control" placeholder="Username" required>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="row mb-6">
+            <label class="col-lg-4 col-form-label required">Email</label>
+            <div class="col-lg-8 fv-row">
+                <input type="email" name="email" class="form-control" placeholder="Email" required>
+            </div>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="row mb-6">
+            <label class="col-lg-4 col-form-label required">Phone Number</label>
+            <div class="col-lg-8 fv-row">
+                <input type="text" name="phone_num" class="form-control" placeholder="Phone Number" required>
+            </div>
+        </div>
+
+        <!-- IC -->
+        <div class="row mb-6">
+            <label class="col-lg-4 col-form-label required">IC / Passport Number</label>
+            <div class="col-lg-8 fv-row">
+                <input type="text" name="ic" class="form-control" placeholder="IC / Passport Number" required>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="row mb-6">
+            <label class="col-lg-4 col-form-label required">Address</label>
+            <div class="col-lg-8 fv-row">
+                <input type="text" name="address" class="form-control" placeholder="Address" required>
+            </div>
+        </div>
+
+        <!-- Occupation -->
+        <div class="row mb-6">
+            <label class="col-lg-4 col-form-label required">Occupation</label>
+            <div class="col-lg-8 fv-row">
+                <input type="text" name="occupation" class="form-control" placeholder="Occupation" required>
+            </div>
+        </div>
+
+        <!-- Relationship -->
+<div class="row mb-6">
+    <label class="col-lg-4 col-form-label required">Relationship</label>
+    <div class="col-lg-8 fv-row">
+        <select name="relationship" class="form-control" required>
+            <option value="">Select Relationship</option>
+            <option value="Father">Father</option>
+            <option value="Mother">Mother</option>
+            <option value="Guardian">Guardian</option>
+        </select>
+    </div>
+</div>
+
+
+        <div class="fv-row mb-8" data-kt-password-meter="true">
 										<!--begin::Wrapper-->
 										<div class="mb-1">
 											<!--begin::Input wrapper-->
@@ -124,6 +194,17 @@
 										<!--end::Repeat Password-->
 									</div>
 									<!--end::Input group=-->
+    </div>
+</div>
+
+
+    <!-- Additional Guardians (Optional) -->
+    <div id="additional-guardians-container"></div>
+    <button type="button" class="btn btn-secondary w-100 mb-4" id="add-guardian-btn">
+        Add Additional Guardian
+    </button>
+
+
                                     <!-- Student Profile Section -->
                                     <div class="mb-5">
                                         <h3 class="fw-bold mb-3">Student Profile Details</h3>
@@ -176,31 +257,36 @@
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
 		<script>
-			document.addEventListener('DOMContentLoaded', function() {
-				let studentIndex = 1;
-				const addBtn = document.getElementById('add-student-btn');
-				const container = document.getElementById('student-forms-container');
-				addBtn.addEventListener('click', function() {
-					fetch('/student-form-partial?index=' + studentIndex)
-						.then(response => response.text())
-						.then(html => {
-							const div = document.createElement('div');
-							div.classList.add('student-form-wrapper');
-							div.innerHTML = html + '<button type="button" class="btn btn-danger remove-student-btn mt-2 mb-2 w-100">Remove</button>';
-							container.appendChild(div);
-							studentIndex++;
-							if (window.Livewire) {
-								window.Livewire.rescan();
-							}
-						});
-				});
-				container.addEventListener('click', function(e) {
-					if (e.target.classList.contains('remove-student-btn')) {
-						e.target.closest('.student-form-wrapper').remove();
-					}
-				});
-			});
-		</script>
+document.addEventListener('DOMContentLoaded', function() {
+    let guardianIndex = 1; // start after the first one
+    const addBtn = document.getElementById('add-guardian-btn');
+    const container = document.getElementById('additional-guardians-container'); // corrected ID
+
+    addBtn.addEventListener('click', function() {
+        fetch('/guardian-form-partial?index=' + guardianIndex)
+            .then(response => response.text())
+            .then(html => {
+                const div = document.createElement('div');
+                div.classList.add('guardian-form-wrapper', 'mb-4');
+                div.innerHTML = html + '<button type="button" class="btn btn-danger remove-guardian-btn mt-2 mb-2 w-100">Remove</button>';
+                container.appendChild(div);
+                guardianIndex++;
+
+                if (window.Livewire) {
+                    window.Livewire.rescan();
+                }
+            });
+    });
+
+    container.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-guardian-btn')) {
+            e.target.closest('.guardian-form-wrapper').remove();
+        }
+    });
+});
+
+</script>
+
 		@livewireScripts
 	</body>
 	<!--end::Body-->

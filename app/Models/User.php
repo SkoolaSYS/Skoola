@@ -57,6 +57,9 @@ class User extends Authenticatable
         'state_id',
         'citie_id',
         'postcode_id',
+        'relationship',
+        'occupation',
+        'username',
     ];
 
     /**

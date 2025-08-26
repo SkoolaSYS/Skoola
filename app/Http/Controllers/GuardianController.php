@@ -120,4 +120,14 @@ class GuardianController extends Controller
         $guardian->delete();
         return redirect()->route('profile.show');
     }
+
+    public function guardianFormPartial(Request $request)
+{
+    // Get the index from query string, default to 0
+    $index = $request->query('index', 0);
+
+    // Pass the index to the partial view
+    return view('auth._guardian-form', compact('index'))->render();
+}
+
 }

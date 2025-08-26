@@ -111,6 +111,8 @@ Route::middleware(['auth', 'role:admin|country|state|ppd|school'])->group(functi
     });
 });
 
+Route::get('/guardian-form-partial', [GuardianController::class, 'guardianFormPartial'])->name('guardian.form.partial');
+
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
     ->middleware('guest')
     ->name('login');
