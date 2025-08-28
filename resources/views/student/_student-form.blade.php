@@ -4,6 +4,9 @@
 @endphp
 
 <div class="card-body border-top p-9">
+    <div id="student-forms-container">
+    <div class="student-form">
+    <div class="card-body border-top p-9">
 
     <!-- Full Name -->
     <div class="row mb-6">
@@ -152,33 +155,44 @@
         </div>
     </div>
 
-    @livewire('ppd-dropdown', ['prefix' => $prefix, 'key' => $key])
+   @livewire('ppd-dropdown', ['prefix' => $prefix], key('ppd-'.$key.'-'.uniqid()))
 
+
+
+</div>
+    </div>
+</div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Listen for changes on all DOB inputs
-    document.querySelectorAll('.dob-input').forEach(function(dobInput) {
-        dobInput.addEventListener('change', function() {
-            const dob = new Date(this.value);
-            if (!isNaN(dob)) {
-                const today = new Date();
-                let age = today.getFullYear() - dob.getFullYear();
-                const m = today.getMonth() - dob.getMonth();
-                if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                    age--;
-                }
+document.addEventListener("DOMContentLoaded", function () {
+    let studentIndex = 1;
 
-                // Find the closest age input in the same row
-                const row = this.closest('.row');
-                const ageInput = row.querySelector('.age-input');
-                if (ageInput) {
-                    ageInput.value = age;
-                }
+    // ✅ AGE CALCULATION FUNCTION
+    function calculateAge(dobInput, ageInput) {
+        let dob = new Date(dobInput.value);
+        if (!isNaN(dob)) {
+            let today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            let m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
             }
-        });
+            ageInput.value = age;
+        }
+    }
+
+    // ✅ DELEGATED AGE CALCULATION
+    document.getElementById("student-forms-container").addEventListener("change", function (e) {
+        if (e.target.classList.contains("dob-input")) {
+            let ageInput = e.target.closest(".student-form").querySelector(".age-input");
+            calculateAge(e.target, ageInput);
+        }
     });
+
+    
 });
 </script>
+
+
 

@@ -4,6 +4,12 @@
 	Student List
 	@endslot
 	<x-card>
+		@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 		<!--begin::Content menu-->
 		<!--begin::Toolbar wrapper-->
 		<div class="app-toolbar-wrapper d-flex align-items-center flex-stack flex-wrap gap-2 py-4 w-100">

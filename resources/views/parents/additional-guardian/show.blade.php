@@ -146,6 +146,30 @@
 					<!--end::Col-->
 				</div>
 				<!--end::Input group-->
+				<!-- Username -->
+				<div class="row mb-7">
+					<label class="col-lg-4 fw-semibold text-muted">Username</label>
+					<div class="col-lg-8">
+						<span class="fw-semibold fs-6 text-gray-800">{{ $guardian->username }}</span>
+					</div>
+				</div>
+
+				<!-- Occupation -->
+				<div class="row mb-7">
+					<label class="col-lg-4 fw-semibold text-muted">Occupation</label>
+					<div class="col-lg-8">
+						<span class="fw-semibold fs-6 text-gray-800">{{ $guardian->occupation }}</span>
+					</div>
+				</div>
+
+				<!-- Relationship -->
+				<div class="row mb-7">
+					<label class="col-lg-4 fw-semibold text-muted">Relationship</label>
+					<div class="col-lg-8">
+						<span class="fw-semibold fs-6 text-gray-800">{{ $guardian->relationship }}</span>
+					</div>
+				</div>
+
 				<!--begin::Input group-->
 				<div class="row mb-7">
 					<!--begin::Label-->

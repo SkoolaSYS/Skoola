@@ -59,6 +59,13 @@
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
+						<!-- Username -->
+						<div class="row mb-6">
+							<label class="col-lg-4 col-form-label required">Username</label>
+							<div class="col-lg-8 fv-row">
+								<input type="text" name="username" class="form-control form-control-lg form-control-solid" placeholder="Username" required>
+							</div>
+						</div>
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
@@ -113,6 +120,25 @@
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
+						<!-- Occupation -->
+						<div class="row mb-6">
+							<label class="col-lg-4 col-form-label required">Occupation</label>
+							<div class="col-lg-8 fv-row">
+								<input type="text" name="occupation" class="form-control form-control-lg form-control-solid" placeholder="Occupation" required>
+							</div>
+						</div>
+						<!-- Relationship -->
+						<div class="row mb-6">
+							<label class="col-lg-4 col-form-label required">Relationship</label>
+							<div class="col-lg-8 fv-row">
+								<select name="relationship" class="form-control form-control-lg form-control-solid" required>
+									<option value="">Select Relationship</option>
+									<option value="Father">Father</option>
+									<option value="Mother">Mother</option>
+									<option value="Guardian">Guardian</option>
+								</select>
+							</div>
+						</div>
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
@@ -126,8 +152,48 @@
 						</div>
 						<!--end::Input group-->
 						<livewire:malaysia-state />
+						<div class="row mb-6">
+						<label class="col-lg-4 col-form-label required">Password</label>
+						<div class="col-lg-8 fv-row" data-kt-password-meter="true">
+							<div class="position-relative mb-3">
+								<input type="password" 
+									name="password" 
+									class="form-control form-control-lg form-control-solid" 
+									placeholder="Password" 
+									required 
+									autocomplete="new-password" />
+								<span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
+									<i class="ki-duotone ki-eye-slash fs-2"></i>
+									<i class="ki-duotone ki-eye fs-2 d-none"></i>
+								</span>
+							</div>
+
+							<div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
+								<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+								<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+								<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+								<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
+							</div>
+
+							<div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
+						</div>
+					</div>
+
+					<div class="row mb-6">
+						<label class="col-lg-4 col-form-label required">Repeat Password</label>
+						<div class="col-lg-8 fv-row">
+							<input type="password" 
+								name="password_confirmation" 
+								class="form-control form-control-lg form-control-solid" 
+								placeholder="Repeat Password" 
+								required 
+								autocomplete="new-password" />
+						</div>
+					</div>
+
 					</div>
 					<!--end::Card body-->
+
 					<!--begin::Actions-->
 					<div class="card-footer d-flex justify-content-end py-6 px-9">
 						<a href="{{ route('profile.show')}}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>

@@ -89,140 +89,104 @@
             <!--end::Card header-->
             <!--begin::Card body-->
             <div class="card-body p-9">
-                <div class="row">
-                    <div class="col-md-6">
-                        <!--begin::Row-->
-                        <div class="row mb-7">
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">Full Name</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-8">
-                                <span class="fw-semibold fs-6 text-gray-800">{{ $parent->name }}</span>
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Row-->
-                        <!--begin::Input group-->
-                        <div class="row mb-7">
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">Identification Card</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-8">
-                                @if ($parent->ic == null)
-                                <span class="fw-semibold fs-6 text-gray-800">N/A</span>
-                                @else
-                                <span class="fw-semibold fs-6 text-gray-800">{{ $parent->ic }}</span>
-                                @endif
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row mb-7">
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">Phone Number
-                                <span class="ms-1" data-bs-toggle="tooltip" title="Phone number must be active">
-                                    <i class="ki-duotone ki-information fs-7">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span></label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-8 d-flex align-items-center">
-                                <span class="fw-semibold fs-6 text-gray-800">{{ $parent->phone_num }}</span>
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row mb-7">
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">Email</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-8">
-                                <span class="fw-semibold fs-6 text-gray-800 text-hover-primary" a href="#">{{ $parent->email }}</a>
-                                    <span class="badge badge-success">Verified</span>
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
-                    </div>
-                    <div class="col-md-6">
-                        <!--begin::Input group-->
-                        <div class="row mb-7">
-                            <!--begin::Label-->
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">Address</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-8">
-                                @if ($parent->address == null)
-                                <span class="fw-semibold fs-6 text-gray-800">N/A</span>
-                                @else
-                                <span class="fw-semibold fs-6 text-gray-800">{{ $parent->address }}</span>
-                                @endif
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row mb-7">
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">Postcode</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-8">
-                                @if ($postcode)
-                                <span class="fw-semibold fs-6 text-gray-800">{{ $postcode->name }}</span>
-                                @else
-                                <span class="fw-semibold fs-6 text-gray-800">N/A</span>
-                                @endif
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row mb-10">
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">City</label>
-                            <!--begin::Label-->
-                            <!--begin::Label-->
-                            <div class="col-lg-8">
-                                @if ($citie)
-                                <span class="fw-semibold fs-6 text-gray-800">{{ $citie->name }}</span>
-                                @else
-                                <span class="fw-semibold fs-6 text-gray-800">N/A</span>
-                                @endif
-                            </div>
-                            <!--begin::Label-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row mb-10">
-                            <!--begin::Label-->
-                            <label class="col-lg-4 fw-semibold text-muted">State</label>
-                            <!--begin::Label-->
-                            <!--begin::Label-->
-                            <div class="col-lg-8">
-                                @if ($state)
-                                <span class="fw-semibold fs-6 text-gray-800">{{ $state->name }}</span>
-                                @else
-                                <span class="fw-semibold fs-6 text-gray-800">N/A</span>
-                                @endif
-                            </div>
-                            <!--begin::Label-->
-                        </div>
-                        <!--end::Input group-->
-                    </div>
+    <div class="row">
+        <!-- Left column -->
+        <div class="col-md-6">
+            <!-- Full Name -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Full Name</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->name }}</span>
                 </div>
             </div>
-            <!--end::Card body-->
+
+            <!-- Identification Card -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Identification Card</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->ic ?? 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Phone Number</label>
+                <div class="col-lg-8 d-flex align-items-center">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->phone_num }}</span>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Email</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800 text-hover-primary">{{ $parent->email }}</span>
+                    <span class="badge badge-success">Verified</span>
+                </div>
+            </div>
+
+            <!-- Occupation -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Occupation</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->occupation ?? 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- Relationship -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Relationship</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->relationship ?? 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- Username -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Username</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->username ?? 'N/A' }}</span>
+                </div>
+            </div>
         </div>
+
+        <!-- Right column -->
+        <div class="col-md-6">
+            <!-- Address -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Address</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->address ?? 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- Postcode -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">Postcode</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $postcode->name ?? 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- City -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">City</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $citie->name ?? 'N/A' }}</span>
+                </div>
+            </div>
+
+            <!-- State -->
+            <div class="row mb-7">
+                <label class="col-lg-4 fw-semibold text-muted">State</label>
+                <div class="col-lg-8">
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $state->name ?? 'N/A' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
         <!--begin::Statements-->
         <div class="card">
             <!--begin::Card header-->
@@ -258,30 +222,31 @@
                             <!--end::Thead-->
                             <!--begin::Tbody-->
                             <tbody class="fs-6 fw-semibold text-gray-600">
-                                @forelse ($guardian as $index => $guardian)
-                                <tr>
-                                    <td class="ps-9">{{ $index + 1 }}</td>
-                                    <td class="ps-0">{{ $guardian->name }}</td>
-                                    <td class="ps-0">{{ $guardian->phone_num }}</td>
-                                    <td class="ps-0">{{ $guardian->email }}</td>
-                                    <td class="text-center d-flex justify-content-center">
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('profile.guardian.show', $guardian->id) }}" class="btn btn-sm btn-light align-self-center">View</a>
-                                            <a href="{{ route('profile.guardian.edit', $guardian->id) }}" class="btn btn-sm btn-primary me-1">Edit</a>
-                                            <form class="form" action="{{ route('profile.guardian.delete', $guardian->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this guardian?')">Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td class="text-center" colspan="5">No additional guardians found.</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
+    @forelse ($guardians as $index => $guardian)
+        <tr>
+            <td class="ps-9">{{ $index + 1 }}</td>
+            <td class="ps-0">{{ $guardian->name }}</td>
+            <td class="ps-0">{{ $guardian->phone_num ?? '-' }}</td>
+            <td class="ps-0">{{ $guardian->email ?? '-' }}</td>
+            <td class="text-center d-flex justify-content-center">
+                <div class="d-flex gap-2">
+                    <a href="{{ route('profile.guardian.show', $guardian->id) }}" class="btn btn-sm btn-light align-self-center">View</a>
+                    <a href="{{ route('profile.guardian.edit', $guardian->id) }}" class="btn btn-sm btn-primary me-1">Edit</a>
+                    <form class="form" action="{{ route('profile.guardian.delete', $guardian->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this guardian?')">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td class="text-center" colspan="5">No additional guardians found.</td>
+        </tr>
+    @endforelse
+</tbody>
+
                             <!--end::Tbody-->
                         </table>
                         <!--end::Table-->

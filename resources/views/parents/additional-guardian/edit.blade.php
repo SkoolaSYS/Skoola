@@ -47,6 +47,13 @@
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
+						<!-- Username -->
+						<div class="row mb-6">
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">Username</label>
+							<div class="col-lg-8 fv-row">
+								<input type="text" name="username" class="form-control form-control-lg form-control-solid" placeholder="Username" value="{{ $guardian->username }}" required />
+							</div>
+						</div>
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
@@ -101,6 +108,26 @@
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
+						<!-- Occupation -->
+						<div class="row mb-6">
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">Occupation</label>
+							<div class="col-lg-8 fv-row">
+								<input type="text" name="occupation" class="form-control form-control-lg form-control-solid" placeholder="Occupation" value="{{ $guardian->occupation }}" required />
+							</div>
+						</div>
+
+						<!-- Relationship -->
+						<div class="row mb-6">
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">Relationship</label>
+							<div class="col-lg-8 fv-row">
+								<select name="relationship" class="form-control form-control-lg form-control-solid" required>
+									<option value="">Select Relationship</option>
+									<option value="Father" {{ $guardian->relationship == 'Father' ? 'selected' : '' }}>Father</option>
+									<option value="Mother" {{ $guardian->relationship == 'Mother' ? 'selected' : '' }}>Mother</option>
+									<option value="Guardian" {{ $guardian->relationship == 'Guardian' ? 'selected' : '' }}>Guardian</option>
+								</select>
+							</div>
+						</div>
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
@@ -113,7 +140,13 @@
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
-						@livewire('malaysia-state', ['selectedPostcode' => $postcode->id])
+						@livewire('malaysia-state', [
+    'selectedState' => $selectedState,
+    'selectedCity' => $selectedCity,
+    'selectedPostcode' => $selectedPostcode,
+])
+
+
 					</div>
 					<!--end::Card body-->
 					<!--begin::Actions-->

@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     use HasFactory;
-    public $fillable = ['name', 'ic', 'state_id', 'district_id', 'school_id', 'parent_id', 'age'];
+    protected $fillable = [
+    'name', 'ic', 'birth_cert_no', 'dob', 'gender', 'grade',
+    'race', 'religion', 'nationality', 'orphan', 'address', 'oku',
+    'state_id', 'district_id', 'school_id', 'age'
+];
 
     public function state()
     {
@@ -25,7 +29,7 @@ class Student extends Model
         return $this->belongsTo(School::class, 'school_id');
     }
 
-    public function user()
+    public function mainParent()
     {
         return $this->belongsTo(User::class, 'parent_id');
     }
@@ -34,4 +38,10 @@ class Student extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function guardians()
+{
+    return $this->belongsToMany(User::class, 'parent_student', 'student_id', 'parent_id')
+                ->withTimestamps();
+}
 }

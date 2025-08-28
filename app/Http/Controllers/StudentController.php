@@ -25,58 +25,91 @@ class StudentController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $student = new Student;
-        $student->parent_id = auth()->id();
+{
+    $request->validate([
+        'name'          => 'required|string|max:255',
+        'ic'            => 'required|string|max:255',
+        'birth_cert_no' => 'nullable|string|max:255',
+        'dob'           => 'nullable|date',
+        'gender'        => 'nullable|string|in:Male,Female',
+        'grade'         => 'nullable|string|max:255',
+        'race'          => 'nullable|string|max:255',
+        'religion'      => 'nullable|string|max:255',
+        'nationality'   => 'nullable|string|max:255',
+        'orphan'        => 'nullable|string|in:Yes,No',
+        'address'       => 'nullable|string',
+        'oku'           => 'nullable|string|in:Yes,No',
+        'state'         => 'nullable|exists:states,id',
+        'district'      => 'nullable|exists:districts,id',
+        'school'        => 'nullable|exists:schools,id',
+    ]);
 
-        $student->name = $request->name;
-        $student->ic = $request->ic;
-        $birthdate = $this->extractBirthDateFromIC($request->ic);
-        if ($birthdate) {
-            $age = $this->calculateAge($birthdate);
-            $student->age = $age;
-        }
+    $student = new Student;
 
-        // Get the selected state, city, and postcode IDs from the form
-        $stateId = $request->input('state');
-        $districtId = $request->input('district');
-        $schoolId = $request->input('school');
+    $student->parent_id      = auth()->id(); // Main guardian tracking
+    $student->name           = $request->name;
+    $student->ic             = $request->ic;
+    $student->birth_cert_no  = $request->birth_cert_no;
+    $student->dob            = $request->dob;
+    $student->gender         = $request->gender;
+    $student->grade          = $request->grade;
+    $student->race           = $request->race;
+    $student->religion       = $request->religion;
+    $student->nationality    = $request->nationality;
+    $student->orphan         = $request->orphan ?? 'No';
+    $student->address        = $request->address;
+    $student->oku            = $request->oku ?? 'No';
 
-        // Check if the IDs are not null, and then update the user's foreign key fields
-        if (!is_null($stateId)) {
-            $state = State::find($stateId);
-            $student->state()->associate($state);
-        }
+    // Foreign keys
+    $stateId    = $request->input('state');
+    $districtId = $request->input('district');
+    $schoolId   = $request->input('school');
 
-        if (!is_null($districtId)) {
-            $district = District::find($districtId);
-            $student->district()->associate($district);
-        }
-
-        if (!is_null($schoolId)) {
-            $school = School::find($schoolId);
-            $student->school()->associate($school);
-        }
-
-        $student->save();
-
-        return redirect('/student');
+    if (!is_null($stateId)) {
+        $student->state()->associate(State::find($stateId));
     }
+    if (!is_null($districtId)) {
+        $student->district()->associate(District::find($districtId));
+    }
+    if (!is_null($schoolId)) {
+        $student->school()->associate(School::find($schoolId));
+    }
+
+    // Calculate age from DOB or IC
+    if ($request->dob) {
+        $student->age = \Carbon\Carbon::parse($request->dob)->age;
+    } elseif ($birthdate = $this->extractBirthDateFromIC($request->ic)) {
+        $student->age = $this->calculateAge($birthdate);
+    }
+
+    $student->save();
+
+    // Attach to pivot table (guardian_student)
+    $student->guardians()->attach(auth()->id());
+
+    return redirect('/student')->with('success', 'Student added successfully');
+}
+
+
 
     public function show()
-    {
-        $user = Auth::user();
-        $students = Student::where('parent_id', $user->id)->get();
-        // Calculate age for each student
-        foreach ($students as $student) {
-            $ic = $student->ic;
-            $birthdate = $this->extractBirthDateFromIC($ic);
-            $age = $birthdate ? $this->calculateAge($birthdate) : null;
-            $student->age = $age;
-        }
+{
+    $user = Auth::user();
 
-        return view('student.view-list-student', ['students' => $students]);
+    // students linked to this parent
+    $students = $user->students;
+
+    foreach ($students as $student) {
+        $ic = $student->ic;
+        $birthdate = $this->extractBirthDateFromIC($ic);
+        $student->age = $birthdate ? $this->calculateAge($birthdate) : null;
     }
+
+    return view('student.view-list-student', compact('students'));
+}
+
+
+
 
     // Helper function to extract birthdate from IC
     private function extractBirthDateFromIC($ic)
@@ -117,43 +150,82 @@ class StudentController extends Controller
         return view('student.edit', compact("student", "state", "district", "school"));
     }
 
-    public function update(Student $student, Request $req)
-    {
-            $student->name = $req->name;
-            $student->ic = $req->ic;
-            $stateId = $req->input('state');
-            $districtId = $req->input('district');
-            $schoolId = $req->input('school');
+    public function update(Request $request, Student $student)
+{
+    // Step 1: Debug incoming data
+    //dd($request->all()); // <--- this will stop here and show all submitted form values
 
-            // Check if the IDs are not null, and then update the user's foreign key fields
-            if (!is_null($stateId)) {
-                $state = State::find($stateId);
-                $student->state()->associate($state);
-            }
+    $request->validate([
+        'name'          => 'required|string|max:255',
+        'ic'            => 'required|string|max:255',
+        'birth_cert_no' => 'nullable|string|max:255',
+        'dob'           => 'nullable|date',
+        'gender'        => 'nullable|string|in:Male,Female',
+        'grade'         => 'nullable|string|max:255',
+        'race'          => 'nullable|string|max:255',
+        'religion'      => 'nullable|string|max:255',
+        'nationality'   => 'nullable|string|max:255',
+        'orphan'        => 'nullable|string|in:Yes,No',
+        'address'       => 'nullable|string',
+        'oku'           => 'nullable|string|in:Yes,No',
+        'state'         => 'nullable|exists:states,id',
+        'district'      => 'nullable|exists:districts,id',
+        'school'        => 'nullable|exists:schools,id',
+    ]);
 
-            if (!is_null($districtId)) {
-                $district = District::find($districtId);
-                $student->district()->associate($district);
-            }
+    // Step 2: Debug student before update
+    // dd($student->toArray());
 
-            if (!is_null($schoolId)) {
-                $school = School::find($schoolId);
-                $student->school()->associate($school);
-            }
+    $student->fill([
+        'name'        => $request->name,
+        'ic'          => $request->ic,
+        'birth_cert_no' => $request->birth_cert_no,
+        'dob'         => $request->dob,
+        'gender'      => $request->gender,
+        'grade'       => $request->grade,
+        'race'        => $request->race,
+        'religion'    => $request->religion,
+        'nationality' => $request->nationality,
+        'address'     => $request->address,
+        'orphan' => $request->orphan, // will save "Yes" or "No"
+        'oku'    => $request->oku,    // will save "Yes" or "No"
+        'state_id'    => $request->state,
+        'district_id' => $request->district,
+        'school_id'   => $request->school,
+    ]);
 
-            $student->save();
+    // Step 3: Debug filled data
+    // dd($student->toArray());
 
-            return redirect('/student')->with('success', 'Student updated successfully');
+    if ($request->dob) {
+        $student->age = \Carbon\Carbon::parse($request->dob)->age;
     }
+
+    $student->save();
+
+    // Step 4: Debug after save
+    // dd($student->toArray());
+
+    return redirect('/student')->with('success', 'Student updated successfully');
+}
+
+
 
     public function delete($id)
-    {
-        $student = Student::find($id);
-        if ($student) {
-            $student->delete();
-            return redirect('/student')->with('success', 'Student deleted successfully');
-        } else {
-            return redirect('/student')->with('error', 'Student not found');
-        }
+{
+    $student = Student::find($id);
+
+    if ($student) {
+        // Detach all guardians first
+        $student->guardians()->detach();
+
+        // Now delete the student
+        $student->delete();
+
+        return redirect('/student')->with('success', 'Student deleted successfully');
+    } else {
+        return redirect('/student')->with('error', 'Student not found');
     }
+}
+
 }

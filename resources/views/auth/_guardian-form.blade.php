@@ -23,25 +23,52 @@
     <input type="text" name="guardians[{{ $index }}][address]" placeholder="Address" class="form-control mb-2">
 
     <div class="fv-row mb-8" data-kt-password-meter="true">
-        <div class="mb-1">
-            <div class="position-relative mb-3">
-                <input type="password" placeholder="Password" name="{{ $prefix }}[password]" class="form-control bg-transparent" autocomplete="new-password" />
-                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
-                    <i class="ki-duotone ki-eye-slash fs-2"></i>
-                    <i class="ki-duotone ki-eye fs-2 d-none"></i>
-                </span>
-            </div>
-            <div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
-                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
-            </div>
+    <!--begin::Wrapper-->
+    <div class="mb-1">
+        <!--begin::Input wrapper-->
+        <div class="position-relative mb-3">
+            <input type="password" 
+                placeholder="Password" 
+                name="guardians[{{ $index }}][password]" 
+                class="form-control bg-transparent" 
+                required 
+                autocomplete="new-password"
+                data-kt-password-meter-control="input" />
+            <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" 
+                data-kt-password-meter-control="visibility">
+                <i class="ki-duotone ki-eye-slash fs-2"></i>
+                <i class="ki-duotone ki-eye fs-2 d-none"></i>
+            </span>
         </div>
-        <div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
-    </div>
+        <!--end::Input wrapper-->
 
-    <div class="fv-row mb-8">
-        <input type="password" placeholder="Repeat Password" name="{{ $prefix }}[password_confirmation]" class="form-control bg-transparent" autocomplete="new-password" />
+        <!--begin::Meter-->
+        <div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
+            <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+            <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+            <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+            <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
+        </div>
+        <!--end::Meter-->
     </div>
+    <!--end::Wrapper-->
+
+    <!--begin::Hint-->
+    <div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
+    <!--end::Hint-->
+</div>
+<!--end::Input group-->
+
+<div class="fv-row mb-8">
+    <!--begin::Repeat Password-->
+    <input type="password" 
+        placeholder="Repeat Password" 
+        name="guardians[{{ $index }}][password_confirmation]" 
+        class="form-control bg-transparent" 
+        required 
+        autocomplete="new-password" />
+    <!--end::Repeat Password-->
+</div>
+<!--end::Input group-->
+
 </div>

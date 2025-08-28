@@ -194,15 +194,15 @@
 										<!--end::Repeat Password-->
 									</div>
 									<!--end::Input group=-->
-    </div>
-</div>
+										</div>
+									</div>
 
 
-    <!-- Additional Guardians (Optional) -->
-    <div id="additional-guardians-container"></div>
-    <button type="button" class="btn btn-secondary w-100 mb-4" id="add-guardian-btn">
-        Add Additional Guardian
-    </button>
+										<!-- Additional Guardians (Optional) -->
+										<div id="additional-guardians-container"></div>
+										<button type="button" class="btn btn-secondary w-100 mb-4" id="add-guardian-btn">
+											Add Additional Guardian
+										</button>
 
 
                                     <!-- Student Profile Section -->
@@ -278,12 +278,50 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
+	document.querySelectorAll('[data-kt-password-meter="true"]').forEach(function (element) {
+    // Avoid duplicate init
+    if (!element.hasAttribute("data-kt-password-meter-initialized")) {
+        new KTPasswordMeter(element);
+        element.setAttribute("data-kt-password-meter-initialized", "true");
+    }
+});
+
+
     container.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-guardian-btn')) {
             e.target.closest('.guardian-form-wrapper').remove();
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+				let studentIndex = 1;
+				const addBtn = document.getElementById('add-student-btn');
+				const container = document.getElementById('student-forms-container');
+				addBtn.addEventListener('click', function() {
+					fetch('/student-form-partial?index=' + studentIndex)
+						.then(response => response.text())
+						.then(html => {
+							const div = document.createElement('div');
+							div.classList.add('student-form-wrapper');
+							div.innerHTML = html + '<button type="button" class="btn btn-danger remove-student-btn mt-2 mb-2 w-100">Remove</button>';
+							container.appendChild(div);
+							studentIndex++;
+							if (window.Livewire) {
+								window.Livewire.rescan();
+							}
+						});
+				});
+				container.addEventListener('click', function(e) {
+					if (e.target.classList.contains('remove-student-btn')) {
+						e.target.closest('.student-form-wrapper').remove();
+					}
+				});
+			});
+
+
+
+
 
 </script>
 

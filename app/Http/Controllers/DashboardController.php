@@ -42,41 +42,51 @@ class DashboardController extends Controller
         }
         
         // Get authenticated user
-        $parent = auth()->user();
-        
-        $students = Student::where('parent_id', auth()->id())
-            ->pluck('name', 'id')->toArray();
+    $parent = auth()->user();
 
-        $attendanceList = Attendance::whereIn('student_id', array_keys($students))
-            ->take(5)
-            ->orderByDesc('id') // Sort in descending order based on the 'id' or 'created_at' column
-            ->get();
+    // 1. Students where this parent is the main guardian
+    $mainStudents = Student::where('parent_id', $parent->id)->pluck('id')->toArray();
 
-        $attendancesAbsent = Attendance::whereIn('student_id', array_keys($students))
-            ->where('status', 'absent')
-            ->groupBy('student_id')
-            ->select('student_id', DB::raw('count(*) as total'))
-            ->pluck('total', 'student_id');
+    // 2. Students linked in pivot table parent_student
+    $pivotStudents = DB::table('parent_student')
+        ->where('parent_id', $parent->id)
+        ->pluck('student_id')
+        ->toArray();
 
-        $attendancesAttend = Attendance::whereIn('student_id', array_keys($students))
-            ->where('status', 'attend')
-            ->groupBy('student_id')
-            ->select('student_id', DB::raw('count(*) as total'))
-            ->pluck('total', 'student_id');
+    // Merge both sets of student IDs
+    $allStudentIds = array_unique(array_merge($mainStudents, $pivotStudents));
 
+    // Get student names for display
+    $students = Student::whereIn('id', $allStudentIds)->pluck('name', 'id')->toArray();
 
-        $attendanceData = [];
-        foreach ($attendancesAttend as $key => $attendCount) {
-            if (isset($attendancesAbsent[$key])) {
-                $absentCount = $attendancesAbsent[$key];
-            } else {
-                $absentCount = 0;
-            }
-        
-            $attendanceData[$key] = json_encode([$attendCount, $absentCount]);
-        }
-        //dd($attendanceData);
-        return view('parents.dashboard', compact('parent', 'attendanceData', 'students', 'attendanceList'));
+    // Attendance list
+    $attendanceList = Attendance::whereIn('student_id', $allStudentIds)
+        ->take(5)
+        ->orderByDesc('id')
+        ->get();
+
+    // Absent count
+    $attendancesAbsent = Attendance::whereIn('student_id', $allStudentIds)
+        ->where('status', 'absent')
+        ->groupBy('student_id')
+        ->select('student_id', DB::raw('count(*) as total'))
+        ->pluck('total', 'student_id');
+
+    // Attend count
+    $attendancesAttend = Attendance::whereIn('student_id', $allStudentIds)
+        ->where('status', 'attend')
+        ->groupBy('student_id')
+        ->select('student_id', DB::raw('count(*) as total'))
+        ->pluck('total', 'student_id');
+
+    // Format chart data
+    $attendanceData = [];
+    foreach ($attendancesAttend as $key => $attendCount) {
+        $absentCount = $attendancesAbsent[$key] ?? 0;
+        $attendanceData[$key] = json_encode([$attendCount, $absentCount]);
     }
+
+    return view('parents.dashboard', compact('parent', 'attendanceData', 'students', 'attendanceList'));
+}
 
 }

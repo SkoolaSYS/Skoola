@@ -21,6 +21,11 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
     $user->assignRole('parent');
     Auth::login($user);
 
+    $guardians = [];
+
+    // Add main parent into guardian list
+    $guardians[] = $user->id;
+
     // Save additional guardians
     if ($request->has('guardians')) {
         foreach ($request->input('guardians') as $index => $guardianData) {
@@ -36,11 +41,15 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
             $guardian->relationship = $guardianData['relationship'] ?? null;
             $guardian->occupation = $guardianData['occupation'] ?? null;
             $guardian->address = $guardianData['address'] ?? null;
-            if (!empty($guardianData['password'])) {
-    $guardian->password = Hash::make($guardianData['password']);
-}
+            $guardian->password = !empty($guardianData['password']) 
+                ? Hash::make($guardianData['password']) 
+                : Hash::make('default123'); // fallback password
+
             $guardian->assignRole('parent');
             $guardian->save();
+
+            // Add guardian to array for pivot linking
+            $guardians[] = $guardian->id;
         }
     }
 
@@ -48,7 +57,7 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
     if ($request->has('students')) {
         foreach ($request->input('students') as $studentData) {
             $student = new Student();
-            $student->parent_id = $user->id;
+            $student->parent_id = $user->id; // keep main guardian for compatibility
             $student->name = $studentData['name'] ?? null;
             $student->ic = $studentData['ic'] ?? null;
             $student->birth_cert_no = $studentData['birth_cert_no'] ?? null;
@@ -66,6 +75,9 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
             $student->district_id = $studentData['district'] ?? null;
             $student->school_id = $studentData['school'] ?? null;
             $student->save();
+
+            // Attach ALL guardians (main + additional) to student via pivot
+            $student->guardians()->attach($guardians);
         }
     }
 
@@ -81,5 +93,6 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
 
     return app(RegisterResponse::class);
 }
+
 
 }

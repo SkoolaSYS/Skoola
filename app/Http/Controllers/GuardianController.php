@@ -9,6 +9,7 @@ use App\Models\Postcode;
 use App\Models\State;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class GuardianController extends Controller
 {
@@ -20,100 +21,158 @@ class GuardianController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $parent = auth()->user();
-        $guardian = new User();
-        $guardian->name = $request->name;
-        $guardian->phone_num = $request->phone_num;
-        $guardian->ic = $request->ic;
-        $guardian->email = $request->email;
-        $guardian->address = $request->address;
+{
+    $parent = auth()->user();
 
-        // Get the selected state, city, and postcode IDs from the form
-        $stateId = $request->input('state');
-        $cityId = $request->input('city');
-        $postcodeId = $request->input('postcode');
+    // Validate form input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:users,username',
+        'email' => 'required|email|unique:users,email',
+        'phone_num' => 'required|string|max:20',
+        'ic' => 'required|string|max:20',
+        'relationship' => 'required|string',
+        'occupation' => 'required|string|max:255',
+        'address' => 'required|string|max:500',
+        'password' => 'required|string|confirmed|min:8',
+        'state' => 'nullable|exists:states,id',
+        'city' => 'nullable|exists:cities,id',
+        'postcode' => 'nullable|exists:postcodes,id',
+    ]);
 
-        // Check if the IDs are not null, and then update the user's foreign key fields
-        if (!is_null($stateId)) {
-            $state = State::find($stateId);
-            $guardian->state()->associate($state);
-        }
+    // 1. Create guardian
+    $guardian = new User();
+    $guardian->name = $request->name;
+    $guardian->username = $request->username;
+    $guardian->phone_num = $request->phone_num;
+    $guardian->ic = $request->ic;
+    $guardian->email = $request->email;
+    $guardian->address = $request->address;
+    $guardian->occupation = $request->occupation;
+    $guardian->relationship = $request->relationship;
+    $guardian->password = Hash::make($request->password);
 
-        if (!is_null($cityId)) {
-            $city = Citie::find($cityId);
-            $guardian->citie()->associate($city);
-        }
+    // State, city, postcode
+    if ($request->filled('state')) {
+        $guardian->state()->associate(State::find($request->state));
+    }
+    if ($request->filled('city')) {
+        $guardian->citie()->associate(Citie::find($request->city));
+    }
+    if ($request->filled('postcode')) {
+        $guardian->postcode()->associate(Postcode::find($request->postcode));
+    }
 
-        if (!is_null($postcodeId)) {
-            $postcode = Postcode::find($postcodeId);
-            $guardian->postcode()->associate($postcode);
-        }
-        // Set the guardian's parent_id to the id of the parent (primary user)
-        $guardian->parent_id = $parent->id;
+    $guardian->save();
 
-        $guardian->save();
-        Session::flash('success', 'Additional Guardian has been added successfully.');
-        if (!$guardian) {
-            Session::flash('error', 'Failed to add Additional Guardian. Please try again.');
-        }
+    // 2. Attach guardian to all of parent's students
+    foreach ($parent->students as $student) {
+        DB::table('parent_student')->insert([
+            'parent_id'  => $guardian->id,
+            'student_id' => $student->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    Session::flash('success', 'Additional Guardian has been added successfully.');
+    return redirect()->route('profile.show');
+}
+
+
+    public function show($id)
+{
+    $guardian = User::find($id);
+
+    if (!$guardian) {
+        Session::flash('error', 'Guardian not found.');
         return redirect()->route('profile.show');
     }
 
-    public function show(User $guardian)
-    {
-        $state = $guardian->state->name;
-        $city = $guardian->citie->name;
-        $postcode = $guardian->postcode->name;
-        return view('parents.additional-guardian.show', compact('guardian','state', 'city', 'postcode'));
-    }
+    $state    = $guardian->state?->name ?? '';
+    $city     = $guardian->citie?->name ?? '';
+    $postcode = $guardian->postcode?->name ?? ''; // make sure 'name' is the column in postcodes table
+
+    return view('parents.additional-guardian.show', compact('guardian', 'state', 'city', 'postcode'));
+}
+
+
+
+
+
+
+
 
     public function edit(User $guardian)
-    {
-        $state = $guardian->state->name;
-        $city = $guardian->citie->name;
-        $postcode = $guardian->postcode;
-        return view('parents.additional-guardian.edit', compact('guardian','state', 'city', 'postcode'));
-    }
+{
+    // Make sure the relationships are loaded
+    $guardian->load(['state', 'citie', 'postcode']);
+
+    return view('parents.additional-guardian.edit', [
+        'guardian' => $guardian,
+        'selectedState' => $guardian->state?->id,
+        'selectedCity' => $guardian->citie?->id,
+        'selectedPostcode' => $guardian->postcode?->id,
+    ]);
+}
+
+
+
+
+
 
     public function update(User $guardian, Request $request)
-    {
-        $guardian->name = $request->name;
-        $guardian->phone_num = $request->phone_num;
-        $guardian->ic = $request->ic;
-        $guardian->email = $request->email;
-        $guardian->address = $request->address;
+{
+    // Validate inputs
+    $request->validate([
+        'name'         => 'required|string|max:255',
+        'username'     => 'required|string|max:255|unique:users,username,' . $guardian->id,
+        'phone_num'    => 'nullable|string|max:20',
+        'ic'           => 'nullable|string|max:20',
+        'email'        => 'nullable|email|max:255|unique:users,email,' . $guardian->id,
+        'address'      => 'nullable|string|max:500',
+        'occupation'   => 'nullable|string|max:255',
+        'relationship' => 'nullable|string|max:50',
+        'state'        => 'nullable|exists:states,id',
+        'city'         => 'nullable|exists:cities,id',
+        'postcode'     => 'nullable|string|max:10', // just a string, not a relationship
+    ]);
 
-        // Get the selected state, city, and postcode IDs from the form
-        $stateId = $request->input('state');
-        $cityId = $request->input('city');
-        $postcodeId = $request->input('postcode');
+    // Update guardian fields
+    $guardian->name         = $request->name;
+    $guardian->username     = $request->username;
+    $guardian->phone_num    = $request->phone_num;
+    $guardian->ic           = $request->ic;
+    $guardian->email        = $request->email;
+    $guardian->address      = $request->address;
+    $guardian->occupation   = $request->occupation;
+    $guardian->relationship = $request->relationship;
 
-        // Check if the IDs are not null, and then update the user's foreign key fields
-        if (!is_null($stateId)) {
-            $state = State::find($stateId);
-            $guardian->state()->associate($state);
-        }
-
-        if (!is_null($cityId)) {
-            $city = Citie::find($cityId);
-            $guardian->citie()->associate($city);
-        }
-
-        if (!is_null($postcodeId)) {
-            $postcode = Postcode::find($postcodeId);
-            $guardian->postcode()->associate($postcode);
-        }
-
-        $guardian->save();
-
-        Session::flash('success', 'Profile updated successfully.');
-        if (!$guardian) {
-            Session::flash('error', 'Failed to update profile. Please try again.');
-        }
-
-        return redirect()->route('profile.guardian.show', ['guardian' => $guardian->id]);
+    // Update relationships
+    if ($request->filled('state')) {
+        $guardian->state()->associate(State::find($request->state));
     }
+
+    if ($request->filled('city')) {
+        $guardian->citie()->associate(Citie::find($request->city));
+    }
+
+    if ($request->filled('postcode')) {
+    $guardian->postcode()->associate(Postcode::find($request->postcode));
+}
+
+
+    // Save
+    $guardian->save();
+
+    Session::flash('success', 'Profile updated successfully.');
+
+    return redirect()->route('profile.guardian.show', ['guardian' => $guardian->id]);
+}
+
+
+
+
 
     public function delete(User $guardian)
     {

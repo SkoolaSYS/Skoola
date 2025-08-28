@@ -62,6 +62,17 @@
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">Username</label>
+							<!--end::Label-->
+							<!--begin::Col-->
+							<div class="col-lg-8 fv-row">
+								<input type="text" name="username" class="form-control form-control-lg form-control-solid" placeholder="Username" value="{{ $user['username'] ?? '' }}" />
+							</div>
+							<!--end::Col-->
+							</div>
+						<!--begin::Input group-->
+						<div class="row mb-6">
+							<!--begin::Label-->
 							<label class="col-lg-4 col-form-label required fw-semibold fs-6">Identification Card</label>
 							<!--end::Label-->
 							<!--begin::Col-->
@@ -113,6 +124,32 @@
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="row mb-6">
+							<!--begin::Label-->
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">Occupation</label>
+							<!--end::Label-->
+							<!--begin::Col-->
+							<div class="col-lg-8 fv-row">
+								<input type="text" name="occupation" class="form-control form-control-lg form-control-solid" placeholder="Occupation" value="{{ $user['occupation'] ?? '' }}" />
+							</div>
+							<!--end::Col-->
+						</div>
+						<!--end::Input group-->
+
+						<!--begin::Input group-->
+						<div class="row mb-6">
+							<!--begin::Label-->
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">Relationship</label>
+							<!--end::Label-->
+							<!--begin::Col-->
+							<div class="col-lg-8 fv-row">
+								<input type="text" name="relationship" class="form-control form-control-lg form-control-solid" placeholder="Relationship" value="{{ $user['relationship'] ?? '' }}" />
+							</div>
+							<!--end::Col-->
+						</div>
+						<!--end::Input group-->
+
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->

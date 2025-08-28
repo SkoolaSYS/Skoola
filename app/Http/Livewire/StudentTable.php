@@ -21,15 +21,18 @@ class StudentTable extends DataTableComponent
     }
 
     public function builder(): Builder
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        return Student::query()
-            ->where('parent_id', $user->id)
-            ->when($this->columnSearch['name'] ?? null, function ($query, $name) {
-                return $query->where('name', 'like', '%' . $name . '%');
-            });
-    }
+    return Student::query()
+        ->whereHas('guardians', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        })
+        ->when($this->columnSearch['name'] ?? null, function ($query, $name) {
+            return $query->where('name', 'like', '%' . $name . '%');
+        });
+}
+
 
     public function columns(): array
     {
