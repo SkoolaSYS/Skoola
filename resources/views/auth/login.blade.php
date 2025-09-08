@@ -64,26 +64,38 @@
                                     <form class="form w-100" data-kt-redirect-url="{{ route('login') }}" action="{{ route('login') }}" method="POST">
                                         @csrf
                                         <!--begin::Heading-->
-                                        <div class="text-center mb-11">
-										@if(session('error'))
-    <div class="alert alert-danger text-center mt-3">
-        {{ session('error') }}
-    </div>
-@endif
+<div class="text-center mb-11">
+    @if(session('error'))
+        <div class="alert alert-danger text-center mt-3">
+            {{ session('error') }}
+        </div>
+    @endif
 
-                                            <!--begin::Title-->
-                                            <h1 class="text-dark fw-bolder mb-3">Log In</h1>
-                                            <!--end::Title-->
-                                            <!--begin::Subtitle-->
-                                            <div class="text-gray-500 fw-semibold fs-6">Log in here to view dashboard and other features!</div>
-											@if (session('status'))
-												<div class="mb-4 font-medium text-sm text-success">
-													{{ session('status') }}
-												</div>
-											@endif
-                                            <!--end::Subtitle=-->
-                                        </div>
-                                        <!--begin::Heading-->
+    @if ($errors->any())
+        <div class="alert alert-danger text-center mt-3">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
+    <!--begin::Title-->
+    <h1 class="text-dark fw-bolder mb-3">Log In</h1>
+    <!--end::Title-->
+
+    <!--begin::Subtitle-->
+    <div class="text-gray-500 fw-semibold fs-6">
+        Log in here to view dashboard and other features!
+    </div>
+    @if (session('status'))
+        <div class="mb-4 font-medium text-sm text-success">
+            {{ session('status') }}
+        </div>
+    @endif
+    <!--end::Subtitle=-->
+</div>
+<!--end::Heading-->
+
+
+                                            
                                         <!--begin::Input group=-->
                                         <div class="fv-row mb-8">
                                             <!--begin::Email-->
