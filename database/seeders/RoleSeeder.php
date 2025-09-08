@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -14,61 +13,63 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::create(['name' => 'view-admin-page']);
-        Permission::create(['name' => 'view-country-page']);
-        Permission::create(['name' => 'view-state-page']);
-        Permission::create(['name' => 'view-ppd-page']);
-        Permission::create(['name' => 'view-school-page']);
-        Permission::create(['name' => 'view-student-attendance-page']);
-        Permission::create(['name' => 'view-parent-page']);
-
-        // Admin role
-        $admin = Role::create(['name' => 'admin']);
-        $admin->givePermissionTo([
+        // Define permissions
+        $permissions = [
             'view-admin-page',
             'view-country-page',
             'view-state-page',
             'view-ppd-page',
             'view-school-page',
             'view-student-attendance-page',
-        ]);
+            'view-parent-page',
+        ];
 
-        // Country role
-        $country = Role::create(['name' => 'country']);
-        $country->givePermissionTo([
-            'view-country-page',
-            'view-state-page',
-            'view-ppd-page',
-            'view-school-page',
-            'view-student-attendance-page',
-        ]);
+        // Create permissions if not exist
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+        }
 
-        // State role
-        $state = Role::create(['name' => 'state']);
-        $state->givePermissionTo([
-            'view-state-page',
-            'view-ppd-page',
-            'view-school-page',
-            'view-student-attendance-page',
-        ]);
+        // Define roles with their permissions
+        $roles = [
+            'admin' => [
+                'view-admin-page',
+                'view-country-page',
+                'view-state-page',
+                'view-ppd-page',
+                'view-school-page',
+                'view-student-attendance-page',
+            ],
+            'country' => [
+                'view-country-page',
+                'view-state-page',
+                'view-ppd-page',
+                'view-school-page',
+                'view-student-attendance-page',
+            ],
+            'state' => [
+                'view-state-page',
+                'view-ppd-page',
+                'view-school-page',
+                'view-student-attendance-page',
+            ],
+            'ppd' => [
+                'view-ppd-page',
+                'view-school-page',
+                'view-student-attendance-page',
+            ],
+            'school' => [
+                'view-school-page',
+                'view-student-attendance-page',
+            ],
+            'parent' => [
+                'view-parent-page',
+            ],
+        ];
 
-        // PPD role
-        $ppd = Role::create(['name' => 'ppd']);
-        $ppd->givePermissionTo([
-            'view-ppd-page',
-            'view-school-page',
-            'view-student-attendance-page',
-        ]);
-
-        // School role
-        $school = Role::create(['name' => 'school']);
-        $school->givePermissionTo([
-            'view-school-page',
-            'view-student-attendance-page',
-        ]);
-
-        // Parent role
-        $parent = Role::create(['name' => 'parent']);
-        $parent->givePermissionTo('view-parent-page');
+        // Create roles and assign permissions
+        foreach ($roles as $roleName => $rolePermissions) {
+            $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
+            $role->syncPermissions($rolePermissions);
+        }
     }
 }
