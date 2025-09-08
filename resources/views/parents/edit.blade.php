@@ -140,15 +140,21 @@
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
-							<label class="col-lg-4 col-form-label fw-semibold fs-6">Relationship</label>
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">Relationship to Student</label>
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
-								<input type="text" name="relationship" class="form-control form-control-lg form-control-solid" placeholder="Relationship" value="{{ $user['relationship'] ?? '' }}" />
+								<select name="relationship" class="form-control form-control-lg form-control-solid">
+									<option value="">-- Select Relationship --</option>
+									<option value="Father" {{ (isset($user['relationship']) && $user['relationship'] == 'Father') ? 'selected' : '' }}>Father</option>
+									<option value="Mother" {{ (isset($user['relationship']) && $user['relationship'] == 'Mother') ? 'selected' : '' }}>Mother</option>
+									<option value="Guardian" {{ (isset($user['relationship']) && $user['relationship'] == 'Guardian') ? 'selected' : '' }}>Guardian</option>
+								</select>
 							</div>
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
+
 
 						<!--begin::Input group-->
 						<div class="row mb-6">

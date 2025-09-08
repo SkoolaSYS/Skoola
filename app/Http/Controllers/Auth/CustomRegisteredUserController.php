@@ -41,6 +41,9 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
             $guardian->relationship = $guardianData['relationship'] ?? null;
             $guardian->occupation = $guardianData['occupation'] ?? null;
             $guardian->address = $guardianData['address'] ?? null;
+            $guardian->state_id = $guardianData['state_id'] ?? null;
+            $guardian->postcode_id = $guardianData['postcode_id'] ?? null;
+            $guardian->citie_id = $guardianData['citie_id'] ?? null;
             $guardian->password = !empty($guardianData['password']) 
                 ? Hash::make($guardianData['password']) 
                 : Hash::make('default123'); // fallback password

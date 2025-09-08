@@ -65,15 +65,14 @@ class GuardianController extends Controller
 
     $guardian->save();
 
-    // 2. Attach guardian to all of parent's students
-    foreach ($parent->students as $student) {
-        DB::table('parent_student')->insert([
-            'parent_id'  => $guardian->id,
-            'student_id' => $student->id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-    }
+// assign role
+$guardian->assignRole('parent');
+
+// attach guardian to all of parent's students
+foreach ($parent->students as $student) {
+    $guardian->students()->syncWithoutDetaching([$student->id]);
+}
+
 
     Session::flash('success', 'Additional Guardian has been added successfully.');
     return redirect()->route('profile.show');

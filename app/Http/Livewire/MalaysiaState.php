@@ -37,10 +37,11 @@ class MalaysiaState extends Component
     }
 
     public function render()
-    {
-        $users = User::find(auth()->user()->id);
-        return view('livewire.malaysia-state');
-    }
+{
+    $users = auth()->check() ? User::find(auth()->id()) : null;
+    return view('livewire.malaysia-state', compact('users'));
+}
+
 
     public function updatedSelectedState($state_id)
     {

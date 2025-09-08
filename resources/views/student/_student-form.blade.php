@@ -18,31 +18,31 @@
 
     <!-- Identification Card / Passport -->
     <div class="row mb-6">
+        <label class="col-lg-4 col-form-label fw-semibold fs-6">Birth Certificate Number</label>
+        <div class="col-lg-8 fv-row">
+            <input type="text" name="{{ $prefix ? $prefix . '[birth_cert_no]' : 'birth_cert_no' }}" class="form-control form-control-lg form-control-solid" placeholder="Birth Certiificate Number" />
+        </div>
+    </div>
+
+    <!-- Identification Card / Passport -->
+    <div class="row mb-6">
         <label class="col-lg-4 col-form-label fw-semibold fs-6">IC / Passport Number</label>
         <div class="col-lg-8 fv-row">
             <input type="text" name="{{ $prefix ? $prefix . '[ic]' : 'ic' }}" class="form-control form-control-lg form-control-solid" placeholder="IC / Passport Number" />
         </div>
     </div>
 
-    <!-- Birth Certificate Number -->
-    <div class="row mb-6">
-        <label class="col-lg-4 col-form-label fw-semibold fs-6">Birth Certificate Number</label>
-        <div class="col-lg-8 fv-row">
-            <input type="text" name="{{ $prefix ? $prefix . '[birth_cert_no]' : 'birth_cert_no' }}" class="form-control form-control-lg form-control-solid" placeholder="Birth Certificate Number" />
-        </div>
-    </div>
-
     <!-- Date of Birth & Age -->
-    <div class="row mb-6">
-        <label class="col-lg-4 col-form-label fw-semibold fs-6">Date of Birth</label>
-        <div class="col-lg-4 fv-row">
-            <input type="date" name="{{ $prefix ? $prefix . '[dob]' : 'dob' }}" class="form-control form-control-lg form-control-solid dob-input" />
-        </div>
-        <label class="col-lg-2 col-form-label fw-semibold fs-6">Age</label>
-        <div class="col-lg-2 fv-row">
-            <input type="number" name="{{ $prefix ? $prefix . '[age]' : 'age' }}" class="form-control form-control-lg form-control-solid age-input" readonly />
-        </div>
+<div class="row mb-6">
+    <!-- Date of Birth -->
+    <label class="col-lg-4 col-form-label fw-semibold fs-6">Date of Birth</label>
+    <div class="col-lg-8 fv-row">
+        <input type="date" 
+               name="{{ $prefix ? $prefix . '[dob]' : 'dob' }}" 
+               class="form-control form-control-lg form-control-solid dob-input" />
     </div>
+</div>
+
 
     <!-- Tingkatan / Darjah -->
     <div class="row mb-6">
@@ -155,44 +155,18 @@
         </div>
     </div>
 
+    <h3>School Details</h3>
+    
    @livewire('ppd-dropdown', ['prefix' => $prefix], key('ppd-'.$key.'-'.uniqid()))
-
-
-
 </div>
     </div>
 </div>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    let studentIndex = 1;
 
-    // ✅ AGE CALCULATION FUNCTION
-    function calculateAge(dobInput, ageInput) {
-        let dob = new Date(dobInput.value);
-        if (!isNaN(dob)) {
-            let today = new Date();
-            let age = today.getFullYear() - dob.getFullYear();
-            let m = today.getMonth() - dob.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-            ageInput.value = age;
-        }
-    }
 
-    // ✅ DELEGATED AGE CALCULATION
-    document.getElementById("student-forms-container").addEventListener("change", function (e) {
-        if (e.target.classList.contains("dob-input")) {
-            let ageInput = e.target.closest(".student-form").querySelector(".age-input");
-            calculateAge(e.target, ageInput);
-        }
-    });
 
-    
-});
-</script>
+
 
 
 

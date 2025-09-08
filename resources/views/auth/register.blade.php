@@ -84,118 +84,132 @@
                                             <!--end::Title-->
                                         </div>
                                         <form action="{{ route('register') }}" method="POST">
-    @csrf
-	<!-- Main Parent / Guardian (Required) -->
-<div id="parent-form">
-    <h3>Parent / Guardian Details</h3>
-    <div class="card-body border-top p-9">
+										@csrf
+										<!-- Main Parent / Guardian (Required) -->
+									<div id="parent-form">
+										<h3>Parent / Guardian Details</h3>
+										<div class="card-body border-top p-9">
 
-        <!-- Full Name -->
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required">Full Name</label>
-            <div class="col-lg-8 fv-row">
-                <input type="text" name="name" class="form-control" placeholder="Full Name" required>
-            </div>
-        </div>
-
-        <!-- Username -->
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required">Username</label>
-            <div class="col-lg-8 fv-row">
-                <input type="text" name="username" class="form-control" placeholder="Username" required>
-            </div>
-        </div>
-
-        <!-- Email -->
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required">Email</label>
-            <div class="col-lg-8 fv-row">
-                <input type="email" name="email" class="form-control" placeholder="Email" required>
-            </div>
-        </div>
-
-        <!-- Phone Number -->
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required">Phone Number</label>
-            <div class="col-lg-8 fv-row">
-                <input type="text" name="phone_num" class="form-control" placeholder="Phone Number" required>
-            </div>
-        </div>
-
-        <!-- IC -->
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required">IC / Passport Number</label>
-            <div class="col-lg-8 fv-row">
-                <input type="text" name="ic" class="form-control" placeholder="IC / Passport Number" required>
-            </div>
-        </div>
-
-        <!-- Address -->
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required">Address</label>
-            <div class="col-lg-8 fv-row">
-                <input type="text" name="address" class="form-control" placeholder="Address" required>
-            </div>
-        </div>
-
-        <!-- Occupation -->
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required">Occupation</label>
-            <div class="col-lg-8 fv-row">
-                <input type="text" name="occupation" class="form-control" placeholder="Occupation" required>
-            </div>
-        </div>
-
-        <!-- Relationship -->
-<div class="row mb-6">
-    <label class="col-lg-4 col-form-label required">Relationship</label>
-    <div class="col-lg-8 fv-row">
-        <select name="relationship" class="form-control" required>
-            <option value="">Select Relationship</option>
-            <option value="Father">Father</option>
-            <option value="Mother">Mother</option>
-            <option value="Guardian">Guardian</option>
-        </select>
-    </div>
-</div>
-
-
-        <div class="fv-row mb-8" data-kt-password-meter="true">
-										<!--begin::Wrapper-->
-										<div class="mb-1">
-											<!--begin::Input wrapper-->
-											<div class="position-relative mb-3">
-											<input type="password" placeholder="Password" name="password" class="form-control bg-transparent" required autofocus autocomplete="new-password" />
-												<span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
-													<i class="ki-duotone ki-eye-slash fs-2"></i>
-													<i class="ki-duotone ki-eye fs-2 d-none"></i>
-												</span>
+											<!-- Full Name -->
+											<div class="row mb-6">
+												<label class="col-lg-4 col-form-label required">Full Name</label>
+												<div class="col-lg-8 fv-row">
+													<input type="text" name="name" class="form-control" placeholder="Full Name" required>
+												</div>
 											</div>
-											<!--end::Input wrapper-->
-											<!--begin::Meter-->
-											<div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
-												<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-												<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-												<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-												<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
+
+											<!-- Username -->
+											<div class="row mb-6">
+												<label class="col-lg-4 col-form-label required">Username</label>
+												<div class="col-lg-8 fv-row">
+													<input type="text" name="username" class="form-control" placeholder="Username" required>
+												</div>
 											</div>
-											<!--end::Meter-->
-										</div>
-										<!--end::Wrapper-->
-										<!--begin::Hint-->
-										<div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
-										<!--end::Hint-->
-									</div>
-									<!--end::Input group=-->
-									<!--end::Input group=-->
-									<div class="fv-row mb-8">
-										<!--begin::Repeat Password-->
-										<input type="password" placeholder="Repeat Password" name="password_confirmation" class="form-control bg-transparent" required autofocus autocomplete="new-password" />
-										<!--end::Repeat Password-->
-									</div>
-									<!--end::Input group=-->
+
+											<!-- Email -->
+											<div class="row mb-6">
+												<label class="col-lg-4 col-form-label required">Email</label>
+												<div class="col-lg-8 fv-row">
+													<input type="email" name="email" class="form-control" placeholder="Email" required>
+												</div>
+											</div>
+
+											<!-- Phone Number -->
+											<div class="row mb-6">
+												<label class="col-lg-4 col-form-label required">Phone Number</label>
+												<div class="col-lg-8 fv-row">
+													<input type="text" name="phone_num" class="form-control" placeholder="Phone Number" required>
+												</div>
+											</div>
+
+											<!-- IC -->
+											<div class="row mb-6">
+												<label class="col-lg-4 col-form-label required">IC / Passport Number</label>
+												<div class="col-lg-8 fv-row">
+													<input type="text" name="ic" class="form-control" placeholder="IC / Passport Number" required>
+												</div>
+											</div>
+
+											<!-- Address -->
+											<div class="row mb-6">
+												<label class="col-lg-4 col-form-label required">Address</label>
+												<div class="col-lg-8 fv-row">
+													<input type="text" name="address" class="form-control" placeholder="Address" required>
+												</div>
+											</div>
+
+											<!-- State, City, Postcode -->
+											<div class="row mb-6">
+													@livewire('malaysia-state')
+											</div>
+
+
+
+											<!-- Occupation -->
+											<div class="row mb-6">
+												<label class="col-lg-4 col-form-label required">Occupation</label>
+												<div class="col-lg-8 fv-row">
+													<input type="text" name="occupation" class="form-control" placeholder="Occupation" required>
+												</div>
+											</div>
+
+											<!-- Relationship -->
+									<div class="row mb-6">
+										<label class="col-lg-4 col-form-label required">Relationship</label>
+										<div class="col-lg-8 fv-row">
+											<select name="relationship" class="form-control" required>
+												<option value="">Select Relationship</option>
+												<option value="Father">Father</option>
+												<option value="Mother">Mother</option>
+												<option value="Guardian">Guardian</option>
+											</select>
 										</div>
 									</div>
+
+
+                                    <!-- Password -->
+									<div class="row mb-6">
+										<label class="col-lg-4 col-form-label required">Password</label>
+										<div class="col-lg-8 fv-row" data-kt-password-meter="true">
+											<!--begin::Wrapper-->
+											<div class="mb-1">
+												<!--begin::Input wrapper-->
+												<div class="position-relative mb-3">
+													<input type="password" placeholder="Password" name="password" class="form-control bg-transparent" required autocomplete="new-password" />
+													<span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
+														<i class="ki-duotone ki-eye-slash fs-2"></i>
+														<i class="ki-duotone ki-eye fs-2 d-none"></i>
+													</span>
+												</div>
+												<!--end::Input wrapper-->
+
+												<!--begin::Meter-->
+												<div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
+													<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+													<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+													<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+													<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
+												</div>
+												<!--end::Meter-->
+											</div>
+											<!--end::Wrapper-->
+
+											<!--begin::Hint-->
+											<div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
+											<!--end::Hint-->
+										</div>
+									</div>
+
+									<!-- Repeat Password -->
+									<div class="row mb-6">
+										<label class="col-lg-4 col-form-label required">Repeat Password</label>
+										<div class="col-lg-8 fv-row">
+											<input type="password" placeholder="Repeat Password" name="password_confirmation" class="form-control bg-transparent" required autocomplete="new-password" />
+										</div>
+									</div>
+
+									
+
 
 
 										<!-- Additional Guardians (Optional) -->
@@ -318,12 +332,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 				});
 			});
-
-
-
-
-
 </script>
+
 
 		@livewireScripts
 	</body>

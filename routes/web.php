@@ -16,7 +16,7 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\CustomRegisteredUserController;
 use App\Http\Controllers\StudentFormController;
-
+use App\Http\Controllers\Auth\SocialController;
 
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
@@ -110,6 +110,10 @@ Route::middleware(['auth', 'role:admin|country|state|ppd|school'])->group(functi
         });
     });
 });
+
+
+Route::get('auth/{provider}', [SocialController::class, 'redirect']);
+Route::get('auth/{provider}/callback', [SocialController::class, 'callback']);
 
 Route::get('/guardian-form-partial', [GuardianController::class, 'guardianFormPartial'])->name('guardian.form.partial');
 

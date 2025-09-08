@@ -9,6 +9,8 @@ use Spatie\Permission\Models\Role;
 use App\Models\State;
 use App\Models\District;
 use App\Models\School;
+use Faker\Factory as Faker;
+
 
 class UserSeeder extends Seeder
 {
@@ -17,6 +19,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create();
+        
         for ($i = 0; $i < 100; $i++) { //create 100 user parents
             $parent = User::create([
                 'name' => fake()->name(),

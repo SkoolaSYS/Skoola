@@ -6,29 +6,85 @@
 <div class="guardian-form mb-4">
     <h4>Guardian {{ $index + 1 }}</h4>
 
-    <input type="text" name="guardians[{{ $index }}][name]" placeholder="Full Name" class="form-control mb-2">
-    <input type="text" name="guardians[{{ $index }}][username]" placeholder="Username" class="form-control mb-2">
-    <input type="email" name="guardians[{{ $index }}][email]" placeholder="Email" class="form-control mb-2">
-    <input type="text" name="guardians[{{ $index }}][phone_num]" placeholder="Phone Number" class="form-control mb-2">
-    <input type="text" name="guardians[{{ $index }}][ic]" placeholder="IC / Passport" class="form-control mb-2">
+    <!-- Full Name -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Full Name</label>
+        <div class="col-lg-8 fv-row">
+            <input type="text" name="guardians[{{ $index }}][name]" class="form-control" placeholder="Full Name">
+        </div>
+    </div>
+        <!-- Username -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Username</label>
+        <div class="col-lg-8 fv-row">
+            <input type="text" name="guardians[{{ $index }}][username]" class="form-control" placeholder="Username">
+        </div>
+    </div>
+    <!-- Email -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Email</label>
+        <div class="col-lg-8 fv-row">
+            <input type="email" name="guardians[{{ $index }}][email]" class="form-control" placeholder="Email">
+        </div>
+    </div>
+    <!-- Phone Number -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Phone Number</label>
+        <div class="col-lg-8 fv-row">
+        <input type="text" name="guardians[{{ $index }}][phone_num]" class="form-control">
+        </div>
+    </div>
 
-    <select name="guardians[{{ $index }}][relationship]" class="form-control mb-2">
-        <option value="">Relationship</option>
-        <option value="father">Father</option>
-        <option value="mother">Mother</option>
-        <option value="guardian">Guardian</option>
-    </select>
+    <!-- IC / Passport -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">IC / Passport</label>
+        <div class="col-lg-8 fv-row">
+        <input type="text" name="guardians[{{ $index }}][ic]" class="form-control">
+        </div>
+    </div>
 
-    <input type="text" name="guardians[{{ $index }}][occupation]" placeholder="Occupation" class="form-control mb-2">
-    <input type="text" name="guardians[{{ $index }}][address]" placeholder="Address" class="form-control mb-2">
+    <!-- Relationship -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Relationship</label>
+        <div class="col-lg-8 fv-row">
+        <select name="guardians[{{ $index }}][relationship]" class="form-control">
+            <option value="">Select Relationship</option>
+            <option value="father">Father</option>
+            <option value="mother">Mother</option>
+            <option value="guardian">Guardian</option>
+        </select>
+        </div>
+    </div>
 
-    <div class="fv-row mb-8" data-kt-password-meter="true">
-    <!--begin::Wrapper-->
-    <div class="mb-1">
-        <!--begin::Input wrapper-->
+    <!-- Occupation -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Occupation</label>
+        <div class="col-lg-8 fv-row">
+        <input type="text" name="guardians[{{ $index }}][occupation]" class="form-control">
+        </div>
+    </div>
+
+    <!-- Address -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Address</label>
+        <div class="col-lg-8 fv-row">
+        <input type="text" name="guardians[{{ $index }}][address]" class="form-control">
+        </div>
+    </div>
+
+    <!-- State, City, Postcode -->
+    <div class="row mb-6">
+        
+        @livewire('malaysia-state', ['prefix' => "guardians[$index]"], key("guardian-$index"))
+        
+    </div>
+
+    <!-- Password -->
+    <div class="row mb-6" data-kt-password-meter="true">
+        <label class="col-lg-4 col-form-label">Password</label>
+        <div class="col-lg-8 fv-row">
         <div class="position-relative mb-3">
             <input type="password" 
-                placeholder="Password" 
                 name="guardians[{{ $index }}][password]" 
                 class="form-control bg-transparent" 
                 required 
@@ -40,35 +96,25 @@
                 <i class="ki-duotone ki-eye fs-2 d-none"></i>
             </span>
         </div>
-        <!--end::Input wrapper-->
-
-        <!--begin::Meter-->
         <div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
             <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
             <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
             <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
             <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
         </div>
-        <!--end::Meter-->
+        <div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
+        </div>
     </div>
-    <!--end::Wrapper-->
 
-    <!--begin::Hint-->
-    <div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
-    <!--end::Hint-->
-</div>
-<!--end::Input group-->
-
-<div class="fv-row mb-8">
-    <!--begin::Repeat Password-->
-    <input type="password" 
-        placeholder="Repeat Password" 
-        name="guardians[{{ $index }}][password_confirmation]" 
-        class="form-control bg-transparent" 
-        required 
-        autocomplete="new-password" />
-    <!--end::Repeat Password-->
-</div>
-<!--end::Input group-->
-
+    <!-- Repeat Password -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label">Repeat Password</label>
+        <div class="col-lg-8 fv-row">
+        <input type="password" 
+            name="guardians[{{ $index }}][password_confirmation]" 
+            class="form-control bg-transparent" 
+            required 
+            autocomplete="new-password" />
+            </div>
+    </div>
 </div>

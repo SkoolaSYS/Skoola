@@ -11,18 +11,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class StudentController extends Controller
 {
 
     public function create()
-    {
-        $states = State::all();
-        $districts = School::all();
-        $schools = School::all();
+{
+    $states = State::all();
+    $districts = District::all();
+    $schools = School::all();
 
-        return view('student.add-student', compact("schools", "districts", "states"));
-    }
+    // Only users who have the "parent" role
+    $guardians = User::role('parent')->get();
+
+    return view('student.add-student', compact("schools", "districts", "states", "guardians"));
+}
+
 
     public function store(Request $request)
 {
@@ -42,11 +47,11 @@ class StudentController extends Controller
         'state'         => 'nullable|exists:states,id',
         'district'      => 'nullable|exists:districts,id',
         'school'        => 'nullable|exists:schools,id',
+        'guardian_id'   => 'nullable|exists:users,id',
     ]);
 
     $student = new Student;
-
-    $student->parent_id      = auth()->id(); // Main guardian tracking
+    $student->parent_id      = auth()->id();
     $student->name           = $request->name;
     $student->ic             = $request->ic;
     $student->birth_cert_no  = $request->birth_cert_no;
@@ -60,22 +65,16 @@ class StudentController extends Controller
     $student->address        = $request->address;
     $student->oku            = $request->oku ?? 'No';
 
-    // Foreign keys
-    $stateId    = $request->input('state');
-    $districtId = $request->input('district');
-    $schoolId   = $request->input('school');
-
-    if (!is_null($stateId)) {
-        $student->state()->associate(State::find($stateId));
+    if ($request->filled('state')) {
+        $student->state()->associate(State::find($request->state));
     }
-    if (!is_null($districtId)) {
-        $student->district()->associate(District::find($districtId));
+    if ($request->filled('district')) {
+        $student->district()->associate(District::find($request->district));
     }
-    if (!is_null($schoolId)) {
-        $student->school()->associate(School::find($schoolId));
+    if ($request->filled('school')) {
+        $student->school()->associate(School::find($request->school));
     }
 
-    // Calculate age from DOB or IC
     if ($request->dob) {
         $student->age = \Carbon\Carbon::parse($request->dob)->age;
     } elseif ($birthdate = $this->extractBirthDateFromIC($request->ic)) {
@@ -84,11 +83,32 @@ class StudentController extends Controller
 
     $student->save();
 
-    // Attach to pivot table (guardian_student)
-    $student->guardians()->attach(auth()->id());
+    // === Guardian linking ===
+    $mainParentId = auth()->id();
+
+    // Step 1: always include logged-in parent
+    $idsToAttach = [$mainParentId];
+
+    // Step 2: find other parents already linked to this parent via existing students
+    $otherGuardianIds = \DB::table('parent_student')
+        ->whereIn('student_id', function($query) use ($mainParentId) {
+            $query->select('student_id')
+                  ->from('parent_student')
+                  ->where('parent_id', $mainParentId);
+        })
+        ->where('parent_id', '!=', $mainParentId)
+        ->pluck('parent_id')
+        ->toArray();
+
+    $idsToAttach = array_merge($idsToAttach, $otherGuardianIds);
+
+    // Step 3: Attach without duplicates
+    $student->guardians()->syncWithoutDetaching($idsToAttach);
 
     return redirect('/student')->with('success', 'Student added successfully');
 }
+
+
 
 
 

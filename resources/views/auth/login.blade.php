@@ -65,6 +65,12 @@
                                         @csrf
                                         <!--begin::Heading-->
                                         <div class="text-center mb-11">
+										@if(session('error'))
+    <div class="alert alert-danger text-center mt-3">
+        {{ session('error') }}
+    </div>
+@endif
+
                                             <!--begin::Title-->
                                             <h1 class="text-dark fw-bolder mb-3">Log In</h1>
                                             <!--end::Title-->
@@ -112,10 +118,26 @@
                                             </button>
                                         </div>
                                         <!--end::Submit button-->
-                                        <!--begin::Sign up-->
-                                        <div class="text-gray-500 text-center fw-semibold fs-6">Not a Member yet?
-                                        <a href="/register" class="link-primary">Register Now!</a></div>
-                                        <!--end::Sign up-->
+										<a href="{{ url('auth/google') }}" class="btn w-100 d-flex align-items-center justify-content-center gap-2 border bg-white" style="border-radius: 8px; padding:10px;">
+										<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" width="20" height="20">
+										<span class="fw-semibold text-dark">Continue with Google</span>
+									</a>
+
+									<a href="{{ url('auth/facebook') }}" 
+									class="btn w-100 d-flex align-items-center justify-content-center gap-2 border" 
+									style="background-color:#fff; color:#1877F2; border-radius:8px; padding:10px;">
+										<img src="https://www.svgrepo.com/show/475647/facebook-color.svg" 
+											alt="Facebook Logo" width="20" height="20">
+										<span class="fw-semibold">Continue with Facebook</span>
+									</a>
+
+									<!--begin::Sign up-->
+									<div class="text-gray-500 text-center fw-semibold fs-6 mt-4">
+										Not a Member yet?
+										<a href="/register" class="link-primary">Register Now!</a>
+									</div>
+									<!--end::Sign up-->
+
                                     </form>
 								<!--end::Form-->
 							</div>
@@ -140,6 +162,28 @@
 		<script src="assets/js/custom/authentication/sign-in/general.js"></script>
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
+
+		<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : 'YOUR_APP_ID',  // 👈 replace with your Facebook App ID
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v19.0' // use latest Graph API version
+    });
+
+    FB.AppEvents.logPageView();   
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
 	</body>
 	<!--end::Body-->
 </html>
