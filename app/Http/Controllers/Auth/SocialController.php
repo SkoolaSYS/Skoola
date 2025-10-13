@@ -19,8 +19,15 @@ class SocialController extends Controller
             ->redirect();
     }
 
+    if ($provider === 'google') {
+        return Socialite::driver('google')
+            ->with(['prompt' => 'select_account']) // 👈 forces Google to ask each time
+            ->redirect();
+    }
+
     return Socialite::driver($provider)->redirect();
 }
+
 
 
     // Handle callback
