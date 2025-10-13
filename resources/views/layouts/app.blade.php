@@ -128,7 +128,7 @@
                                 </a>
                                 @endrole
                                 <!--begin:Menu item-->
-                                @role ('admin|country|state|ppd|school')
+                                @role('teacher')
                                 <a href="{{route('dashboard')}}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <span class="menu-link">
@@ -136,7 +136,36 @@
                                     </span>
                                     <!--end:Menu link-->
                                 </a>
+                                <!--end:Menu item-->
+                                <!--begin:Menu item-->
+                                <a href="{{ route('class_attendance.index') }}" 
+                                class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                    <!--begin:Menu link-->
+                                    <span class="menu-link">
+                                        <span class="menu-title">Class Attendance</span>
+                                    </span>
+                                    <!--end:Menu link-->
+                                </a>
                                 @endrole
+                                <!--begin:Menu item-->
+                                @role('admin|country|state|ppd|school')
+                                    {{-- Common menu for all roles --}}
+                                    <a href="{{ route('dashboard') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                        <span class="menu-link">
+                                            <span class="menu-title">Dashboards</span>
+                                        </span>
+                                    </a>
+                                @endrole
+
+                                {{-- Additional menu only for school role --}}
+                                @role('school')
+                                    <a href="{{ route('school.teachers.index') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                        <span class="menu-link">
+                                            <span class="menu-title">Teacher</span>
+                                        </span>
+                                    </a>
+                                @endrole
+
                                 @role('admin')
                                 <a href="{{route('admin.show')}}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                     <!--begin:Menu link-->
@@ -281,6 +310,8 @@
 
             <!--end::Custom Javascript-->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
             @stack('scripts')
             @stack('remarks')

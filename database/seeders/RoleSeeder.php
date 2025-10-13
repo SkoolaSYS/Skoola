@@ -22,6 +22,8 @@ class RoleSeeder extends Seeder
             'view-school-page',
             'view-student-attendance-page',
             'view-parent-page',
+            'view-teacher-page',
+            'view-school-admin-page',
         ];
 
         // Create permissions if not exist
@@ -59,6 +61,15 @@ class RoleSeeder extends Seeder
             ],
             'school' => [
                 'view-school-page',
+                'view-student-attendance-page',
+            ],
+            'school_admin' => [
+                'view-school-admin-page',
+                'view-school-page',
+                'view-student-attendance-page',
+            ],
+            'teacher' => [
+                'view-teacher-page',
                 'view-student-attendance-page',
             ],
             'parent' => [

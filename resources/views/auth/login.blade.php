@@ -25,6 +25,19 @@
 	<!--end::Head-->
 	<!--begin::Body-->
 	<body id="kt_body" class="app-blank bgi-size-cover bgi-attachment-fixed bgi-position-center">
+		<!-- PositiveSSL TrustLogo -->
+<div style="position:fixed; top:10px; left:10px; z-index:9999;">
+  <script type="text/javascript">
+    var tlJsHost = ((window.location.protocol == "https:") ? 
+      "https://secure.trust-provider.com/" : "http://www.trustlogo.com/");
+    document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+    TrustLogo("https://www.positivessl.com/images/seals/positivessl_trust_seal_lg_222x54.png", "POSDV", "none");
+  </script>
+</div>
+<!-- End PositiveSSL TrustLogo -->
+
 		<!--begin::Theme mode setup on page load-->
 		<script>var defaultThemeMode = "light"; var themeMode; if ( document.documentElement ) { if ( document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if ( localStorage.getItem("data-bs-theme") !== null ) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
 		<!--end::Theme mode setup on page load-->
@@ -64,35 +77,35 @@
                                     <form class="form w-100" data-kt-redirect-url="{{ route('login') }}" action="{{ route('login') }}" method="POST">
                                         @csrf
                                         <!--begin::Heading-->
-<div class="text-center mb-11">
-    @if(session('error'))
-        <div class="alert alert-danger text-center mt-3">
-            {{ session('error') }}
-        </div>
-    @endif
+										<div class="text-center mb-11">
+											@if(session('error'))
+												<div class="alert alert-danger text-center mt-3">
+													{{ session('error') }}
+												</div>
+											@endif
 
-    @if ($errors->any())
-        <div class="alert alert-danger text-center mt-3">
-            {{ $errors->first() }}
-        </div>
-    @endif
+											@if ($errors->any())
+												<div class="alert alert-danger text-center mt-3">
+													{{ $errors->first() }}
+												</div>
+											@endif
 
-    <!--begin::Title-->
-    <h1 class="text-dark fw-bolder mb-3">Log In</h1>
-    <!--end::Title-->
+											<!--begin::Title-->
+											<h1 class="text-dark fw-bolder mb-3">Log In</h1>
+											<!--end::Title-->
 
-    <!--begin::Subtitle-->
-    <div class="text-gray-500 fw-semibold fs-6">
-        Log in here to view dashboard and other features!
-    </div>
-    @if (session('status'))
-        <div class="mb-4 font-medium text-sm text-success">
-            {{ session('status') }}
-        </div>
-    @endif
-    <!--end::Subtitle=-->
-</div>
-<!--end::Heading-->
+											<!--begin::Subtitle-->
+											<div class="text-gray-500 fw-semibold fs-6">
+												Log in here to view dashboard and other features!
+											</div>
+											@if (session('status'))
+												<div class="mb-4 font-medium text-sm text-success">
+													{{ session('status') }}
+												</div>
+											@endif
+											<!--end::Subtitle=-->
+										</div>
+										<!--end::Heading-->
 
 
                                             

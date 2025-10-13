@@ -55,6 +55,7 @@
                 <option value="Tingkatan 3">Tingkatan 3</option>
                 <option value="Tingkatan 4">Tingkatan 4</option>
                 <option value="Tingkatan 5">Tingkatan 5</option>
+                <option value="Tingkatan 5">Tingkatan 6</option>
                 <option value="Darjah 1">Darjah 1</option>
                 <option value="Darjah 2">Darjah 2</option>
                 <option value="Darjah 3">Darjah 3</option>

@@ -2,15 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
 use App\Models\State;
 use App\Models\District;
 use App\Models\School;
 use Faker\Factory as Faker;
-
 
 class UserSeeder extends Seeder
 {
@@ -21,69 +18,110 @@ class UserSeeder extends Seeder
     {
         $faker = Faker::create();
         
-        for ($i = 0; $i < 100; $i++) { //create 100 user parents
-            $parent = User::create([
-                'name' => fake()->name(),
-                'phone_num' => '0123456789',
-                'email' => fake()->email(),
-                'password' => bcrypt('password')
-            ]);
+        // ---------------- Parents ----------------
+        for ($i = 0; $i < 100; $i++) { 
+            $parent = User::firstOrCreate(
+                ['email' => $faker->unique()->safeEmail()],
+                [
+                    'name' => $faker->name(),
+                    'phone_num' => '0123456789',
+                    'password' => bcrypt('password'),
+                ]
+            );
             $parent->assignRole('parent');
         }
 
-        $admin = User::create([
-            'name' => 'Admin',
-            'phone_num' => '0123456789',
-            'email' => 'admin@email.com',
-            'password' => bcrypt('password')
-        ]);
+        // ---------------- Admin ----------------
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@email.com'],
+            [
+                'name' => 'Admin',
+                'phone_num' => '0123456789',
+                'password' => bcrypt('password'),
+            ]
+        );
         $admin->assignRole('admin');
 
-        $country = User::create([
-            'name' => 'Country User',
-            'phone_num' => '0123456789',
-            'email' => 'country@email.com',
-            'password' => bcrypt('password')
-        ]);
+        // ---------------- Country ----------------
+        $country = User::firstOrCreate(
+            ['email' => 'country@email.com'],
+            [
+                'name' => 'Country User',
+                'phone_num' => '0123456789',
+                'password' => bcrypt('password'),
+            ]
+        );
         $country->assignRole('country');
 
-        $states = State::inRandomOrder()->take(5)->pluck('id', 'name'); //Testing states User
+        // ---------------- State ----------------
+        $states = State::inRandomOrder()->take(5)->pluck('id', 'name'); 
         foreach ($states as $stateName => $stateId) {
-            $state = User::create([
-                'name' => "{$stateName} User",
-                'phone_num' => '03000000000',
-                'email' => "state{$stateId}@example.com",
-                'password' => bcrypt('password'),
-            ]);
+            $state = User::firstOrCreate(
+                ['email' => "state{$stateId}@example.com"],
+                [
+                    'name' => "{$stateName} User",
+                    'phone_num' => '03000000000',
+                    'password' => bcrypt('password'),
+                ]
+            );
 
-            $state->assignRole('state'); // Assign role
-            $state->setMeta('user_state_id', $stateId); // Update the user_state_id meta field
+            $state->assignRole('state'); 
+            $state->setMeta('user_state_id', $stateId); 
         }
 
-        $ppd = District::inRandomOrder()->take(10)->pluck('id', 'ppd'); //Testing ppd User
+        // ---------------- PPD ----------------
+        $ppd = District::inRandomOrder()->take(10)->pluck('id', 'ppd'); 
         foreach ($ppd as $ppdName => $ppdId) {
-            $district = User::create([
-                'name' => "{$ppdName} User",
-                'phone_num' => '03000000000',
-                'email' => "PPD{$ppdId}@example.com",
-                'password' => bcrypt('password'),
-            ]);
+            $district = User::firstOrCreate(
+                ['email' => "PPD{$ppdId}@example.com"],
+                [
+                    'name' => "{$ppdName} User",
+                    'phone_num' => '03000000000',
+                    'password' => bcrypt('password'),
+                ]
+            );
 
-            $district->assignRole('ppd'); // Assign role
-            $district->setMeta('user_district_id', $ppdId); // Update the user_district_id meta field
+            $district->assignRole('ppd'); 
+            $district->setMeta('user_district_id', $ppdId); 
         }
 
-        $schools = School::inRandomOrder()->take(10)->pluck('id', 'name'); //Testing schools User
+        // ---------------- School ----------------
+        $schools = School::inRandomOrder()->take(10)->pluck('id', 'name'); 
         foreach ($schools as $schoolName => $schoolId) {
-            $school = User::create([
-                'name' => "{$schoolName} User",
-                'phone_num' => '03000000000',
-                'email' => "school{$schoolId}@example.com",
-                'password' => bcrypt('password'),
-            ]);
+            $school = User::firstOrCreate(
+                ['email' => "school{$schoolId}@example.com"],
+                [
+                    'name' => "{$schoolName} User",
+                    'phone_num' => '03000000000',
+                    'password' => bcrypt('password'),
+                ]
+            );
 
-            $school->assignRole('school'); // Assign role
-            $school->setMeta('user_school_id', $schoolId); // Update the user_district_id meta field
+            $school->assignRole('school'); 
+            $school->setMeta('user_school_id', $schoolId); 
+        }
+
+        // ---------------- Teachers ----------------
+        $teacherSchools = School::inRandomOrder()->take(20)->pluck('id', 'name');
+        $counter = 1;
+
+        foreach ($teacherSchools as $schoolName => $schoolId) {
+            $teacherId = 'TCH' . str_pad($counter, 3, '0', STR_PAD_LEFT);
+
+            $teacher = User::firstOrCreate(
+                ['teacher_id' => $teacherId],
+                [
+                    'name' => "{$faker->firstName} Teacher ({$schoolName})",
+                    'phone_num' => '0311111111',
+                    'email' => "teacher{$teacherId}@example.com",
+                    'password' => bcrypt('password'),
+                ]
+            );
+
+            $teacher->assignRole('teacher'); 
+            $teacher->setMeta('user_school_id', $schoolId); 
+
+            $counter++;
         }
     }
 }

@@ -3,61 +3,140 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\State;
-use Illuminate\Http\Request;
+use App\Models\ClassAttendance;
 use App\Models\Student;
-use App\Models\User;
+use App\Models\Teacher; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $user = auth()->user();
-        // Check if the logged-in user has the correct role
+{
+    $user = auth()->user();
 
-        
+    // -------------------------------
+    // Redirects for admin/country
+    // -------------------------------
+    if ($user->hasRole('admin|country')) {
+        return redirect()->route('dashboard.country');
+    }
 
-        if ($user->hasRole('admin|country')) {
-            return redirect()->route('dashboard.country');
+    // -------------------------------
+    // Redirects for state/ppd/school
+    // -------------------------------
+    if ($user->hasRole('state|ppd|school')) {
+        $userStateId = $user->getMeta('user_state_id');
+        $userDistrictId = $user->getMeta('user_district_id');
+        $userSchoolId = $user->getMeta('user_school_id');
+
+        if ($userStateId) {
+            return redirect()->route('dashboard.state', ['state' => $userStateId]);
+        } elseif ($userDistrictId) {
+            return redirect()->route('dashboard.ppd', ['ppd' => $userDistrictId]);
+        } elseif ($userSchoolId) {
+            return redirect()->route('dashboard.school', ['school' => $userSchoolId]);
+        } else {
+            return abort(403, 'Unauthorized.');
         }
-        if ($user->hasRole('state|ppd|school')) {
-            $userStateId = $user->getMeta('user_state_id');
-            $userDistrictId = $user->getMeta('user_district_id');
-            $userSchoolId = $user->getMeta('user_school_id');
+    }
 
-            if ($userStateId) {
-                return redirect()->route('dashboard.state', ['state' => $userStateId]);
-            } 
-            else if ($userDistrictId) {
-                return redirect()->route('dashboard.ppd', ['ppd' => $userDistrictId]);
-            }
-            else if ($userSchoolId) {
-                return redirect()->route('dashboard.school', ['school' => $userSchoolId]);
-            }
-            else {
-                return abort(403, 'Unauthorized.');
-            }
-        }
-        
-        // Get authenticated user
-    $parent = auth()->user();
+    // -------------------------------
+// Teacher dashboard (Dynamic classes)
+// -------------------------------
+if ($user->hasRole('teacher')) {
+    $teacherId = $user->id; // use logged-in teacher
+    $attendanceData = [];
 
-    // 1. Students where this parent is the main guardian
-    $mainStudents = Student::where('parent_id', $parent->id)->pluck('id')->toArray();
-
-    // 2. Students linked in pivot table parent_student
-    $pivotStudents = DB::table('parent_student')
-        ->where('parent_id', $parent->id)
-        ->pluck('student_id')
+    // Get all unique grade + class_name combinations for this teacher
+    $classes = ClassAttendance::where('teacher_id', $teacherId)
+        ->select('grade', 'class_name')
+        ->distinct()
+        ->get()
+        ->pluck('grade', 'class_name') // creates ['3A' => 'Darjah 3']
         ->toArray();
 
-    // Merge both sets of student IDs
-    $allStudentIds = array_unique(array_merge($mainStudents, $pivotStudents));
+    foreach ($classes as $className => $grade) {
+        $students = Student::where('grade', $grade)
+            ->where('class_name', $className)
+            ->pluck('id');
 
-    // Get student names for display
-    $students = Student::whereIn('id', $allStudentIds)->pluck('name', 'id')->toArray();
+        // --- Daily ---
+        $dailyPresent = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereDate('attendance_time', now()->toDateString())
+            ->where('status', 'Present')
+            ->count();
+        $dailyAbsent = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereDate('attendance_time', now()->toDateString())
+            ->where('status', 'Absent')
+            ->count();
+        $dailyLate = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereDate('attendance_time', now()->toDateString())
+            ->where('status', 'Late')
+            ->count();
+
+        // --- Weekly ---
+        $weeklyPresent = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereBetween('attendance_time', [now()->startOfWeek(), now()->endOfWeek()])
+            ->where('status', 'Present')
+            ->count();
+        $weeklyAbsent = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereBetween('attendance_time', [now()->startOfWeek(), now()->endOfWeek()])
+            ->where('status', 'Absent')
+            ->count();
+        $weeklyLate = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereBetween('attendance_time', [now()->startOfWeek(), now()->endOfWeek()])
+            ->where('status', 'Late')
+            ->count();
+
+        // --- Monthly ---
+        $monthlyPresent = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereMonth('attendance_time', now()->month)
+            ->where('status', 'Present')
+            ->count();
+        $monthlyAbsent = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereMonth('attendance_time', now()->month)
+            ->where('status', 'Absent')
+            ->count();
+        $monthlyLate = ClassAttendance::whereIn('student_id', $students)
+            ->where('teacher_id', $teacherId)
+            ->whereMonth('attendance_time', now()->month)
+            ->where('status', 'Late')
+            ->count();
+
+        $attendanceData[$className] = [
+            'daily'   => [$dailyPresent, $dailyAbsent, $dailyLate],
+            'weekly'  => [$weeklyPresent, $weeklyAbsent, $weeklyLate],
+            'monthly' => [$monthlyPresent, $monthlyAbsent, $monthlyLate],
+        ];
+    }
+
+    return view('teacher.dashboard', compact('attendanceData', 'classes'));
+}
+
+
+
+    // -------------------------------
+    // Parent dashboard section
+    // -------------------------------
+    $parent = $user; // logged in parent
+
+    // Get all student IDs linked to this parent from pivot
+    $allStudentIds = $parent->students()->pluck('students.id')->toArray();
+
+    // Student names
+    $students = Student::whereIn('id', $allStudentIds)
+        ->pluck('name', 'id')
+        ->toArray();
 
     // Attendance list
     $attendanceList = Attendance::whereIn('student_id', $allStudentIds)
@@ -81,9 +160,10 @@ class DashboardController extends Controller
 
     // Format chart data
     $attendanceData = [];
-    foreach ($attendancesAttend as $key => $attendCount) {
-        $absentCount = $attendancesAbsent[$key] ?? 0;
-        $attendanceData[$key] = json_encode([$attendCount, $absentCount]);
+    foreach ($students as $id => $name) {
+        $attend = $attendancesAttend[$id] ?? 0;
+        $absent = $attendancesAbsent[$id] ?? 0;
+        $attendanceData[$id] = json_encode([$attend, $absent]);
     }
 
     return view('parents.dashboard', compact('parent', 'attendanceData', 'students', 'attendanceList'));

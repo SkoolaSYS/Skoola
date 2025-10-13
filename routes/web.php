@@ -17,6 +17,9 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\CustomRegisteredUserController;
 use App\Http\Controllers\StudentFormController;
 use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\ClassAttendanceController;
+use App\Http\Controllers\TeacherController;
+
 
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
@@ -52,6 +55,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/update/{student}', [StudentController::class, 'update'])->name('update');
             Route::get('delete/{student}', [StudentController::class, 'delete'])->name('delete');
         });
+
+        
+
 
         Route::prefix('attendance')->name('attendance.')->group(function () {
             Route::get('', [AttendanceController::class, 'show'])->name('show');
@@ -111,6 +117,40 @@ Route::middleware(['auth', 'role:admin|country|state|ppd|school'])->group(functi
     });
 });
 
+Route::middleware(['auth', 'role:teacher'])->group(function () {
+    Route::get('/teacher/dashboard', [DashboardController::class, 'index'])->name('teacher.dashboard');
+});
+
+Route::prefix('school')->name('school.')->middleware(['role:school'])->group(function () {
+    Route::get('/student/create', [StudentController::class, 'schoolCreate'])->name('student.create');
+    Route::post('/student/store', [StudentController::class, 'schoolStore'])->name('student.store');
+    Route::get('/students/template', [StudentController::class, 'downloadTemplate'])->name('students.template');
+    Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
+    Route::get('/students/{student}/edit', [StudentController::class, 'schoolEdit'])->name('students.edit');
+    Route::put('/students/{student}/update', [StudentController::class, 'schoolUpdate'])->name('students.update');
+
+    Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
+    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
+    Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
+    Route::get('/teachers/{teacher}', [TeacherController::class, 'show'])->name('teachers.show');
+    Route::get('/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('teachers.edit');
+    Route::put('/teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update');
+    Route::put('/teachers/{id}/toggle', [TeacherController::class, 'toggleStatus'])
+    ->name('teachers.toggle');
+
+
+});
+
+
+
+
+Route::get('/class-attendance', [ClassAttendanceController::class, 'index'])
+    ->name('class_attendance.index');
+
+Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
+    ->name('class_attendance.show');
+
+Route::post('/class-attendance', [ClassAttendanceController::class, 'store'])->name('class_attendance.store');
 
 Route::get('auth/{provider}', [SocialController::class, 'redirect']);
 Route::get('auth/{provider}/callback', [SocialController::class, 'callback']);

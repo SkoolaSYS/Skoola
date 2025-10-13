@@ -11,7 +11,7 @@ class Student extends Model
     protected $fillable = [
     'name', 'ic', 'birth_cert_no', 'dob', 'gender', 'grade',
     'race', 'religion', 'nationality', 'orphan', 'address', 'oku',
-    'state_id', 'district_id', 'school_id', 'age'
+    'state_id', 'district_id', 'school_id', 'age', 'class_name', 'status',
 ];
 
     public function state()
@@ -29,10 +29,12 @@ class Student extends Model
         return $this->belongsTo(School::class, 'school_id');
     }
 
-    public function mainParent()
-    {
-        return $this->belongsTo(User::class, 'parent_id');
-    }
+    public function parents()
+{
+    return $this->belongsToMany(User::class, 'parent_student', 'student_id', 'parent_id')
+                ->withTimestamps();
+}
+
 
     public function attendance()
     {

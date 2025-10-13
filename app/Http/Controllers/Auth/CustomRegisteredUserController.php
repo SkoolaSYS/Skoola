@@ -60,7 +60,7 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
     if ($request->has('students')) {
         foreach ($request->input('students') as $studentData) {
             $student = new Student();
-            $student->parent_id = $user->id; // keep main guardian for compatibility
+            
             $student->name = $studentData['name'] ?? null;
             $student->ic = $studentData['ic'] ?? null;
             $student->birth_cert_no = $studentData['birth_cert_no'] ?? null;

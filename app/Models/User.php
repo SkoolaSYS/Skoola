@@ -42,6 +42,12 @@ public function postcode()
     return $this->belongsTo(Postcode::class, 'postcode_id');
 }
 
+public function school()
+{
+    return $this->belongsTo(School::class);
+}
+
+
 
 
 
@@ -61,27 +67,26 @@ public function extraStudents()
 // Get all students of this parent (primary + extra via pivot)
 public function allStudents()
 {
-    // Students where this user is the primary parent
-    $primary = $this->hasMany(Student::class, 'parent_id')->get();
-
-    // Students where this user is an additional parent
-    $extra = $this->belongsToMany(Student::class, 'parent_student', 'parent_id', 'student_id')->get();
-
-    return $primary->merge($extra);
+    // Now everything comes from the pivot
+    return $this->belongsToMany(Student::class, 'parent_student', 'parent_id', 'student_id')
+                ->withTimestamps()
+                ->get();
 }
+
 
 // Get additional guardians (other parents linked to the same students)
 public function additionalGuardians()
 {
-    $studentIds = $this->allStudents()->pluck('id');
+    $studentIds = $this->students()->pluck('students.id');
 
-    return User::whereHas('extraStudents', function($q) use ($studentIds) {
+    return User::whereHas('students', function($q) use ($studentIds) {
         $q->whereIn('student_id', $studentIds);
     })
     ->where('id', '!=', $this->id) // exclude this parent
     ->distinct()
     ->get();
 }
+
 
 
 //public function guardians()
@@ -108,6 +113,9 @@ public function additionalGuardians()
         'relationship',
         'occupation',
         'username',
+        'teacher_id',
+        'school_id',
+        'status',
     ];
 
     /**

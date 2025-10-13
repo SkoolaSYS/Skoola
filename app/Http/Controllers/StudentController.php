@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\StudentsImport;
+use App\Exports\StudentsTemplateExport;
 
 class StudentController extends Controller
 {
@@ -31,82 +34,58 @@ class StudentController extends Controller
 
     public function store(Request $request)
 {
+    // ✅ Validation for multiple students
     $request->validate([
-        'name'          => 'required|string|max:255',
-        'ic'            => 'required|string|max:255',
-        'birth_cert_no' => 'nullable|string|max:255',
-        'dob'           => 'nullable|date',
-        'gender'        => 'nullable|string|in:Male,Female',
-        'grade'         => 'nullable|string|max:255',
-        'race'          => 'nullable|string|max:255',
-        'religion'      => 'nullable|string|max:255',
-        'nationality'   => 'nullable|string|max:255',
-        'orphan'        => 'nullable|string|in:Yes,No',
-        'address'       => 'nullable|string',
-        'oku'           => 'nullable|string|in:Yes,No',
-        'state'         => 'nullable|exists:states,id',
-        'district'      => 'nullable|exists:districts,id',
-        'school'        => 'nullable|exists:schools,id',
-        'guardian_id'   => 'nullable|exists:users,id',
+        'students.*.name'        => 'required|string|max:255',
+        'students.*.ic'          => 'required|string|max:255',
+        'students.*.birth_cert_no' => 'nullable|string|max:255',
+        'students.*.dob'         => 'nullable|date',
+        'students.*.gender'      => 'nullable|string|in:Male,Female',
+        'students.*.grade'       => 'nullable|string|max:255',
+        'students.*.race'        => 'nullable|string|max:255',
+        'students.*.religion'    => 'nullable|string|max:255',
+        'students.*.nationality' => 'nullable|string|max:255',
+        'students.*.orphan'      => 'nullable|string|in:Yes,No',
+        'students.*.address'     => 'nullable|string',
+        'students.*.oku'         => 'nullable|string|in:Yes,No',
+        'students.*.state'       => 'nullable|exists:states,id',
+        'students.*.district'    => 'nullable|exists:districts,id',
+        'students.*.school'      => 'nullable|exists:schools,id',
     ]);
 
-    $student = new Student;
-    $student->parent_id      = auth()->id();
-    $student->name           = $request->name;
-    $student->ic             = $request->ic;
-    $student->birth_cert_no  = $request->birth_cert_no;
-    $student->dob            = $request->dob;
-    $student->gender         = $request->gender;
-    $student->grade          = $request->grade;
-    $student->race           = $request->race;
-    $student->religion       = $request->religion;
-    $student->nationality    = $request->nationality;
-    $student->orphan         = $request->orphan ?? 'No';
-    $student->address        = $request->address;
-    $student->oku            = $request->oku ?? 'No';
-
-    if ($request->filled('state')) {
-        $student->state()->associate(State::find($request->state));
-    }
-    if ($request->filled('district')) {
-        $student->district()->associate(District::find($request->district));
-    }
-    if ($request->filled('school')) {
-        $student->school()->associate(School::find($request->school));
-    }
-
-    if ($request->dob) {
-        $student->age = \Carbon\Carbon::parse($request->dob)->age;
-    } elseif ($birthdate = $this->extractBirthDateFromIC($request->ic)) {
-        $student->age = $this->calculateAge($birthdate);
-    }
-
-    $student->save();
-
-    // === Guardian linking ===
     $mainParentId = auth()->id();
+    $guardians = [$mainParentId]; // attach logged-in parent automatically
 
-    // Step 1: always include logged-in parent
-    $idsToAttach = [$mainParentId];
+    // save each student
+    foreach ($request->students as $studentData) {
+        $student = new \App\Models\Student();
+        $student->name          = $studentData['name'];
+        $student->ic            = $studentData['ic'];
+        $student->birth_cert_no = $studentData['birth_cert_no'] ?? null;
+        $student->dob           = $studentData['dob'] ?? null;
+        $student->age           = !empty($studentData['dob']) ? \Carbon\Carbon::parse($studentData['dob'])->age : null;
+        $student->grade         = $studentData['grade'] ?? null;
+        $student->gender        = $studentData['gender'] ?? null;
+        $student->race          = $studentData['race'] ?? null;
+        $student->religion      = $studentData['religion'] ?? null;
+        $student->nationality   = $studentData['nationality'] ?? null;
+        $student->orphan        = $studentData['orphan'] ?? 'No';
+        $student->address       = $studentData['address'] ?? null;
+        $student->oku           = $studentData['oku'] ?? 'No';
+        $student->state_id      = $studentData['state'] ?? null;
+        $student->district_id   = $studentData['district'] ?? null;
+        $student->school_id     = $studentData['school'] ?? null;
 
-    // Step 2: find other parents already linked to this parent via existing students
-    $otherGuardianIds = \DB::table('parent_student')
-        ->whereIn('student_id', function($query) use ($mainParentId) {
-            $query->select('student_id')
-                  ->from('parent_student')
-                  ->where('parent_id', $mainParentId);
-        })
-        ->where('parent_id', '!=', $mainParentId)
-        ->pluck('parent_id')
-        ->toArray();
+        $student->save();
 
-    $idsToAttach = array_merge($idsToAttach, $otherGuardianIds);
+        // attach parent(s)
+        $student->guardians()->attach($guardians);
+    }
 
-    // Step 3: Attach without duplicates
-    $student->guardians()->syncWithoutDetaching($idsToAttach);
-
-    return redirect('/student')->with('success', 'Student added successfully');
+    return redirect()->route('student.show')
+                     ->with('success', 'Student(s) added successfully');
 }
+
 
 
 
@@ -247,5 +226,77 @@ class StudentController extends Controller
         return redirect('/student')->with('error', 'Student not found');
     }
 }
+
+public function downloadTemplate()
+{
+    // Generate a simple Excel template
+    return Excel::download(new StudentsTemplateExport, 'student_template.xlsx');
+}
+
+public function import(Request $request)
+{
+    $request->validate([
+        'import_file' => 'required|file|mimes:xlsx,xls',
+        'school_id' => 'required|integer|exists:schools,id',
+    ]);
+
+    Excel::import(new StudentsImport($request->school_id), $request->file('import_file'));
+
+    return redirect()->back()->with('success', 'Students imported successfully!');
+}
+
+
+public function schoolCreate(Request $request)
+{
+    $school_id = $request->school_id;
+    $school = School::findOrFail($school_id);
+
+    return view('school.students.create', compact('school'));
+}
+
+public function schoolStore(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'gender' => 'required',
+        'grade' => 'required',
+        'class_name' => 'required',
+        'ic' => 'required',
+    ]);
+
+    $student = new Student();
+    $student->fill($validated);
+    $student->school_id = $request->school_id;
+    $student->save();
+
+    return redirect()->route('dashboard.school', ['school' => $request->school_id])
+                 ->with('success', 'Student added successfully.');
+
+}
+
+public function schoolEdit(Student $student)
+{
+    return view('school.students.edit', compact('student'));
+}
+
+public function schoolUpdate(Request $request, Student $student)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'address' => 'nullable|string|max:255',
+        'ic' => 'required|string|max:255',
+        'class_name' => 'required|string|max:255',
+    ]);
+
+    $student->update($validated);
+
+    return redirect()
+        ->route('dashboard.school', ['school' => $student->school_id])
+        ->with('success', 'Student updated successfully.');
+}
+
+
+
+
 
 }
