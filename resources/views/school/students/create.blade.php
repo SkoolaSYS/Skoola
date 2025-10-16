@@ -69,7 +69,7 @@
                 <label class="form-label">Race</label>
                 <select name="race" class="form-select" required>
                     <option value="">Select Race</option>
-                    <option value="Melayu">Malay</option>
+                    <option value="Malay">Malay</option>
                     <option value="Chinese">Chinese</option>
                     <option value="Indian">Indian</option>
                     <option value="Others">Others</option>
