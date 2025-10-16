@@ -43,7 +43,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Darjah/Tingkatan</label>
-                <select name="race" class="form-select" required>
+                <select name="grade" class="form-select" required>
                     <option value="">Select Darjah/Tingkatan</option>
                     <option value="Darjah 1">Darjah 1</option>
                     <option value="Darjah 2">Darjah 2</option>
