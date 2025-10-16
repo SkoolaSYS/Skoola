@@ -11,6 +11,7 @@ use App\Models\Student;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 
+
 class AdminStudentTable extends DataTableComponent
 {
     protected $model = Student::class;
@@ -62,12 +63,9 @@ class AdminStudentTable extends DataTableComponent
 
                 $totalAttendances = $attendancesAttend + $attendancesAbsent;
 
-                if ($totalAttendances > 0) {
-                    $attendancePercentage = ($attendancesAttend / $totalAttendances) * 100;
-                    return number_format($attendancePercentage, 1) . '%';
-                } else {
-                    return '0.0%';
-                }
+                return $totalAttendances > 0
+                    ? number_format(($attendancesAttend / $totalAttendances) * 100, 1) . '%'
+                    : '0.0%';
             }),
 
         Column::make('Status', 'status')
@@ -76,22 +74,62 @@ class AdminStudentTable extends DataTableComponent
                     ? '<span class="badge bg-success">Active</span>'
                     : '<span class="badge bg-secondary">Inactive</span>'
             )
-            ->html(),
+            ->html(), // ✅ correct usage here (on the Column definition)
 
         Column::make('Actions')
-            ->label(function ($row) {
-                $toggleButton = $row->status === 'Active'
-                    ? "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-danger me-1'>Deactivate</button>"
-                    : "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-success me-1'>Activate</button>";
+    ->label(function ($row) {
+        $user = Auth::user();
 
-                return "
-                    <a href='" . route('dashboard.student-attendance', $row) . "' class='btn btn-sm btn-primary me-1'>View</a>
-                    <a href='" . route('school.students.edit', $row) . "' class='btn btn-sm btn-warning me-1'>Edit</a>
-                    {$toggleButton}
-                ";
-            })
-            ->html(),
+        // Always show "View" button
+        $buttons = "<button wire:click='showStudentModal({$row->id})' class='btn btn-sm btn-primary me-1'>View</button>";
+
+        // Show Details button only to admin/school
+        if ($user->hasRole(['admin', 'school'])) {
+            $buttons .= "<a href='" . route('school.students.details', $row->id) . "' class='btn btn-sm btn-info me-1'>Details</a>";
+        }
+
+        // Show Edit + Toggle for admin/school roles
+        if ($user->hasRole(['admin', 'school'])) {
+            $toggleButton = $row->status === 'Active'
+                ? "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-danger me-1'>Deactivate</button>"
+                : "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-success me-1'>Activate</button>";
+
+            $buttons .= "
+                <a href='" . route('school.students.edit', $row) . "' class='btn btn-sm btn-warning me-1'>Edit</a>
+                {$toggleButton}
+            ";
+        }
+
+        return $buttons;
+    })
+    ->html(),
+
     ];
 }
+
+
+public $selectedStudent;
+public $attendanceData = [];
+
+public function showStudentModal($studentId)
+{
+    $student = Student::find($studentId);
+    $attendCount = Attendance::where('student_id', $studentId)->where('status', 'attend')->count();
+    $absentCount = Attendance::where('student_id', $studentId)->where('status', 'absent')->count();
+
+    $payload = [
+        'attendanceData' => [$attendCount, $absentCount],
+        'studentName'    => $student ? $student->name : null,
+        'detailUrl'      => $student ? route('dashboard.student-attendance', $student->id) : null,
+    ];
+
+    // dispatch payload with details
+    $this->dispatchBrowserEvent('open-student-modal', $payload);
+}
+
+
+
+
+
 
 }

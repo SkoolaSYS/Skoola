@@ -115,7 +115,9 @@ class ClassAttendanceController extends Controller
         );
     }
 
-    return back()->with('success', 'Attendance saved successfully.');
+    return redirect()
+        ->route('teacher.dashboard') // change to your actual dashboard route name
+        ->with('success', 'Attendance saved successfully!');
 }
 
 

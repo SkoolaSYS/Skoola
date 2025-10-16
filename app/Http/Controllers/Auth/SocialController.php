@@ -21,7 +21,7 @@ class SocialController extends Controller
 
     if ($provider === 'google') {
         return Socialite::driver('google')
-            ->with(['prompt' => 'select_account']) // 👈 forces Google to ask each time
+            ->with(['prompt' => 'select_account']) 
             ->redirect();
     }
 
@@ -33,7 +33,7 @@ class SocialController extends Controller
     // Handle callback
     public function callback($provider)
 {
-    // ✅ Handle user cancel or missing code
+    //Handle user cancel or missing code
     if (!request()->has('code')) {
         return redirect()->route('login')->with('error', 'Facebook login was cancelled.');
     }

@@ -59,41 +59,22 @@
 
                             <!-- Button Group (Add Student + Export) -->
                             <div class="d-flex align-items-center gap-2">
+                                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('school'))
+                                    <div class="dropdown">
+                                        <button class="btn btn-light-primary dropdown-toggle" type="button" id="addStudentDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="ki-duotone ki-plus fs-2"></i> Add Student
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="addStudentDropdown">
+                                            <li><a class="dropdown-item" href="{{ route('school.student.create', ['school_id' => $school_id]) }}">Add Student Manually</a></li>
+                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkImportModal">Import from Excel</a></li>
+                                        </ul>
+                                    </div>
+                                @endif
 
-                                <!-- Add Student Dropdown -->
-                                <div class="dropdown">
-                                    <button class="btn btn-light-primary dropdown-toggle" 
-                                            type="button" 
-                                            id="addStudentDropdown" 
-                                            data-bs-toggle="dropdown" 
-                                            aria-expanded="false">
-                                        <i class="ki-duotone ki-plus fs-2"></i> Add Student
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="addStudentDropdown">
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('school.student.create', ['school_id' => $school_id]) }}">
-                                                Add Student Manually
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkImportModal">
-                                                Import from Excel
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <!-- Export Button -->
-                                <a href="{{ route('dashboard.school_export', ['school_id' => $school_id]) }}" 
-                                type="button" 
-                                class="btn btn-light-success">
+                                <a href="{{ route('dashboard.school_export', ['school_id' => $school_id]) }}" class="btn btn-light-success">
                                     <i class="ki-duotone ki-exit-up fs-2"></i> Export to Excel
                                 </a>
-
                             </div>
-
-
-
 
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
@@ -107,10 +88,36 @@
                         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4">
                             @livewire('admin-student-table', ['school_id' => $school_id])
                         </div>
+
+                        <!-- Student Modal -->
+                        <div wire:ignore.self class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content shadow-lg">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="studentModalLabel">Student Attendance</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body text-center">
+                                <div id="modal_chart" class="mx-auto" style="max-width:300px;"></div>
+                            </div>
+
+                            <div class="modal-footer justify-content-between">
+                                <a id="modal_detail_link" href="#" class="btn btn-primary">View Details</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
+
+        
+
 
         <!-- Bulk Import Modal -->
         <div class="modal fade" id="bulkImportModal" tabindex="-1" aria-labelledby="bulkImportModalLabel" aria-hidden="true">
@@ -182,5 +189,53 @@
         });
     });
     </script>
+
+    @push('scripts')
+<script>
+window.addEventListener('open-student-modal', event => {
+    // event.detail contains the payload we dispatched from Livewire
+    const data = event.detail.attendanceData || [];
+    const studentName = event.detail.studentName || 'Student Attendance';
+    const detailUrl = event.detail.detailUrl || '#';
+
+    // set title and detail link
+    document.getElementById('studentModalLabel').innerText = studentName + "'s Attendance";
+    document.getElementById('modal_detail_link').setAttribute('href', detailUrl);
+
+    // show modal
+    const modalEl = document.getElementById('studentModal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+
+    // render chart (destroy previous chart if any)
+    setTimeout(() => {
+        const chartContainer = document.querySelector("#modal_chart");
+        if (!chartContainer) return;
+
+        // clear previous chart HTML (if any)
+        chartContainer.innerHTML = '';
+
+        if (!Array.isArray(data) || data.length === 0) {
+            chartContainer.innerHTML = '<p class="text-muted">No attendance data.</p>';
+            return;
+        }
+
+        // create ApexCharts donut
+        const chart = new ApexCharts(chartContainer, {
+            series: data,
+            chart: { type: 'donut', width: 230, height: 200 },
+            labels: ['Present', 'Absent'],
+            colors: ['#50cd89', '#f1416c'],
+            legend: { show: true, position: 'bottom' },
+        });
+
+        // render chart, and keep reference if you want to destroy later
+        chart.render();
+    }, 150);
+});
+</script>
+@endpush
+
+
 </x-app-layout>
 @endrole

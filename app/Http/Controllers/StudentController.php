@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\State;
 use App\Models\District;
 use App\Models\School;
+use App\Models\Attendance;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -257,22 +258,36 @@ public function schoolCreate(Request $request)
 public function schoolStore(Request $request)
 {
     $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'gender' => 'required',
-        'grade' => 'required',
-        'class_name' => 'required',
-        'ic' => 'required',
+        'name'           => 'required|string|max:255',
+        'ic'             => 'required|string|max:20',
+        'birth_cert_no'  => 'nullable|string|max:50',
+        'dob'            => 'nullable|date',
+        'gender'         => 'required|string|max:10',
+        'race'           => 'nullable|string|max:50',
+        'religion'       => 'nullable|string|max:50',
+        'nationality'    => 'nullable|string|max:50',
+        'orphan'         => 'nullable|string|max:10',
+        'oku'            => 'nullable|string|max:10',
+        'address'        => 'nullable|string|max:255',
+        'grade'          => 'required|string|max:50',
+        'class_name'     => 'required|string|max:50',
+        'school_id'      => 'required|integer',
     ]);
 
-    $student = new Student();
+    // Auto-calculate age if dob is provided
+    if (!empty($validated['dob'])) {
+        $validated['age'] = \Carbon\Carbon::parse($validated['dob'])->age;
+    }
+
+    $student = new \App\Models\Student();
     $student->fill($validated);
-    $student->school_id = $request->school_id;
     $student->save();
 
-    return redirect()->route('dashboard.school', ['school' => $request->school_id])
-                 ->with('success', 'Student added successfully.');
-
+    return redirect()
+        ->route('dashboard.school', ['school' => $request->school_id])
+        ->with('success', 'Student added successfully.');
 }
+
 
 public function schoolEdit(Student $student)
 {
@@ -282,11 +297,25 @@ public function schoolEdit(Student $student)
 public function schoolUpdate(Request $request, Student $student)
 {
     $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'address' => 'nullable|string|max:255',
-        'ic' => 'required|string|max:255',
-        'class_name' => 'required|string|max:255',
+        'name'           => 'required|string|max:255',
+        'ic'             => 'required|string|max:20',
+        'birth_cert_no'  => 'nullable|string|max:50',
+        'dob'            => 'nullable|date',
+        'gender'         => 'required|string|max:10',
+        'race'           => 'nullable|string|max:50',
+        'religion'       => 'nullable|string|max:50',
+        'nationality'    => 'nullable|string|max:50',
+        'orphan'         => 'nullable|string|max:10',
+        'oku'            => 'nullable|string|max:10',
+        'address'        => 'nullable|string|max:255',
+        'grade'          => 'required|string|max:50',
+        'class_name'     => 'required|string|max:50',
     ]);
+
+    // Auto-calculate age if dob is provided
+    if (!empty($validated['dob'])) {
+        $validated['age'] = \Carbon\Carbon::parse($validated['dob'])->age;
+    }
 
     $student->update($validated);
 
@@ -294,6 +323,26 @@ public function schoolUpdate(Request $request, Student $student)
         ->route('dashboard.school', ['school' => $student->school_id])
         ->with('success', 'Student updated successfully.');
 }
+
+
+public function details($id)
+{
+    $student = Student::with('school')->findOrFail($id); // load relationships if needed
+    $attendances = Attendance::where('student_id', $id)->get();
+
+    return view('school.students.details', compact('student', 'attendances'));
+}
+
+public function destroy(Student $student)
+{
+    $student->delete();
+
+    return redirect()
+        ->route('dashboard.school', ['school' => $student->school_id])
+        ->with('success', 'Student deleted successfully (soft deleted).');
+}
+
+
 
 
 

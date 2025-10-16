@@ -6,20 +6,20 @@
 
     <x-card title="Class Attendance">
         <div class="mb-3 text-end text-muted">
-    {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}
-</div>
-
-<!-- Success Message -->
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}
         </div>
-    @endif
 
-    @if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
+        <!-- Success Message -->
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
 
         <!-- Form to select Grade, Class, Subject -->
         <div class="mb-5">
@@ -29,18 +29,10 @@
                         <label for="grade" class="form-label">Tingkatan/Darjah</label>
                         <select name="grade" id="grade" class="form-select" onchange="filterClasses()" required>
                             <option value="">-- Select Grade --</option>
-                            <option value="Tingkatan 1" {{ $selectedGrade == 'Tingkatan 1' ? 'selected' : '' }}>Tingkatan 1</option>
-                            <option value="Tingkatan 2" {{ $selectedGrade == 'Tingkatan 2' ? 'selected' : '' }}>Tingkatan 2</option>
-                            <option value="Tingkatan 3" {{ $selectedGrade == 'Tingkatan 3' ? 'selected' : '' }}>Tingkatan 3</option>
-                            <option value="Tingkatan 4" {{ $selectedGrade == 'Tingkatan 4' ? 'selected' : '' }}>Tingkatan 4</option>
-                            <option value="Tingkatan 5" {{ $selectedGrade == 'Tingkatan 5' ? 'selected' : '' }}>Tingkatan 5</option>
-                            <option value="Tingkatan 6" {{ $selectedGrade == 'Tingkatan 6' ? 'selected' : '' }}>Tingkatan 6</option>
-                            <option value="Darjah 1" {{ $selectedGrade == 'Darjah 1' ? 'selected' : '' }}>Darjah 1</option>
-                            <option value="Darjah 2" {{ $selectedGrade == 'Darjah 2' ? 'selected' : '' }}>Darjah 2</option>
-                            <option value="Darjah 3" {{ $selectedGrade == 'Darjah 3' ? 'selected' : '' }}>Darjah 3</option>
-                            <option value="Darjah 4" {{ $selectedGrade == 'Darjah 4' ? 'selected' : '' }}>Darjah 4</option>
-                            <option value="Darjah 5" {{ $selectedGrade == 'Darjah 5' ? 'selected' : '' }}>Darjah 5</option>
-                            <option value="Darjah 6" {{ $selectedGrade == 'Darjah 6' ? 'selected' : '' }}>Darjah 6</option>
+                            @foreach(['Tingkatan 1','Tingkatan 2','Tingkatan 3','Tingkatan 4','Tingkatan 5','Tingkatan 6',
+                                      'Darjah 1','Darjah 2','Darjah 3','Darjah 4','Darjah 5','Darjah 6'] as $grade)
+                                <option value="{{ $grade }}" {{ $selectedGrade == $grade ? 'selected' : '' }}>{{ $grade }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -81,8 +73,8 @@
                 <input type="hidden" name="subject" value="{{ $selectedSubject }}">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover mt-3">
-                        <thead>
+                    <table class="table table-bordered table-hover mt-3 align-middle">
+                        <thead class="table-light">
                             <tr>
                                 <th>No.</th>
                                 <th>Name</th>
@@ -95,17 +87,16 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $student->name }}</td>
                                     <td>
-                                        <select name="attendance[{{ $student->id }}]" class="attendance-select">
-                                        @foreach(['Present','Absent','Late','MC','Unwell','School Activity','Others'] as $status)
-                                            <option value="{{ $status }}" 
-                                                {{ ($attendanceRecords[$student->id] ?? 'Present') == $status ? 'selected' : '' }}>
-                                                {{ $status }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-
-
+                                        <select name="attendance[{{ $student->id }}]" 
+                                                class="form-select attendance-select"
+                                                onchange="updateSelectColor(this)">
+                                            @foreach(['Present','Absent','Late','MC','Unwell','School Activity','Others'] as $status)
+                                                <option value="{{ $status }}" 
+                                                    {{ ($attendanceRecords[$student->id] ?? 'Present') == $status ? 'selected' : '' }}>
+                                                    {{ $status }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </td>
                                 </tr>
                             @endforeach
@@ -120,6 +111,26 @@
 
     </x-card>
 
+    <style>
+        /* Color styling for dropdowns */
+        .attendance-select {
+            transition: background-color 0.3s ease;
+            color: #000;
+        }
+        .attendance-present {
+            background-color: #d4edda !important; /* light green */
+            border-color: #c3e6cb;
+        }
+        .attendance-absent {
+            background-color: #f8d7da !important; /* light red */
+            border-color: #f5c6cb;
+        }
+        .attendance-others {
+            background-color: #fff3cd !important; /* light yellow */
+            border-color: #ffeeba;
+        }
+    </style>
+
     <script>
         function filterClasses() {
             let grade = document.getElementById("grade").value;
@@ -128,7 +139,7 @@
             for (let i = 0; i < classSelect.options.length; i++) {
                 let option = classSelect.options[i];
 
-                if(option.value === "") { option.style.display = ""; continue; }
+                if (option.value === "") { option.style.display = ""; continue; }
 
                 if ((grade.includes("Tingkatan") && option.value.startsWith(grade.replace("Tingkatan ",""))) ||
                     (grade.includes("Darjah") && option.value.startsWith(grade.replace("Darjah ",""))) ||
@@ -141,11 +152,27 @@
             classSelect.value = "{{ $selectedClass ?? '' }}";
         }
 
-        // Run filterClasses on page load to maintain selected class
+        // Color logic
+        function updateSelectColor(select) {
+            select.classList.remove('attendance-present', 'attendance-absent', 'attendance-others');
+            let value = select.value.toLowerCase();
+            if (value === 'present') {
+                select.classList.add('attendance-present');
+            } else if (value === 'absent') {
+                select.classList.add('attendance-absent');
+            } else if (value === 'others') {
+                select.classList.add('attendance-others');
+            } else {
+                // for MC, Unwell, etc., default to yellow as "others"
+                select.classList.add('attendance-others');
+            }
+        }
+
+        // Apply color on page load
         document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.attendance-select').forEach(updateSelectColor);
             filterClasses();
         });
     </script>
-
 </x-app-layout>
 @endrole

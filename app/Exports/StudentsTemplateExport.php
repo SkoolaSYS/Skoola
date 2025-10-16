@@ -10,7 +10,8 @@ class StudentsTemplateExport implements FromArray
     {
         // This defines the first row (headers) of the Excel template
         return [
-            ['No.', 'Nama Penuh', 'Alamat', 'Kelas', 'No. Kad Pengenalan'],
+            ['No.', 'Nama Penuh', 'Alamat', 'No. Kad Pengenalan', 'No. Sijil Lahir', 'Tarikh Lahir', 'Darjah/Tingkatan', 'Kelas',
+        'Jantina', 'Kaum', 'Agama', 'Kewarganegaraan', 'Yatim', 'OKU'],
         ];
     }
 }

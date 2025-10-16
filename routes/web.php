@@ -128,6 +128,11 @@ Route::prefix('school')->name('school.')->middleware(['role:school'])->group(fun
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
     Route::get('/students/{student}/edit', [StudentController::class, 'schoolEdit'])->name('students.edit');
     Route::put('/students/{student}/update', [StudentController::class, 'schoolUpdate'])->name('students.update');
+    Route::get('/students/{student}/details', [StudentController::class, 'details'])
+        ->name('students.details');
+    Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+
+
 
     Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
     Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
@@ -137,6 +142,7 @@ Route::prefix('school')->name('school.')->middleware(['role:school'])->group(fun
     Route::put('/teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update');
     Route::put('/teachers/{id}/toggle', [TeacherController::class, 'toggleStatus'])
     ->name('teachers.toggle');
+    
 
 
 });
