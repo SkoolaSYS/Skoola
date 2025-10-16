@@ -42,8 +42,22 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Grade</label>
-                <input type="text" class="form-control" name="grade" required>
+                <label class="form-label">Darjah/Tingkatan</label>
+                <select name="race" class="form-select" required>
+                    <option value="">Select Darjah/Tingkatan</option>
+                    <option value="Darjah 1">Darjah 1</option>
+                    <option value="Darjah 2">Darjah 2</option>
+                    <option value="Darjah 3">Darjah 3</option>
+                    <option value="Darjah 4">Darjah 4</option>
+                    <option value="Darjah 5">Darjah 5</option>
+                    <option value="Darjah 6">Darjah 6</option>
+                    <option value="Tingkatan 1">Tingkatan 1</option>
+                    <option value="Tingkatan 2">Tingkatan 2</option>
+                    <option value="Tingkatan 3">Tingkatan 3</option>
+                    <option value="Tingkatan 4">Tingkatan 4</option>
+                    <option value="Tingkatan 5">Tingkatan 5</option>
+                    <option value="Tingkatan 6">Tingkatan 6</option>
+                </select>
             </div>
 
             <div class="mb-3">
@@ -55,7 +69,7 @@
                 <label class="form-label">Race</label>
                 <select name="race" class="form-select" required>
                     <option value="">Select Race</option>
-                    <option value="Melayu">Melayu</option>
+                    <option value="Melayu">Malay</option>
                     <option value="Chinese">Chinese</option>
                     <option value="Indian">Indian</option>
                     <option value="Others">Others</option>
