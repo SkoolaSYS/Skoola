@@ -339,7 +339,7 @@ public function destroy(Student $student)
 
     return redirect()
         ->route('dashboard.school', ['school' => $student->school_id])
-        ->with('success', 'Student deleted successfully (soft deleted).');
+        ->with('success', 'Student deleted successfully');
 }
 
 
