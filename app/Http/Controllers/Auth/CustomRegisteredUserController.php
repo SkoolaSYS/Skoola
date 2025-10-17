@@ -67,6 +67,7 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
             $student->dob = $studentData['dob'] ?? null;
             $student->age = !empty($studentData['dob']) ? Carbon::parse($studentData['dob'])->age : null;
             $student->grade = $studentData['grade'] ?? null;
+            $student->class_name = $studentData['class_name'] ?? null;
             $student->gender = $studentData['gender'] ?? null;
             $student->race = $studentData['race'] ?? null;
             $student->religion = $studentData['religion'] ?? null;

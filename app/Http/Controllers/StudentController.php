@@ -43,6 +43,7 @@ class StudentController extends Controller
         'students.*.dob'         => 'nullable|date',
         'students.*.gender'      => 'nullable|string|in:Male,Female',
         'students.*.grade'       => 'nullable|string|max:255',
+        'students.*.class_name'  => 'nullable|string|max:255',
         'students.*.race'        => 'nullable|string|max:255',
         'students.*.religion'    => 'nullable|string|max:255',
         'students.*.nationality' => 'nullable|string|max:255',
@@ -66,6 +67,7 @@ class StudentController extends Controller
         $student->dob           = $studentData['dob'] ?? null;
         $student->age           = !empty($studentData['dob']) ? \Carbon\Carbon::parse($studentData['dob'])->age : null;
         $student->grade         = $studentData['grade'] ?? null;
+        $student->class_name    = $studentData['class_name'] ?? null;
         $student->gender        = $studentData['gender'] ?? null;
         $student->race          = $studentData['race'] ?? null;
         $student->religion      = $studentData['religion'] ?? null;
@@ -152,8 +154,6 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student)
 {
-    // Step 1: Debug incoming data
-    //dd($request->all()); // <--- this will stop here and show all submitted form values
 
     $request->validate([
         'name'          => 'required|string|max:255',
@@ -162,6 +162,7 @@ class StudentController extends Controller
         'dob'           => 'nullable|date',
         'gender'        => 'nullable|string|in:Male,Female',
         'grade'         => 'nullable|string|max:255',
+        'class_name'    => 'nullable|string|max:255',
         'race'          => 'nullable|string|max:255',
         'religion'      => 'nullable|string|max:255',
         'nationality'   => 'nullable|string|max:255',
@@ -183,6 +184,7 @@ class StudentController extends Controller
         'dob'         => $request->dob,
         'gender'      => $request->gender,
         'grade'       => $request->grade,
+        'class_name'  => $request->class_name,
         'race'        => $request->race,
         'religion'    => $request->religion,
         'nationality' => $request->nationality,

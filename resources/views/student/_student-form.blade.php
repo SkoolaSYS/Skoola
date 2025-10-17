@@ -66,6 +66,14 @@
         </div>
     </div>
 
+    <!-- Class -->
+    <div class="row mb-6">
+        <label class="col-lg-4 col-form-label fw-semibold fs-6">Class</label>
+        <div class="col-lg-8 fv-row">
+            <input type="text" name="{{ $prefix ? $prefix . '[class_name]' : 'class_name' }}" class="form-control form-control-lg form-control-solid" placeholder="Class" />
+        </div>
+    </div>
+
     <!-- Gender -->
     <div class="row mb-6">
         <label class="col-lg-4 col-form-label fw-semibold fs-6">Gender</label>
