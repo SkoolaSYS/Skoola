@@ -15,10 +15,8 @@ class ReceiveController extends Controller
 
         // ✅ Validate expected fields (customize to your needs)
         $validated = $request->validate([
-            'school_id' => 'required|string',
-            'school_name' => 'required|string',
-            'data_type' => 'required|string', // e.g. "attendance", "student", etc.
-            'payload' => 'required|array',   // The actual data sent
+            'nama' => 'required|string',
+
         ]);
 
         // Example: you can store it in your database

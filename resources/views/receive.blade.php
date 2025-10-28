@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Data Receiver</title>
+    <title>Receive</title>
 </head>
 <body>
-    <h1>Hello</h1>
-
-    
+    @if(request()->has('nama'))
+        <h1>Hello {{ request('nama') }}</h1>
+    @else
+        <h1>Hello</h1>
+        
+        
+    @endif
 </body>
 </html>
