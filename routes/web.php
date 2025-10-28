@@ -179,6 +179,7 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
 
 
 
+
 Route::get('auth/{provider}', [SocialController::class, 'redirect']);
 Route::get('auth/{provider}/callback', [SocialController::class, 'callback']);
 
