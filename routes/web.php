@@ -175,6 +175,12 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
     return view('receive');
 });
 
+Route::post('/receive_post', function (Request $request) {
+    return view('receive_post', [
+        'nama' => $request->input('nama')
+    ]);
+});
+
 
 
 
