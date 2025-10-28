@@ -86,16 +86,17 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
     }
 
     // Redirect parent
-    if ($user->hasRole('parent')) {
-        return new class implements RegisterResponse {
-            public function toResponse($request)
-            {
-                return redirect('/student');
-            }
-        };
-    }
+        if ($user->hasRole('parent')) {
+            return new class implements RegisterResponse {
+                public function toResponse($request)
+                {
+                    return redirect()->away('http://pwa.komeps.co.uk/#/pre-register-maya');
+                }
+            };
+        }
 
-    return app(RegisterResponse::class);
+        return app(RegisterResponse::class);
+
 }
 
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ReceiveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,4 @@ use Illuminate\Support\Facades\Route;
 Route::post('register' , RegisterController::class);
 Route::get('student/{student_id}' , [StudentController::class , 'index']);
 Route::get('user/{user_id}' , [UserController::class , 'index']);
+Route::post('/receive', [ReceiveController::class, 'store']);
