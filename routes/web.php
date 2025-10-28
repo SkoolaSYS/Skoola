@@ -171,6 +171,10 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
     ->name('class_attendance.downloadPdf')
     ->middleware(['auth', 'role:teacher']);
 
+    Route::get('/receive', function () {
+    return view('receive');
+});
+
 
 
 
