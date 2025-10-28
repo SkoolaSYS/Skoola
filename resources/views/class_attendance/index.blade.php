@@ -63,51 +63,86 @@
             </form>
         </div>
 
-        @if(isset($students) && count($students) > 0)
-        <div class="mt-5">
-            <h5>Student List - {{ $selectedClass }} ({{ $selectedSubject }})</h5>
-            <form method="POST" action="{{ route('class_attendance.store') }}">
-                @csrf
-                <input type="hidden" name="grade" value="{{ $selectedGrade }}">
-                <input type="hidden" name="class_name" value="{{ $selectedClass }}">
-                <input type="hidden" name="subject" value="{{ $selectedSubject }}">
+       @if(isset($students) && count($students) > 0)
+<div class="mt-5">
+    <h5>Student List - {{ $selectedClass }} ({{ $selectedGrade }})</h5>
 
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover mt-3 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>No.</th>
-                                <th>Name</th>
-                                <th>Attendance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($students as $student)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $student->name }}</td>
-                                    <td>
-                                        <select name="attendance[{{ $student->id }}]" 
-                                                class="form-select attendance-select"
-                                                onchange="updateSelectColor(this)">
-                                            @foreach(['Present','Absent','Late','MC','Unwell','School Activity','Others'] as $status)
-                                                <option value="{{ $status }}" 
-                                                    {{ ($attendanceRecords[$student->id] ?? 'Present') == $status ? 'selected' : '' }}>
-                                                    {{ $status }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+    <div class="text-end mb-3 d-flex justify-content-end gap-2">
+    <a href="{{ route('class_attendance.add', ['grade' => $selectedGrade, 'class_name' => $selectedClass, 'subject' => $selectedSubject]) }}"
+       class="btn btn-primary">
+        Add Attendance
+    </a>
 
-                <button type="submit" class="btn btn-success mt-3">Save Attendance</button>
-            </form>
-        </div>
-        @endif
+    @php
+        $teacherHasAttendance = \App\Models\ClassAttendance::where('grade', $selectedGrade)
+            ->where('class_name', $selectedClass)
+            ->where('subject', $selectedSubject)
+            ->where('teacher_id', auth()->id())
+            ->whereDate('attendance_time', now()->toDateString())
+            ->exists();
+    @endphp
+
+    @if($teacherHasAttendance)
+        <a href="{{ route('class_attendance.edit', [
+            'grade' => $selectedGrade,
+            'class_name' => $selectedClass,
+            'subject' => $selectedSubject
+        ]) }}" class="btn btn-warning">
+            Edit Attendance
+        </a>
+        
+    @endif
+
+        <a href="{{ route('class_attendance.downloadPdf', [
+        'grade' => $selectedGrade,
+        'class_name' => $selectedClass,
+        'subject' => $selectedSubject
+    ]) }}" 
+    class="btn btn-danger" target="_blank">
+        Download PDF
+    </a>
+
+</div>
+
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover mt-3 align-middle text-center">
+            <thead class="table-light">
+                <tr>
+        <th>No.</th>
+        <th>Name</th>
+        @foreach($subjectOrder as $subject => $num)
+            <th>{{ $num }}</th>
+        @endforeach
+    </tr>
+</thead>
+<tbody>
+    @foreach($students as $student)
+        <tr>
+            <td>{{ $loop->iteration }}</td>
+            <td>{{ $student->name }}</td>
+            @foreach($subjectOrder as $subject => $num)
+                @php
+                    $status = $attendanceRecords[$student->id][$subject] ?? null;
+                    $color = match($status) {
+                        'Present' => 'bg-success',
+                        'Absent' => 'bg-danger',
+                        default => ($status ? 'bg-warning' : '')
+                    };
+                @endphp
+                <td class="{{ $color }}" style="text-align:center;">
+                    {{ $status ? strtoupper(substr($status, 0, 1)) : '-' }}
+                </td>
+            @endforeach
+        </tr>
+    @endforeach
+</tbody>
+        </table>
+    </div>
+</div>
+@endif
+
 
     </x-card>
 

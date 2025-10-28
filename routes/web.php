@@ -157,6 +157,23 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
     ->name('class_attendance.show');
 
 Route::post('/class-attendance', [ClassAttendanceController::class, 'store'])->name('class_attendance.store');
+Route::get('/class_attendance/add', [ClassAttendanceController::class, 'add'])->name('class_attendance.add');
+Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveClassAttendance'])
+    ->name('class_attendance.save');
+
+    Route::get('/class_attendance/edit', [ClassAttendanceController::class, 'edit'])
+    ->name('class_attendance.edit');
+
+    Route::post('/class-attendance/update', [ClassAttendanceController::class, 'updateAttendance'])
+    ->name('class_attendance.update');
+
+    Route::get('/class-attendance/download-pdf', [App\Http\Controllers\ClassAttendanceController::class, 'downloadPdf'])
+    ->name('class_attendance.downloadPdf')
+    ->middleware(['auth', 'role:teacher']);
+
+
+
+
 
 Route::get('auth/{provider}', [SocialController::class, 'redirect']);
 Route::get('auth/{provider}/callback', [SocialController::class, 'callback']);
