@@ -12,7 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-    '/receive',   // allow POST from external system without CSRF
+    'receive', // or 'receive/*' if needed
 ];
+
 
 }
