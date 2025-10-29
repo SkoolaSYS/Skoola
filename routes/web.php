@@ -173,7 +173,14 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
 Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
     ->name('class_attendance.show');
 
-    Route::post('/receive', [ReceiveController::class, 'store'])->name('receive.store');
+    Route::get('/receive', function () {
+    return view('receive', [
+        'card_id' => '123456',
+        'time' => now()->format('Y-m-d H:i:s'),
+        'message' => 'Data received successfully'
+    ]);
+});
+
 
 Route::post('/receive_post', function (Request $request) {
     return view('receive_post', [
