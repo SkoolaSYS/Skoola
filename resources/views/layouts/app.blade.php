@@ -166,6 +166,14 @@
                                     </a>
                                 @endrole
 
+                                @role('school')
+                                    <a href="{{ route('school.reports.index') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                        <span class="menu-link">
+                                            <span class="menu-title">Laporan Sentuhan</span>
+                                        </span>
+                                    </a>
+                                @endrole
+
                                 @role('admin')
                                 <a href="{{route('admin.show')}}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                     <!--begin:Menu link-->

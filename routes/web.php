@@ -22,6 +22,7 @@ use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\ClassAttendanceController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Api\ReceiveController;
+use App\Http\Controllers\School\ReportController;
 
 
 
@@ -145,11 +146,13 @@ Route::prefix('school')->name('school.')->middleware(['role:school'])->group(fun
     Route::put('/teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update');
     Route::put('/teachers/{id}/toggle', [TeacherController::class, 'toggleStatus'])
     ->name('teachers.toggle');
-    
-
 
 });
 
+
+Route::prefix('school')->name('school.')->group(function () {
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+});
 
 
 Route::get('/class-attendance/pdf', [ClassAttendanceController::class, 'downloadPdf'])
