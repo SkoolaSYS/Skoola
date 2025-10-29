@@ -25,4 +25,5 @@ use App\Http\Controllers\Api\ReceiveController;
 Route::post('register' , RegisterController::class);
 Route::get('student/{student_id}' , [StudentController::class , 'index']);
 Route::get('user/{user_id}' , [UserController::class , 'index']);
-Route::get('/receive', [ReceiveController::class, 'store']);
+Route::post('/receive', [ReceiveController::class, 'store'])->name('receive.store');
+

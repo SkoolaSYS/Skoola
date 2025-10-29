@@ -175,12 +175,6 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
 
     Route::post('/receive', [ReceiveController::class, 'store'])->name('receive.store');
 
-
-
-    Route::get('/receive', function () {
-    return view('receive');
-});
-
 Route::post('/receive_post', function (Request $request) {
     return view('receive_post', [
         'nama' => $request->input('nama')
