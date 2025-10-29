@@ -173,7 +173,7 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
 Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
     ->name('class_attendance.show');
 
-    Route::get('/receive', function () {
+    Route::post('/receive', function () {
     return view('receive');
 });
 
