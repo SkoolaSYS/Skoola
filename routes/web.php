@@ -149,12 +149,11 @@ Route::prefix('school')->name('school.')->middleware(['role:school'])->group(fun
 
 
 
+Route::get('/class-attendance/pdf', [ClassAttendanceController::class, 'downloadPdf'])
+    ->name('class_attendance.pdf');
 
 Route::get('/class-attendance', [ClassAttendanceController::class, 'index'])
     ->name('class_attendance.index');
-
-Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
-    ->name('class_attendance.show');
 
 Route::post('/class-attendance', [ClassAttendanceController::class, 'store'])->name('class_attendance.store');
 Route::get('/class_attendance/add', [ClassAttendanceController::class, 'add'])->name('class_attendance.add');
@@ -167,9 +166,13 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
     Route::post('/class-attendance/update', [ClassAttendanceController::class, 'updateAttendance'])
     ->name('class_attendance.update');
 
-    Route::get('/class-attendance/download-pdf', [App\Http\Controllers\ClassAttendanceController::class, 'downloadPdf'])
-    ->name('class_attendance.downloadPdf')
-    ->middleware(['auth', 'role:teacher']);
+    Route::get('/class-attendance/pdf', [ClassAttendanceController::class, 'downloadPdf'])
+    ->name('class_attendance.pdf');
+
+Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
+    ->name('class_attendance.show');
+
+
 
     Route::get('/receive', function () {
     return view('receive');

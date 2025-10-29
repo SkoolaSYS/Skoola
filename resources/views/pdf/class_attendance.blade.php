@@ -13,15 +13,23 @@
 </head>
 <body>
     <h3>Class Attendance Report</h3>
-    <p><strong>Grade:</strong> {{ $grade }} | <strong>Class:</strong> {{ $class_name }} | <strong>Subject:</strong> {{ $subject }}</p>
-    <p><strong>Teacher:</strong> {{ $teacher }} | <strong>Date:</strong> {{ $date }}</p>
+    <p>
+        <strong>Grade:</strong> {{ $grade }} |
+        <strong>Class:</strong> {{ $class_name }} |
+        <strong>Date:</strong> {{ $date }}
+    </p>
+    <p>
+        <strong>Teacher:</strong> {{ $teacher }}
+    </p>
 
     <table>
         <thead>
             <tr>
                 <th>No.</th>
                 <th>Student Name</th>
-                <th>Status</th>
+                @foreach($subjects as $subject)
+                    <th>{{ $subject }}</th>
+                @endforeach
             </tr>
         </thead>
         <tbody>
@@ -29,7 +37,9 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $student->name }}</td>
-                    <td>{{ $records[$student->id] ?? '-' }}</td>
+                    @foreach($subjects as $subject)
+                        <td>{{ $attendanceRecords[$student->id][$subject] ?? '-' }}</td>
+                    @endforeach
                 </tr>
             @endforeach
         </tbody>

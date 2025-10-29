@@ -295,41 +295,47 @@ public function saveClassAttendance(Request $request)
 
 public function downloadPdf(Request $request)
 {
-    $grade = $request->grade;
-    $class_name = $request->class_name;
-    $subject = $request->subject;
+    $grade = trim($request->grade);
+    $class_name = trim($request->class_name);
 
-    // Get students
+    // Get all students for this class & grade
     $students = Student::where('grade', $grade)
         ->where('class_name', $class_name)
+        ->orderBy('name')
         ->get();
 
-    // Get attendance records
-    $attendanceRecords = ClassAttendance::where('grade', $grade)
+    // Get all attendance records for today for this class
+    $today = now()->toDateString();
+    $attendances = ClassAttendance::where('grade', $grade)
         ->where('class_name', $class_name)
-        ->where('subject', $subject)
+        ->whereDate('attendance_time', $today)
         ->where('teacher_id', auth()->id())
-        ->get()
-        ->groupBy('student_id');
+        ->get();
 
-    // Convert records into easier format
-    $records = [];
-    foreach ($students as $student) {
-        $records[$student->id] = $attendanceRecords[$student->id][0]->status ?? '-';
+    // Determine all subjects for today
+    $subjects = $attendances->pluck('subject')->unique()->values()->toArray();
+
+    // Build attendance lookup: $attendanceRecords[student_id][subject] = status
+    $attendanceRecords = [];
+    foreach ($attendances as $record) {
+        $attendanceRecords[$record->student_id][$record->subject] = $record->status;
     }
 
+    // Load PDF view
     $pdf = Pdf::loadView('pdf.class_attendance', [
         'grade' => $grade,
         'class_name' => $class_name,
-        'subject' => $subject,
         'students' => $students,
-        'records' => $records,
+        'attendanceRecords' => $attendanceRecords,
+        'subjects' => $subjects,
         'teacher' => auth()->user()->name,
         'date' => now()->format('d/m/Y'),
-    ])->setPaper('A4', 'portrait');
+    ])->setPaper('A4', 'landscape'); // use landscape if many subjects
 
-    return $pdf->stream("Class_Attendance_{$class_name}_{$subject}.pdf");
+    return $pdf->stream("Class_Attendance_{$class_name}.pdf");
 }
+
+
 
 
 

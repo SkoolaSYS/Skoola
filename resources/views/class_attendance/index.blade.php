@@ -93,14 +93,16 @@
         
     @endif
 
-        <a href="{{ route('class_attendance.downloadPdf', [
-        'grade' => $selectedGrade,
-        'class_name' => $selectedClass,
-        'subject' => $selectedSubject
-    ]) }}" 
-    class="btn btn-danger" target="_blank">
-        Download PDF
-    </a>
+        <a href="{{ route('class_attendance.pdf', [
+    'grade' => $selectedGrade,
+    'class_name' => $selectedClass,
+    'subject' => $selectedSubject
+]) }}" 
+   class="btn btn-danger" target="_blank">
+   Download PDF
+</a>
+
+
 
 </div>
 
