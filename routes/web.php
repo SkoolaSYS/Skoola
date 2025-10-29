@@ -174,8 +174,12 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
     ->name('class_attendance.show');
 
     Route::post('/receive', function () {
-    return view('receive');
+    return view('receive', [
+        'card_id' => null,
+        'time' => null,
+    ]);
 });
+
 
 
 Route::post('/receive_post', function (Request $request) {
