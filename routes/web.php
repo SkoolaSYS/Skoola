@@ -174,11 +174,7 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
     ->name('class_attendance.show');
 
     Route::get('/receive', function () {
-    return view('receive', [
-        'card_id' => '123456',
-        'time' => now()->format('Y-m-d H:i:s'),
-        'message' => 'Data received successfully'
-    ]);
+    return view('receive');
 });
 
 
