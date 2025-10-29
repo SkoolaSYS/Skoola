@@ -175,9 +175,14 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
     ->name('class_attendance.show');
 
     Route::post('/receive', function (Request $request) {
+    // Get the raw JSON payload as an array
+    $data = $request->json()->all();  
+
+    // $data is an array of objects
+    // For example: [{"card_id":"0000135566","time":"2025-10-29 07:30:12.001"}, {...}]
+
     return view('receive', [
-        'card_id' => $request->input('card_id'),
-        'time' => $request->input('time'),
+        'payload' => $data, // pass the array to the view
     ]);
 });
 
