@@ -183,6 +183,7 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
 
 
 
+
 Route::post('/receive_post', function (Request $request) {
     return view('receive_post', [
         'nama' => $request->input('nama')
