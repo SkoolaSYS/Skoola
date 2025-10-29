@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\JsonReaderController;
 use App\Http\Controllers\StudentController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -174,15 +175,22 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
 Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
     ->name('class_attendance.show');
 
-    Route::post('/receive', function (Request $request) {
-    // Get the raw JSON payload as an array
-    $data = $request->json()->all();  
+    Route::post('/receive', function (\Illuminate\Http\Request $request) {
+    // Get JSON payload
+    $payload = $request->all(); // assuming the ASP sends JSON array
 
-    // $data is an array of objects
-    // For example: [{"card_id":"0000135566","time":"2025-10-29 07:30:12.001"}, {...}]
+    if (isset($payload) && is_array($payload)) {
+        foreach ($payload as $item) {
+            DB::table('records')->insert([
+                'card_id' => $item['card_id'] ?? null,
+                'time' => $item['time'] ?? now(),
+            ]);
+        }
+    }
 
+    // Pass data to Blade view
     return view('receive', [
-        'payload' => $data, // pass the array to the view
+        'payload' => $payload,
     ]);
 });
 
