@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\JsonReaderController;
 use App\Http\Controllers\StudentController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
