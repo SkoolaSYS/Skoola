@@ -8,6 +8,7 @@
     <h1>Receive Confirmation</h1>
 
     <p><strong>Card ID:</strong> {{ $card_id ?? '-' }}</p>
-    <p><strong>Time:</strong> {{ $time ?? '-' }}</p>
+<p><strong>Time:</strong> {{ $time ?? '-' }}</p>
+
 </body>
 </html>
