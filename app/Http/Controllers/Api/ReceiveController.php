@@ -15,20 +15,15 @@ class ReceiveController extends Controller
 
         // ✅ Validate expected fields (customize to your needs)
         $validated = $request->validate([
-            'nama' => 'required|string',
-
+            'card_id' => 'required|string',
+            'time' => 'required|date_format:Y-m-d H:i:s', // adjust format if needed
         ]);
 
-        // Example: you can store it in your database
-        // e.g. save to a `school_data` table
-        // SchoolData::create($validated);
-
-        // Or process the data immediately here...
-
-        return response()->json([
-            'status' => 'success',
+        // Pass data to a Blade view
+        return view('receive', [
+            'card_id' => $validated['card_id'],
+            'time' => $validated['time'],
             'message' => 'Data received successfully',
-            'received_at' => now()->toDateTimeString(),
         ]);
     }
 }

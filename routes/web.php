@@ -19,6 +19,7 @@ use App\Http\Controllers\StudentFormController;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\ClassAttendanceController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\Api\ReceiveController;
 
 
 
@@ -171,6 +172,8 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
 
 Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
     ->name('class_attendance.show');
+
+    Route::post('/receive', [ReceiveController::class, 'store'])->name('receive.store');
 
 
 

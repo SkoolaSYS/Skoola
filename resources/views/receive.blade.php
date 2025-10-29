@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Receive</title>
+    <title>Data Received</title>
 </head>
 <body>
-    @if(request()->has('nama'))
-        <h1>Hello {{ request('nama') }}</h1>
-    @else
-        <h1>Hello</h1>
-        
-        
-    @endif
+    <h1>Receive Confirmation</h1>
+
+    <p><strong>Card ID:</strong> {{ $card_id }}</p>
+    <p><strong>Time:</strong> {{ $time }}</p>
+    <p style="color: green;"><strong>{{ $message }}</strong></p>
 </body>
 </html>
