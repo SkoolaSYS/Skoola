@@ -7,6 +7,7 @@
 		@if ($parent->ic == NULL && $parent->address == NULL)
 		<x-profile-notice />
 		@endif
+
 		<div class="app-toolbar-wrapper d-flex align-items-center flex-stack flex-wrap gap-2 py-4 w-100">
 			<!--begin::Page title-->
 			<div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
@@ -32,7 +33,8 @@
 								<!--begin::Container-->
 								<div class="d-flex justify-content-between flex-column w-225px w-md-600px mx-auto mx-md-0 pt-3 pb-10">
 									<!--begin::Title-->
-									<div class="fs-4 fw-bold text-gray-900 text-center mb-5">{{$name}}'s Attendance<br /></div>
+									<div class="fs-4 fw-bold text-gray-900 text-center mb-5">{{ __('messages.parent_attendance', ['name' => $name]) }}
+<br /></div>
 									<!--end::Title-->
 									<div class="mx-auto mb-4" id="pie_chart_{{$id}}"></div>
 									<div class="mx-auto">
@@ -44,7 +46,7 @@
 													<div class="bullet bullet-dot w-8px h-7px bg-success me-2" style="color:#50cd89;"></div>
 													<!--end::Bullet-->
 													<!--begin::Label-->
-													<div class="fs-8 fw-semibold text-muted">Present</div>
+													<div class="fs-8 fw-semibold text-muted">{{ __('messages.present') }}</div>
 													<!--end::Label-->
 												</div>
 												<!--end::Label-->
@@ -54,7 +56,7 @@
 													<div class="bullet bullet-dot w-8px h-7px bg-danger me-2" style="color:#f1416c;"></div>
 													<!--end::Bullet-->
 													<!--begin::Label-->
-													<div class="fs-8 fw-semibold text-muted">Absent</div>
+													<div class="fs-8 fw-semibold text-muted">{{ __('messages.absent') }}</div>
 													<!--end::Label-->
 												</div>
 											</div>
@@ -73,8 +75,8 @@
 								@endif
 
 								@empty
-								<span class="text-center text-muted">No students found.
-									<a href="{{ route('student.show') }}"> Add Students Here</a>
+								<span class="text-center text-muted">{{ __('messages.nostudents') }}
+									<a href="{{ route('student.show') }}"> {{ __('messages.addstudents') }}</a>
 								</span>
 								@endforelse
 							</div>
@@ -103,11 +105,11 @@
 						<div class="card-header cursor-pointer">
 							<!--begin::Card title-->
 							<div class="card-title m-0">
-								<h3 class="fw-bold m-0">List of Student's Attendance</h3>
+								<h3 class="fw-bold m-0">{{ __('messages.listattendance') }}</h3>
 							</div>
 							<!--end::Card title-->
 							<!--begin::Action-->
-							<a href="{{route('attendance.show')}}" class="btn btn-sm btn-primary align-self-center">View More</a>
+							<a href="{{route('attendance.show')}}" class="btn btn-sm btn-primary align-self-center">{{ __('messages.viewmore') }}</a>
 							<!--end::Action-->
 						</div>
 						<!--end::Card header-->
@@ -121,13 +123,13 @@
 										<!--begin::Thead-->
 										<thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
 											<tr>
-												<th class="min-w-125px ps-9">Date</th>
-												<th class="min-w-125px ps-9">Check-In</th>
-												<th class="min-w-125px ps-9">Check-Out</th>
-												<th class="min-w-150px px-0">Name</th>
-												<th class="min-w-150px px-0">School</th>
-												<th class="min-w-150px ps-5">Status</th>
-												<th class="min-w-150px ps-5">Remarks</th>
+												<th class="min-w-125px ps-9">{{ __('messages.date') }}</th>
+												<th class="min-w-125px ps-9">{{ __('messages.checkin') }}</th>
+												<th class="min-w-125px ps-9">{{ __('messages.checkout') }}</th>
+												<th class="min-w-150px px-0">{{ __('messages.name') }}</th>
+												<th class="min-w-150px px-0">{{ __('messages.school') }}</th>
+												<th class="min-w-150px ps-5">{{ __('messages.status') }}</th>
+												<th class="min-w-150px ps-5">{{ __('messages.remarks') }}</th>
 											</tr>
 										</thead>
 										<!--end::Thead-->
@@ -143,11 +145,11 @@
 
 												@if ($attendance->status == 'attend')
 												<td class="text-center">
-													<a class="badge status-badge" style="background-color:#50cd89;">Present</a>
+													<a class="badge status-badge" style="background-color:#50cd89;">{{ __('messages.present') }}</a>
 												</td>
 												@else
 												<td class="text-center">
-													<a class="badge status-badge" style="background-color:#f1416c;">Absent</a>
+													<a class="badge status-badge" style="background-color:#f1416c;">{{ __('messages.absent') }}</a>
 												</td>
 												@endif
 												@if ($attendance->remarks == NULL)
@@ -159,7 +161,7 @@
 											</tr>
 											@empty
 											<tr>
-												<td class="text-center" colspan="8">No attendances found.</td>
+												<td class="text-center" colspan="8">{{ __('messages.noattendance') }}</td>
 											</tr>
 											@endforelse
 										</tbody>

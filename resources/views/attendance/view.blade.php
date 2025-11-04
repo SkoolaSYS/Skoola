@@ -9,7 +9,7 @@
             <!--begin::Page title-->
             <div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
                 <!--begin::Title-->
-                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">Student's Attendance Log</h1>
+                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.log') }}</h1>
                 <!--end::Title-->
             </div>
             <!--end::Page title-->
@@ -17,7 +17,7 @@
                 <i class="ki-duotone ki-exit-up fs-2">
                     <span class="path1"></span>
                     <span class="path2"></span>
-                </i>Export to Excel
+                </i>{{ __('messages.export') }}
             </a>
         </div>
         <!--end::Toolbar wrapper-->

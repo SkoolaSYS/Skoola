@@ -10,7 +10,7 @@
 			<!--begin::Page title-->
 			<div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
 				<!--begin::Title-->
-				<h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">Account Overview</h1>
+				<h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.acc') }}</h1>
 				<!--end::Title-->
 			</div>
 			<!--end::Page title-->
@@ -23,7 +23,7 @@
 			<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
 				<!--begin::Card title-->
 				<div class="card-title m-0">
-					<h3 class="fw-bold m-0">Additional Guardian's Profile Details</h3>
+					<h3 class="fw-bold m-0">{{ __('messages.addguardianprofiledetails') }}</h3>
 				</div>
 				<!--end::Card title-->
 			</div>
@@ -50,11 +50,11 @@
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
-							<label class="col-lg-4 col-form-label required fw-semibold fs-6">Full Name</label>
+							<label class="col-lg-4 col-form-label required fw-semibold fs-6">{{ __('messages.fullname') }}</label>
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
-								<input type="text" name="name" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Full name" value="" required />
+								<input type="text" name="name" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="{{ __('messages.fullname') }}" value="" required />
 							</div>
 							<!--end::Col-->
 						</div>
@@ -69,11 +69,11 @@
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
-							<label class="col-lg-4 col-form-label required fw-semibold fs-6">Identification Card</label>
+							<label class="col-lg-4 col-form-label required fw-semibold fs-6">{{ __('messages.ic') }}</label>
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
-								<input type="text" name="ic" class="form-control form-control-lg form-control-solid" placeholder="NRIC" value="" required />
+								<input type="text" name="ic" class="form-control form-control-lg form-control-solid" placeholder="{{ __('messages.ic') }}" value="" required />
 							</div>
 							<!--end::Col-->
 						</div>
@@ -82,7 +82,7 @@
 						<div class="row mb-6">
 							<!--begin::Label-->
 							<label class="col-lg-4 col-form-label fw-semibold fs-6">
-								<span class="required">Phone Number</span>
+								<span class="required">{{ __('messages.phonenum') }}</span>
 								<span class="ms-1" data-bs-toggle="tooltip" title="Phone number must be active">
 									<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
 										<span class="path1"></span>
@@ -94,7 +94,7 @@
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
-								<input type="tel" name="phone_num" class="form-control form-control-lg form-control-solid" placeholder="Phone Number" value="" required />
+								<input type="tel" name="phone_num" class="form-control form-control-lg form-control-solid" placeholder="{{ __('messages.phonenum') }}" value="" required />
 							</div>
 							<!--end::Col-->
 						</div>
@@ -122,44 +122,44 @@
 						<!--end::Input group-->
 						<!-- Occupation -->
 						<div class="row mb-6">
-							<label class="col-lg-4 col-form-label required">Occupation</label>
+							<label class="col-lg-4 col-form-label required">{{ __('messages.occupation') }}</label>
 							<div class="col-lg-8 fv-row">
-								<input type="text" name="occupation" class="form-control form-control-lg form-control-solid" placeholder="Occupation" required>
+								<input type="text" name="occupation" class="form-control form-control-lg form-control-solid" placeholder="{{ __('messages.occupation') }}" required>
 							</div>
 						</div>
 						<!-- Relationship -->
 						<div class="row mb-6">
-							<label class="col-lg-4 col-form-label required">Relationship</label>
+							<label class="col-lg-4 col-form-label required">{{ __('messages.relay') }}</label>
 							<div class="col-lg-8 fv-row">
 								<select name="relationship" class="form-control form-control-lg form-control-solid" required>
-									<option value="">Select Relationship</option>
-									<option value="Father">Father</option>
-									<option value="Mother">Mother</option>
-									<option value="Guardian">Guardian</option>
+									<option value="">{{ __('messages.selectrelay') }}</option>
+									<option value="Father">{{ __('messages.father') }}</option>
+									<option value="Mother">{{ __('messages.mother') }}</option>
+									<option value="Guardian">{{ __('messages.guardian') }}</option>
 								</select>
 							</div>
 						</div>
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
-							<label class="col-lg-4 col-form-label fw-semibold fs-6">Address</label>
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">{{ __('messages.address') }}</label>
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
-								<input type="text" name="address" class="form-control form-control-lg form-control-solid" placeholder="Address" value="" required />
+								<input type="text" name="address" class="form-control form-control-lg form-control-solid" placeholder="{{ __('messages.address') }}" value="" required />
 							</div>
 							<!--end::Col-->
 						</div>
 						<!--end::Input group-->
 						<livewire:malaysia-state />
 						<div class="row mb-6">
-						<label class="col-lg-4 col-form-label required">Password</label>
+						<label class="col-lg-4 col-form-label required">{{ __('messages.password') }}</label>
 						<div class="col-lg-8 fv-row" data-kt-password-meter="true">
 							<div class="position-relative mb-3">
 								<input type="password" 
 									name="password" 
 									class="form-control form-control-lg form-control-solid" 
-									placeholder="Password" 
+									placeholder="{{ __('messages.password') }}" 
 									required 
 									autocomplete="new-password" />
 								<span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
@@ -175,17 +175,17 @@
 								<div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
 							</div>
 
-							<div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
+							<div class="text-muted">{{ __('messages.hintpass') }}</div>
 						</div>
 					</div>
 
 					<div class="row mb-6">
-						<label class="col-lg-4 col-form-label required">Repeat Password</label>
+						<label class="col-lg-4 col-form-label required">{{ __('messages.repeatpass') }}</label>
 						<div class="col-lg-8 fv-row">
 							<input type="password" 
 								name="password_confirmation" 
 								class="form-control form-control-lg form-control-solid" 
-								placeholder="Repeat Password" 
+								placeholder="{{ __('messages.repeatpass') }}" 
 								required 
 								autocomplete="new-password" />
 						</div>
@@ -197,7 +197,7 @@
 					<!--begin::Actions-->
 					<div class="card-footer d-flex justify-content-end py-6 px-9">
 						<a href="{{ route('profile.show')}}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>
-						<button type="submit" wire:loading.attr="disabled" class="btn btn-primary" id="kt_account_profile_details_submit">Save Changes</button> <!--Navigate back to Profile Page-->
+						<button type="submit" wire:loading.attr="disabled" class="btn btn-primary" id="kt_account_profile_details_submit">{{ __('messages.save') }}</button> <!--Navigate back to Profile Page-->
 						<!-- <div wire:loading>
 							Loading..
 						</div> -->

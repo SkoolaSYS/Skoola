@@ -10,7 +10,7 @@
 			<!--begin::Page title-->
 			<div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
 				<!--begin::Title-->
-				<h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">Account Overview</h1>
+				<h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.acc') }}</h1>
 				<!--end::Title-->
 			</div>
 			<!--end::Page title-->
@@ -23,7 +23,7 @@
 			<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
 				<!--begin::Card title-->
 				<div class="card-title m-0">
-					<h3 class="fw-bold m-0">Edit Profile Details</h3>
+					<h3 class="fw-bold m-0">{{ __('messages.editprofile') }}</h3>
 				</div>
 				<!--end::Card title-->
 			</div>
@@ -38,7 +38,7 @@
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
-							<label class="col-lg-4 col-form-label required fw-semibold fs-6">Full Name</label>
+							<label class="col-lg-4 col-form-label required fw-semibold fs-6">{{ __('messages.fullname') }}</label>
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
@@ -57,7 +57,7 @@
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
-							<label class="col-lg-4 col-form-label required fw-semibold fs-6">Identification Card</label>
+							<label class="col-lg-4 col-form-label required fw-semibold fs-6">{{ __('messages.ic') }}</label>
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
@@ -70,7 +70,7 @@
 						<div class="row mb-6">
 							<!--begin::Label-->
 							<label class="col-lg-4 col-form-label fw-semibold fs-6">
-								<span class="required">Phone Number</span>
+								<span class="required">{{ __('messages.phonenum') }}</span>
 								<span class="ms-1" data-bs-toggle="tooltip" title="Phone number must be active">
 									<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
 										<span class="path1"></span>
@@ -110,7 +110,7 @@
 						<!--end::Input group-->
 						<!-- Occupation -->
 						<div class="row mb-6">
-							<label class="col-lg-4 col-form-label fw-semibold fs-6">Occupation</label>
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">{{ __('messages.occupation') }}</label>
 							<div class="col-lg-8 fv-row">
 								<input type="text" name="occupation" class="form-control form-control-lg form-control-solid" placeholder="Occupation" value="{{ $guardian->occupation }}" required />
 							</div>
@@ -118,20 +118,20 @@
 
 						<!-- Relationship -->
 						<div class="row mb-6">
-							<label class="col-lg-4 col-form-label fw-semibold fs-6">Relationship</label>
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">{{ __('messages.relay') }}</label>
 							<div class="col-lg-8 fv-row">
 								<select name="relationship" class="form-control form-control-lg form-control-solid" required>
-									<option value="">Select Relationship</option>
-									<option value="Father" {{ $guardian->relationship == 'Father' ? 'selected' : '' }}>Father</option>
-									<option value="Mother" {{ $guardian->relationship == 'Mother' ? 'selected' : '' }}>Mother</option>
-									<option value="Guardian" {{ $guardian->relationship == 'Guardian' ? 'selected' : '' }}>Guardian</option>
+									<option value="">{{ __('messages.selectrelay') }}</option>
+									<option value="Father" {{ $guardian->relationship == 'Father' ? 'selected' : '' }}>{{ __('messages.father') }}</option>
+									<option value="Mother" {{ $guardian->relationship == 'Mother' ? 'selected' : '' }}>{{ __('messages.mother') }}</option>
+									<option value="Guardian" {{ $guardian->relationship == 'Guardian' ? 'selected' : '' }}>{{ __('messages.guardian') }}</option>
 								</select>
 							</div>
 						</div>
 						<!--begin::Input group-->
 						<div class="row mb-6">
 							<!--begin::Label-->
-							<label class="col-lg-4 col-form-label fw-semibold fs-6">Address</label>
+							<label class="col-lg-4 col-form-label fw-semibold fs-6">{{ __('messages.address') }}</label>
 							<!--end::Label-->
 							<!--begin::Col-->
 							<div class="col-lg-8 fv-row">
@@ -152,7 +152,7 @@
 					<!--begin::Actions-->
 					<div class="card-footer d-flex justify-content-end py-6 px-9">
 						<a href="{{ route('profile.show')}}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>
-						<button type="submit" wire:loading.attr="disabled" class="btn btn-primary" id="kt_account_profile_details_submit">Save Changes</button> <!--Navigate back to Profile Page-->
+						<button type="submit" wire:loading.attr="disabled" class="btn btn-primary" id="kt_account_profile_details_submit">{{ __('messages.save') }}</button> <!--Navigate back to Profile Page-->
 						<!-- <div wire:loading>
 							Loading..
 						</div> -->

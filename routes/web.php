@@ -23,6 +23,10 @@ use App\Http\Controllers\ClassAttendanceController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Api\ReceiveController;
 use App\Http\Controllers\School\ReportController;
+use App\Http\Controllers\LanguageController;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 
 
@@ -149,6 +153,13 @@ Route::prefix('school')->name('school.')->middleware(['role:school'])->group(fun
 
 });
 
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'ms'])) {
+        Session::put('applocale', $locale);
+        App::setLocale($locale);
+    }
+    return Redirect::back();
+})->name('lang.switch');
 
 Route::prefix('school')->name('school.')->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
@@ -177,6 +188,8 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
 
 Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
     ->name('class_attendance.show');
+
+    
 
     Route::post('/receive', function (\Illuminate\Http\Request $request) {
     // Get JSON payload

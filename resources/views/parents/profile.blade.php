@@ -10,8 +10,7 @@
             <!--begin::Page title-->
             <div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
                 <!--begin::Title-->
-                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">Account
-                    Overview</h1>
+                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.acc') }}</h1>
                 <!--end::Title-->
             </div>
             <!--end::Page title-->
@@ -41,7 +40,7 @@
                                             <span class="path1"></span>
                                             <span class="path2"></span>
                                             <span class="path3"></span>
-                                        </i>Primary Guardian</a>
+                                        </i>{{ __('messages.primary') }}</a>
                                     <a class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
                                         <i class="ki-duotone ki-sms fs-4 me-1">
                                             <span class="path1"></span>
@@ -79,11 +78,11 @@
             <div class="card-header cursor-pointer">
                 <!--begin::Card title-->
                 <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Profile Details</h3>
+                    <h3 class="fw-bold m-0">{{ __('messages.profiledetails') }}</h3>
                 </div>
                 <!--end::Card title-->
                 <!--begin::Action-->
-                <a href="/profile/edit" class="btn btn-sm btn-primary align-self-center">Edit Profile</a>
+                <a href="/profile/edit" class="btn btn-sm btn-primary align-self-center">{{ __('messages.editprofile') }}</a>
                 <!--end::Action-->
             </div>
             <!--end::Card header-->
@@ -94,7 +93,7 @@
         <div class="col-md-6">
             <!-- Full Name -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">Full Name</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.fullname') }}</label>
                 <div class="col-lg-8">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $parent->name }}</span>
                 </div>
@@ -102,7 +101,7 @@
 
             <!-- Identification Card -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">Identification Card</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.ic') }}</label>
                 <div class="col-lg-8">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $parent->ic ?? 'N/A' }}</span>
                 </div>
@@ -110,7 +109,7 @@
 
             <!-- Phone Number -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">Phone Number</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.phonenum') }}</label>
                 <div class="col-lg-8 d-flex align-items-center">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $parent->phone_num }}</span>
                 </div>
@@ -127,7 +126,7 @@
 
             <!-- Occupation -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">Occupation</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.occupation') }}</label>
                 <div class="col-lg-8">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $parent->occupation ?? 'N/A' }}</span>
                 </div>
@@ -135,7 +134,7 @@
 
             <!-- Relationship -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">Relationship</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.relay') }}</label>
                 <div class="col-lg-8">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $parent->relationship ?? 'N/A' }}</span>
                 </div>
@@ -154,7 +153,7 @@
         <div class="col-md-6">
             <!-- Address -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">Address</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.address') }}</label>
                 <div class="col-lg-8">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $parent->address ?? 'N/A' }}</span>
                 </div>
@@ -170,7 +169,7 @@
 
             <!-- City -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">City</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.city') }}</label>
                 <div class="col-lg-8">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $citie->name ?? 'N/A' }}</span>
                 </div>
@@ -178,7 +177,7 @@
 
             <!-- State -->
             <div class="row mb-7">
-                <label class="col-lg-4 fw-semibold text-muted">State</label>
+                <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.state') }}</label>
                 <div class="col-lg-8">
                     <span class="fw-semibold fs-6 text-gray-800">{{ $state->name ?? 'N/A' }}</span>
                 </div>
@@ -193,12 +192,11 @@
             <div class="card-header cursor-pointer">
                 <!--begin::Card title-->
                 <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">List of Additional Guardian</h3>
+                    <h3 class="fw-bold m-0">{{ __('messages.listaddguardian') }}</h3>
                 </div>
                 <!--end::Card title-->
                 <!--begin::Action-->
-                <a href="{{ route('profile.guardian.create') }}" class="btn btn-sm btn-primary align-self-center">Add
-                    Additional Guardian</a>
+                <a href="{{ route('profile.guardian.create') }}" class="btn btn-sm btn-primary align-self-center">{{ __('messages.addguardian') }}</a>
                 <!--end::Action-->
             </div>
             <!--end::Card header-->
@@ -213,10 +211,10 @@
                             <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
                                 <tr>
                                     <th class="min-w-175px ps-9">No.</th>
-                                    <th class="min-w-150px px-0">Name</th>
-                                    <th class="min-w-150px px-0">Phone Number</th>
+                                    <th class="min-w-150px px-0">{{ __('messages.name') }}</th>
+                                    <th class="min-w-150px px-0">{{ __('messages.phonenum') }}</th>
                                     <th class="min-w-150px px-0">Email</th>
-                                    <th class="min-w-125px text-center" colspan="3">Action</th>
+                                    <th class="min-w-125px text-center" colspan="3">{{ __('messages.action') }}</th>
                                 </tr>
                             </thead>
                             <!--end::Thead-->
@@ -230,8 +228,8 @@
             <td class="ps-0">{{ $guardian->email ?? '-' }}</td>
             <td class="text-center d-flex justify-content-center">
                 <div class="d-flex gap-2">
-                    <a href="{{ route('profile.guardian.show', $guardian->id) }}" class="btn btn-sm btn-light align-self-center">View</a>
-                    <a href="{{ route('profile.guardian.edit', $guardian->id) }}" class="btn btn-sm btn-primary me-1">Edit</a>
+                    <a href="{{ route('profile.guardian.show', $guardian->id) }}" class="btn btn-sm btn-light align-self-center">{{ __('messages.view') }}</a>
+                    <a href="{{ route('profile.guardian.edit', $guardian->id) }}" class="btn btn-sm btn-primary me-1">{{ __('messages.edit') }}</a>
                     <form class="form" action="{{ route('profile.guardian.delete', $guardian->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
@@ -242,7 +240,7 @@
         </tr>
     @empty
         <tr>
-            <td class="text-center" colspan="5">No additional guardians found.</td>
+            <td class="text-center" colspan="5">{{ __('messages.noaddguardian') }}</td>
         </tr>
     @endforelse
 </tbody>

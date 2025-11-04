@@ -10,7 +10,7 @@
             <!--begin::Page title-->
             <div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
                 <!--begin::Title-->
-                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">Student List</h1>
+                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.studentlist') }}</h1>
                 <!--end::Title-->
             </div>
             <!--end::Page title-->
@@ -23,7 +23,7 @@
             <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
                 <!--begin::Card title-->
                 <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">Student Profile Details</h3>
+                    <h3 class="fw-bold m-0">{{ __('messages.studentprofiledetails') }}</h3>
                 </div>
                 <!--end::Card title-->
             </div>
@@ -50,13 +50,13 @@
 
     <!-- short left-aligned Add button -->
     <button type="button" class="btn btn-secondary btn-sm mt-1" id="add-student-btn">
-        Add More Student
+        {{ __('messages.addmorestudent') }}
     </button>
 
     <!-- Actions -->
     <div class="card-footer d-flex justify-content-end py-6 px-9">
         <a href="{{ route('student.show')}}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>
-        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Save Changes</button>
+        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">{{ __('messages.save') }}</button>
     </div>
 </form>
 

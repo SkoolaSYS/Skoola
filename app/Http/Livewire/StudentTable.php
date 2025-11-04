@@ -39,28 +39,29 @@ class StudentTable extends DataTableComponent
         return [
             Column::make("NO.", "id")
                 ->sortable(),
-            Column::make("Student Name", "name")
+            Column::make(__('messages.studentname'), "name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Identification Card", "ic")
+            Column::make(__('messages.ic'), "ic")
                 ->sortable(),
-            Column::make("Age", "age")
+            Column::make(__('messages.age'), "age")
                 ->sortable(),
-            Column::make("School Name", "school_id")
+            Column::make(__('messages.schoolname'), "school_id")
                 ->sortable()
                 ->format(function ($value) {
                     $school = School::find($value);
                     return $school ? $school->name : 'N/A';
                 }),
-            ButtonGroupColumn::make('Actions')
+            ButtonGroupColumn::make(__('messages.action'))
                 ->attributes(function ($row) {
                     return [
                         'class' => 'space-x-2',
                     ];
                 })
                 ->buttons([
-                    LinkColumn::make('Edit')
-                        ->title(fn ($row) => 'Edit ')
+                    LinkColumn::make(__('messages.edit'))
+                        ->title(fn ($row) => __('messages.edit'))
+
                         ->location(fn ($row) => route('student.edit', $row))
                         ->attributes(function ($row) {
                             return [

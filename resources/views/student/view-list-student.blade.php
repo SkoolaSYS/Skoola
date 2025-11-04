@@ -16,14 +16,14 @@
 			<!--begin::Page title-->
 			<div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
 				<!--begin::Title-->
-				<h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">Student List</h1>
+				<h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.studentlist') }}</h1>
 				<!--end::Title-->
 			</div>
 			<!--end::Page title-->
 			<!-- Add Student button -->
 			<div class="ms-auto">
 				<a href="{{ route('student.create') }}" class="btn btn-primary">
-					<i class="ki-duotone ki-plus fs-2"></i>Add Student
+					<i class="ki-duotone ki-plus fs-2"></i>{{ __('messages.addstudent') }}
 				</a>
 			</div>
 		</div>
