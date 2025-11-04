@@ -39,18 +39,18 @@ class AttendanceTable extends DataTableComponent
         return [
             Column::make("NO.", "id")
                 ->sortable(),
-            Column::make("Student Name", "student.name")
+            Column::make("Nama Pelajar", "student.name")
                 ->searchable()
                 ->sortable(),
-            Column::make("Check in", "check_in")
+            Column::make("Daftar Masuk", "check_in")
                 ->sortable(),
-            Column::make("Check out", "check_out")
+            Column::make("Daftar Keluar", "check_out")
                 ->sortable(),
-            Column::make("Date", "date")
+            Column::make("Tarikh", "date")
                 ->sortable(),
             Column::make("Status", "status")
                 ->sortable(),
-            Column::make("Remarks", "remarks")
+            Column::make("Sebab Tidak Hadir", "remarks")
                 ->sortable(),
             Column::make('')
                 ->label(function ($row, Column $column) {

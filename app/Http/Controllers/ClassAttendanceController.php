@@ -158,12 +158,16 @@ public function add(Request $request)
         ->orderBy('name')
         ->get();
 
-    // 🟢 Get existing attendance data
+    $today = Carbon::today();
+
+    // 🟢 Get existing attendance for the same class & grade (ignore subject)
     $existingAttendance = \App\Models\ClassAttendance::where('grade', $selectedGrade)
         ->where('class_name', $selectedClass)
-        ->where('subject', $selectedSubject)
-        ->pluck('status', 'student_id'); // key = student_id, value = status
+        ->whereDate('attendance_time', $today)
+        ->pluck('status', 'student_id')
+        ->toArray();
 
+    // 🟢 Show same attendance for all subjects today
     return view('class_attendance.add', compact(
         'selectedGrade',
         'selectedClass',
@@ -194,7 +198,7 @@ public function saveClassAttendance(Request $request)
     $todayDate = now()->toDateString();
 
     foreach ($request->attendance as $studentId => $status) {
-        // Check if attendance already exists for this student, class, subject, and date
+        // ✅ Only differentiate by grade, class, subject, and date
         $existing = ClassAttendance::where('student_id', $studentId)
             ->where('grade', $request->grade)
             ->where('class_name', $request->class_name)
@@ -203,29 +207,31 @@ public function saveClassAttendance(Request $request)
             ->first();
 
         if ($existing) {
-            // Update only status (don’t overwrite teacher_id)
             $existing->update(['status' => $status]);
         } else {
-            // Create new record if not exist
             ClassAttendance::create([
                 'student_id' => $studentId,
                 'teacher_id' => $teacherId,
                 'grade' => $request->grade,
                 'class_name' => $request->class_name,
                 'subject' => $request->subject,
-                'status' => $status,
+                'status' => $status ?? 'Present',
                 'attendance_time' => now(),
             ]);
         }
     }
 
-    // Redirect back to the attendance page with current filters
-    return redirect()->route('class_attendance.index', [
-        'grade' => $request->grade,
-        'class_name' => $request->class_name,
-        'subject' => $request->subject,
-    ])->with('success', 'Attendance saved successfully!');
+    return redirect()
+        ->route('class_attendance.index', [
+            'grade' => $request->grade,
+            'class_name' => $request->class_name,
+            'subject' => $request->subject,
+        ])
+        ->with('success', 'Attendance saved successfully!');
 }
+
+
+
 
 
 
