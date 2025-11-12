@@ -166,7 +166,7 @@
 				<div class="row mb-7">
 					<label class="col-lg-4 fw-semibold text-muted">{{ __('messages.relay') }}</label>
 					<div class="col-lg-8">
-						<span class="fw-semibold fs-6 text-gray-800">{{ $guardian->relationship }}</span>
+						<span class="fw-semibold fs-6 text-gray-800">{{ $guardian->relationship ? __('messages.' . strtolower($guardian->relationship)) : 'N/A' }}</span>
 					</div>
 				</div>
 

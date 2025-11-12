@@ -47,11 +47,11 @@ class AdminStudentTable extends DataTableComponent
         Column::make('NO.', 'id')
             ->sortable(),
 
-        Column::make("Student's Name", 'name')
+        Column::make(__('messages.studentname'), 'name')
             ->sortable()
             ->searchable(),
 
-        Column::make("Average Percentage", 'id')
+        Column::make(__('messages.attendancepercentage'), 'id')
             ->format(function ($value, $row) {
                 $attendancesAttend = Attendance::where('student_id', $row->id)
                     ->where('status', 'attend')
@@ -76,26 +76,26 @@ class AdminStudentTable extends DataTableComponent
             )
             ->html(), // ✅ correct usage here (on the Column definition)
 
-        Column::make('Actions')
+        Column::make(__('messages.action'))
     ->label(function ($row) {
         $user = Auth::user();
 
         // Always show "View" button
-        $buttons = "<button wire:click='showStudentModal({$row->id})' class='btn btn-sm btn-primary me-1'>View</button>";
+        $buttons = "<button wire:click='showStudentModal({$row->id})' class='btn btn-sm btn-primary me-1'>" . __('messages.view') . "</button>";
 
         // Show Details button only to admin/school
         if ($user->hasRole(['admin', 'school'])) {
-            $buttons .= "<a href='" . route('school.students.details', $row->id) . "' class='btn btn-sm btn-info me-1'>Details</a>";
+            $buttons .= "<a href='" . route('school.students.details', $row->id) . "' class='btn btn-sm btn-info me-1'>" . __('messages.details') . "</a>";
         }
 
         // Show Edit + Toggle for admin/school roles
         if ($user->hasRole(['admin', 'school'])) {
             $toggleButton = $row->status === 'Active'
-                ? "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-danger me-1'>Deactivate</button>"
-                : "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-success me-1'>Activate</button>";
+                ? "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-danger me-1'>" . __('messages.deactivate') . "</button>"
+                : "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-success me-1'>" . __('messages.activate') . "</button>";
 
             $buttons .= "
-                <a href='" . route('school.students.edit', $row) . "' class='btn btn-sm btn-warning me-1'>Edit</a>
+                <a href='" . route('school.students.edit', $row) . "' class='btn btn-sm btn-warning me-1'>" . __('messages.edit') . "</a>
                 {$toggleButton}
             ";
         }

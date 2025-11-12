@@ -14,8 +14,8 @@
                 <!-- Header -->
                 <div class="card-header position-relative py-0 border-bottom-2 justify-content-center">
                     <span class="d-flex flex-column justify-content-center">
-                        <h1 class="page-heading text-dark fw-bolder fs-1 m-0 text-center">Dashboard</h1>
-                        <h6 class="text-muted text-center fs-7">School Level</h6>
+                        <h1 class="page-heading text-dark fw-bolder fs-1 m-0 text-center">{{ __('messages.dashboard') }}</h1>
+                        <h6 class="text-muted text-center fs-7">{{ __('messages.schoollevel') }}</h6>
                     </span>
                 </div>
 
@@ -26,7 +26,7 @@
                     <!-- Total Students -->
                     <div class="p-4 border-0 bg-transparent">
                         <h1 class="text-dark fw-bolder fs-1 mb-0">{{ $totalPelajar }}</h1>
-                        <h6 class="text-muted fs-7">Total Students</h6>
+                        <h6 class="text-muted fs-7">{{ __('messages.totalstudents') }}</h6>
                     </div>
 
                     <!-- Average Attendance -->
@@ -34,7 +34,7 @@
                         <div style="position: relative; width: 180px; height: 180px; margin: 0 auto;">
                             <canvas id="attendanceDonutChart"></canvas>
                         </div>
-                        <h6 class="text-muted fs-7 mb-2">Average Attendance Percentage</h6>
+                        <h6 class="text-muted fs-7 mb-2">{{ __('messages.avgattendance') }}</h6>
                     </div>
 
                 </div>
@@ -54,7 +54,7 @@
 
                             <!-- Page title -->
                             <div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
-                                <h3 class="text-2xl font-semibold mb-3">LIST OF STUDENTS IN {{ $school->name }}</h3>
+                                <h3 class="text-2xl font-semibold mb-3">{{ __('messages.listofstudents', ['school' => $school->name]) }}</h3>
                             </div>
 
                             <!-- Button Group (Add Student + Export) -->
@@ -62,17 +62,17 @@
                                 @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('school'))
                                     <div class="dropdown">
                                         <button class="btn btn-light-primary dropdown-toggle" type="button" id="addStudentDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="ki-duotone ki-plus fs-2"></i> Add Student
+                                            <i class="ki-duotone ki-plus fs-2"></i> {{ __('messages.addstudent') }}
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="addStudentDropdown">
-                                            <li><a class="dropdown-item" href="{{ route('school.student.create', ['school_id' => $school_id]) }}">Add Student Manually</a></li>
-                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkImportModal">Import from Excel</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('school.student.create', ['school_id' => $school_id]) }}">{{ __('messages.addmanually') }}</a></li>
+                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkImportModal">{{ __('messages.importexcel') }}</a></li>
                                         </ul>
                                     </div>
                                 @endif
 
                                 <a href="{{ route('dashboard.school_export', ['school_id' => $school_id]) }}" class="btn btn-light-success">
-                                    <i class="ki-duotone ki-exit-up fs-2"></i> Export to Excel
+                                    <i class="ki-duotone ki-exit-up fs-2"></i> {{ __('messages.export') }}
                                 </a>
                             </div>
 
@@ -94,7 +94,7 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content shadow-lg">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="studentModalLabel">Student Attendance</h5>
+                                <h5 class="modal-title" id="studentModalLabel">{{ __('messages.studentattendance') }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
@@ -103,8 +103,8 @@
                             </div>
 
                             <div class="modal-footer justify-content-between">
-                                <a id="modal_detail_link" href="#" class="btn btn-primary">View Details</a>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a id="modal_detail_link" href="#" class="btn btn-primary">{{ __('messages.viewdetails') }}</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                             </div>
                             </div>
                         </div>
@@ -125,15 +125,15 @@
                 <form action="{{ route('school.students.import') }}" method="POST" enctype="multipart/form-data" class="modal-content">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="bulkImportModalLabel">Import Students from Excel</h5>
+                        <h5 class="modal-title" id="bulkImportModalLabel">{{ __('messages.importstudentsfromexcel') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
-                        <p class="mb-3">Please use our Excel template before importing:</p>
-                        <a href="{{ route('school.students.template') }}" class="btn btn-link">Download Template</a>
+                        <p class="mb-3">{{ __('messages.pleaseusetemplate') }}</p>
+                        <a href="{{ route('school.students.template') }}" class="btn btn-link">{{ __('messages.downloadtemplate') }}</a>
                         <div class="mb-3">
-                            <label for="import_file" class="form-label">Upload Excel File</label>
+                            <label for="import_file" class="form-label">{{ __('messages.uploadexcelfile') }}</label>
                             <input type="file" class="form-control" id="import_file" name="import_file" accept=".xlsx, .xls" required>
                         </div>
                     </div>
@@ -199,7 +199,7 @@ window.addEventListener('open-student-modal', event => {
     const detailUrl = event.detail.detailUrl || '#';
 
     // set title and detail link
-    document.getElementById('studentModalLabel').innerText = studentName + "'s Attendance";
+    document.getElementById('studentModalLabel').innerText = "Kehadiran " + studentName;
     document.getElementById('modal_detail_link').setAttribute('href', detailUrl);
 
     // show modal
@@ -224,10 +224,15 @@ window.addEventListener('open-student-modal', event => {
         const chart = new ApexCharts(chartContainer, {
             series: data,
             chart: { type: 'donut', width: 230, height: 200 },
-            labels: ['Present', 'Absent'],
-            colors: ['#50cd89', '#f1416c'],
+            labels: [
+                "{{ __('messages.present') }}", 
+                "{{ __('messages.absent') }}", 
+                "{{ __('messages.late') }}"
+            ],
+            colors: ['#50cd89', '#f1416c', '#ffc107'], // added color for 'late'
             legend: { show: true, position: 'bottom' },
         });
+
 
         // render chart, and keep reference if you want to destroy later
         chart.render();

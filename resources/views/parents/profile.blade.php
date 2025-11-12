@@ -136,7 +136,8 @@
             <div class="row mb-7">
                 <label class="col-lg-4 fw-semibold text-muted">{{ __('messages.relay') }}</label>
                 <div class="col-lg-8">
-                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->relationship ?? 'N/A' }}</span>
+                    <span class="fw-semibold fs-6 text-gray-800">{{ $parent->relationship ? __('messages.' . strtolower($parent->relationship)) : 'N/A' }}
+</span>
                 </div>
             </div>
 

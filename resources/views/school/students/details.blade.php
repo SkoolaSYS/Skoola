@@ -5,60 +5,57 @@
             <h3 class="mb-3">{{ $student->name }}'s Details</h3>
 
             <table class="table table-bordered">
+                
                 <tr>
-                    <th>Student ID</th>
-                    <td>{{ $student->id }}</td>
-                </tr>
-                <tr>
-                    <th>Name</th>
+                    <th>{{ __('messages.fullname') }}</th>
                     <td>{{ $student->name }}</td>
                 </tr>
                 <tr>
-                    <th>IC Number</th>
+                    <th>{{ __('messages.ic') }}</th>
                     <td>{{ $student->ic ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Age</th>
+                    <th>{{ __('messages.age') }}</th>
                     <td>{{ $student->age }}</td>
                 </tr>
                 <tr>
-                    <th>Birth Certificate Number</th>
+                    <th>{{ __('messages.birthcertno') }}</th>
                     <td>{{ $student->birth_cert_no }}</td>
                 </tr>
                 <tr>
-                    <th>Date of Birth</th>
+                    <th>{{ __('messages.dob') }}</th>
                     <td>{{ $student->dob }}</td>
                 </tr>
                 <tr>
-                    <th>Grade</th>
+                    <th>{{ __('messages.grade') }}</th>
                     <td>{{ $student->grade }}</td>
                 </tr>
                 <tr>
-                    <th>Class</th>
+                    <th>{{ __('messages.class') }}</th>
                     <td>{{ $student->class_name }}</td>
                 </tr>
                 <tr>
-                    <th>Gender</th>
+                    <th>{{ __('messages.gender') }}</th>
                     <td>{{ $student->gender }}</td>
                 </tr>
                 <tr>
-                    <th>Race</th>
+                    <th>{{ __('messages.race') }}</th>
                     <td>{{ $student->race }}</td>
                 </tr>
                 <tr>
-                    <th>Religion</th>
+                    <th>{{ __('messages.religion') }}</th>
                     <td>{{ $student->religion }}</td>
                 </tr>
                 <tr>
-                    <th>Nationality</th>
+                    <th>{{ __('messages.nationality') }}</th>
                     <td>{{ $student->nationality }}</td>
                 </tr>
                 <tr>
-                    <th>Address</th>
+                    <th>{{ __('messages.address') }}</th>
                     <td>{{ $student->address ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Orphan</th>
+                    <th>{{ __('messages.orphan') }}</th>
                     <td>{{ $student->orphan }}</td>
                 </tr>
                 <tr>
@@ -76,7 +73,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>School</th>
+                    <th>{{ __('messages.school') }}</th>
                     <td>{{ $student->school->name ?? 'N/A' }}</td>
                 </tr>
             </table>

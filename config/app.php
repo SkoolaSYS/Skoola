@@ -84,7 +84,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'ms',
 'fallback_locale' => 'en',
 
 

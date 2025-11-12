@@ -12,8 +12,8 @@
 
             <!-- Search Bar -->
             <div class="mb-3 d-flex justify-content-end">
-                <input type="text" id="searchInput" class="form-control w-auto me-2" placeholder="Search student name...">
-                <button type="button" class="btn btn-primary" id="searchButton">Search</button>
+                <input type="text" id="searchInput" class="form-control w-auto me-2" placeholder="{{ __('messages.searchstudent') }}">
+                <button type="button" class="btn btn-primary" id="searchButton">{{ __('messages.search') }}</button>
             </div>
 
             <div class="table-responsive">
@@ -21,8 +21,8 @@
                     <thead class="table-light">
                         <tr>
                             <th>No.</th>
-                            <th>Name</th>
-                            <th>Attendance</th>
+                            <th>{{ __('messages.fullname') }}</th>
+                            <th>{{ __('messages.attendance') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,13 +35,13 @@
                                 <td>{{ $student->name }}</td>
                                 <td>
                                     <select name="attendance[{{ $student->id }}]" class="form-select">
-                                        <option value="Present" {{ $currentStatus == 'Present' ? 'selected' : '' }}>Present</option>
-                                        <option value="Absent" {{ $currentStatus == 'Absent' ? 'selected' : '' }}>Absent</option>
-                                        <option value="Late" {{ $currentStatus == 'Late' ? 'selected' : '' }}>Late</option>
+                                        <option value="Present" {{ $currentStatus == 'Present' ? 'selected' : '' }}>{{ __('messages.present') }}</option>
+                                        <option value="Absent" {{ $currentStatus == 'Absent' ? 'selected' : '' }}>{{ __('messages.absent') }}</option>
+                                        <option value="Late" {{ $currentStatus == 'Late' ? 'selected' : '' }}>{{ __('messages.late') }}</option>
                                         <option value="MC" {{ $currentStatus == 'MC' ? 'selected' : '' }}>MC</option>
-                                        <option value="Unwell" {{ $currentStatus == 'Unwell' ? 'selected' : '' }}>Unwell</option>
-                                        <option value="School Activity" {{ $currentStatus == 'School Activity' ? 'selected' : '' }}>School Activity</option>
-                                        <option value="Others" {{ $currentStatus == 'Others' ? 'selected' : '' }}>Others</option>
+                                        <option value="Unwell" {{ $currentStatus == 'Unwell' ? 'selected' : '' }}>{{ __('messages.unwell') }}</option>
+                                        <option value="School Activity" {{ $currentStatus == 'School Activity' ? 'selected' : '' }}>{{ __('messages.schoolactivity') }}</option>
+                                        <option value="Others" {{ $currentStatus == 'Others' ? 'selected' : '' }}>{{ __('messages.others') }}</option>
                                     </select>
                                 </td>
                             </tr>
@@ -50,7 +50,7 @@
                 </table>
             </div>
 
-            <button type="submit" class="btn btn-success mt-3">Save Attendance</button>
+            <button type="submit" class="btn btn-success mt-3">{{ __('messages.save') }}</button>
         </form>
     </x-card>
 

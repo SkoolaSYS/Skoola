@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\Http\Controllers\JsonReaderController;
 use App\Http\Controllers\StudentController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -27,10 +30,33 @@ use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\EmailVerificationController;
 
+Route::get('/debug', function () {
+    return 'Debug route is working!';
+});
 
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
+
+Route::get('/verify-email/{token}', [EmailVerificationController::class, 'verify']);
+
+// Show parent email page (from PWA)
+Route::get('/parent-email', [EmailVerificationController::class, 'show'])
+    ->name('parent.email');
+
+// ✅ Send verification email (PWA)
+Route::post('/attendance-parent/send', [EmailVerificationController::class, 'sendVerification'])
+    ->name('attendance.send');
+
+// ✅ Handle verification link from email
+Route::get('/attendance-parent/verify/{token}', [EmailVerificationController::class, 'verifyEmail'])
+    ->name('attendance.verify');
+
+// ✅ Parent dashboard (PWA iframe)
+Route::get('/attendance-parent', [DashboardController::class, 'pwaParentDashboard'])
+    ->name('attendance.parent');
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
 

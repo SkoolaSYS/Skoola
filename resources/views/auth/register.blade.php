@@ -100,14 +100,14 @@
 										@csrf
 										<!-- Main Parent / Guardian (Required) -->
 									<div id="parent-form">
-										<h3>Parent / Guardian Details</h3>
+										<h3>{{ __('messages.parentdetails') }}</h3>
 										<div class="card-body border-top p-9">
 
 											<!-- Full Name -->
 											<div class="row mb-6">
-												<label class="col-lg-4 col-form-label required">Full Name</label>
+												<label class="col-lg-4 col-form-label required">{{ __('messages.fullname') }}</label>
 												<div class="col-lg-8 fv-row">
-													<input type="text" name="name" class="form-control" placeholder="Full Name" required>
+													<input type="text" name="name" class="form-control" placeholder="{{ __('messages.fullname') }}" required>
 												</div>
 											</div>
 
@@ -129,25 +129,25 @@
 
 											<!-- Phone Number -->
 											<div class="row mb-6">
-												<label class="col-lg-4 col-form-label required">Phone Number</label>
+												<label class="col-lg-4 col-form-label required">{{ __('messages.phonenum') }}</label>
 												<div class="col-lg-8 fv-row">
-													<input type="text" name="phone_num" class="form-control" placeholder="Phone Number" required>
+													<input type="text" name="phone_num" class="form-control" placeholder="{{ __('messages.phonenum') }}" required>
 												</div>
 											</div>
 
 											<!-- IC -->
 											<div class="row mb-6">
-												<label class="col-lg-4 col-form-label required">IC / Passport Number</label>
+												<label class="col-lg-4 col-form-label required">{{ __('messages.ic') }}</label>
 												<div class="col-lg-8 fv-row">
-													<input type="text" name="ic" class="form-control" placeholder="IC / Passport Number" required>
+													<input type="text" name="ic" class="form-control" placeholder="{{ __('messages.ic') }}" required>
 												</div>
 											</div>
 
 											<!-- Address -->
 											<div class="row mb-6">
-												<label class="col-lg-4 col-form-label required">Address</label>
+												<label class="col-lg-4 col-form-label required">{{ __('messages.address') }}</label>
 												<div class="col-lg-8 fv-row">
-													<input type="text" name="address" class="form-control" placeholder="Address" required>
+													<input type="text" name="address" class="form-control" placeholder="{{ __('messages.address') }}" required>
 												</div>
 											</div>
 
@@ -160,21 +160,21 @@
 
 											<!-- Occupation -->
 											<div class="row mb-6">
-												<label class="col-lg-4 col-form-label required">Occupation</label>
+												<label class="col-lg-4 col-form-label required">{{ __('messages.occupation') }}</label>
 												<div class="col-lg-8 fv-row">
-													<input type="text" name="occupation" class="form-control" placeholder="Occupation" required>
+													<input type="text" name="occupation" class="form-control" placeholder="{{ __('messages.occupation') }}" required>
 												</div>
 											</div>
 
 											<!-- Relationship -->
 									<div class="row mb-6">
-										<label class="col-lg-4 col-form-label required">Relationship</label>
+										<label class="col-lg-4 col-form-label required">{{ __('messages.relay') }}</label>
 										<div class="col-lg-8 fv-row">
 											<select name="relationship" class="form-control" required>
-												<option value="">Select Relationship</option>
-												<option value="Father">Father</option>
-												<option value="Mother">Mother</option>
-												<option value="Guardian">Guardian</option>
+												<option value="">{{ __('messages.selectrelay') }}</option>
+												<option value="Father">{{ __('messages.father') }}</option>
+												<option value="Mother">{{ __('messages.mother') }}</option>
+												<option value="Guardian">{{ __('messages.guardian') }}</option>
 											</select>
 										</div>
 									</div>
@@ -182,13 +182,13 @@
 
                                     <!-- Password -->
 									<div class="row mb-6">
-										<label class="col-lg-4 col-form-label required">Password</label>
+										<label class="col-lg-4 col-form-label required">{{ __('messages.password') }}</label>
 										<div class="col-lg-8 fv-row" data-kt-password-meter="true">
 											<!--begin::Wrapper-->
 											<div class="mb-1">
 												<!--begin::Input wrapper-->
 												<div class="position-relative mb-3">
-													<input type="password" placeholder="Password" name="password" class="form-control bg-transparent" required autocomplete="new-password" />
+													<input type="password" placeholder="{{ __('messages.password') }}" name="password" class="form-control bg-transparent" required autocomplete="new-password" />
 													<span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
 														<i class="ki-duotone ki-eye-slash fs-2"></i>
 														<i class="ki-duotone ki-eye fs-2 d-none"></i>
@@ -208,16 +208,16 @@
 											<!--end::Wrapper-->
 
 											<!--begin::Hint-->
-											<div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
+											<div class="text-muted">{{ __('messages.hintpass') }}</div>
 											<!--end::Hint-->
 										</div>
 									</div>
 
 									<!-- Repeat Password -->
 									<div class="row mb-6">
-										<label class="col-lg-4 col-form-label required">Repeat Password</label>
+										<label class="col-lg-4 col-form-label required">{{ __('messages.repeatpass') }}</label>
 										<div class="col-lg-8 fv-row">
-											<input type="password" placeholder="Repeat Password" name="password_confirmation" class="form-control bg-transparent" required autocomplete="new-password" />
+											<input type="password" placeholder="{{ __('messages.repeatpass') }}" name="password_confirmation" class="form-control bg-transparent" required autocomplete="new-password" />
 										</div>
 									</div>
 
@@ -228,25 +228,25 @@
 										<!-- Additional Guardians (Optional) -->
 										<div id="additional-guardians-container"></div>
 										<button type="button" class="btn btn-secondary w-100 mb-4" id="add-guardian-btn">
-											Add Additional Guardian
+											{{ __('messages.addguardian') }}
 										</button>
 
 
                                     <!-- Student Profile Section -->
                                     <div class="mb-5">
-                                        <h3 class="fw-bold mb-3">Student Profile Details</h3>
+                                        <h3 class="fw-bold mb-3">{{ __('messages.studentprofiledetails') }}</h3>
                                         <div id="student-forms-container">
                                             @include('student._student-form', ['prefix' => 'students[0]', 'key' => 'student-0'])
                                         </div>
 										<hr>
-                                        <button type="button" class="btn btn-secondary mt-1 w-100" id="add-student-btn">Add More</button>
+                                        <button type="button" class="btn btn-secondary mt-1 w-100" id="add-student-btn">{{ __('messages.addmore') }}</button>
 										<hr>
                                     </div>
 									<!--begin::Submit button-->
 									<div class="d-grid mb-10">
 										<button type="submit" id="kt_sign_up_submit" class="btn btn-primary">
 											<!--begin::Indicator label-->
-											<span class="indicator-label">Register</span>
+											<span class="indicator-label">{{ __('messages.register') }}</span>
 											<!--end::Indicator label-->
 											<!--begin::Indicator progress-->
 											<span class="indicator-progress">Please wait...
@@ -256,8 +256,8 @@
 									</div>
 									<!--end::Submit button-->
 									<!--begin::Sign up-->
-									<div class="text-gray-500 text-center fw-semibold fs-6">Already have an Account?
-									<a href="/login" class="link-primary fw-semibold">Log in</a></div>
+									<div class="text-gray-500 text-center fw-semibold fs-6">{{ __('messages.alreadyhave') }}
+									<a href="/login" class="link-primary fw-semibold">{{ __('messages.login') }}</a></div>
 									<!--end::Sign up-->
 								</form>
 								<!--end::Form-->

@@ -1,18 +1,19 @@
-@role('parent')
+
 <x-app-layout>
 	@slot ('title')
 	Dashboard
 	@endslot
 	<x-card title=''>
-		@if ($parent->ic == NULL && $parent->address == NULL)
+		
 		<x-profile-notice />
-		@endif
+		
 
 		<div class="app-toolbar-wrapper d-flex align-items-center flex-stack flex-wrap gap-2 py-4 w-100">
 			<!--begin::Page title-->
 			<div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
 				<!--begin::Title-->
 				<div class="mb-3 text-center">
+    <p>Email sent from PWA: <strong>{{ $email ?: 'No email provided' }}</strong></p>
 </div>
 
 
@@ -239,4 +240,3 @@
 		@endpush
 	</x-card>
 </x-app-layout>
-@endrole

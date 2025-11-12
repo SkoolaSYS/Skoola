@@ -8,7 +8,7 @@
                 @method('PUT')
 
                 <div class="mb-3">
-                    <label class="form-label">Name</label>
+                    <label class="form-label">{{ __('messages.fullname') }}</label>
                     <input type="text" name="name" class="form-control" 
                            value="{{ old('name', $teacher->name) }}">
                 </div>
@@ -20,18 +20,18 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">IC Number</label>
+                    <label class="form-label">{{ __('messages.ic') }}</label>
                     <input type="text" name="ic" class="form-control" 
                            value="{{ old('ic', $teacher->ic) }}">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Address</label>
+                    <label class="form-label">{{ __('messages.address') }}</label>
                     <textarea name="address" class="form-control" rows="2">{{ old('address', $teacher->address) }}</textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Phone Number</label>
+                    <label class="form-label">{{ __('messages.phonenum') }}</label>
                     <input type="text" name="phone_num" class="form-control" 
                            value="{{ old('phone_num', $teacher->phone_num) }}">
                 </div>
@@ -44,7 +44,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-success">Save Changes</button>
+                <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
                 <a href="{{ route('school.teachers.index') }}" class="btn btn-secondary ms-2">Cancel</a>
             </form>
         </div>

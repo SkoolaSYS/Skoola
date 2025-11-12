@@ -15,8 +15,8 @@
                     <thead class="table-light">
                         <tr>
                             <th>No.</th>
-                            <th>Name</th>
-                            <th>Attendance</th>
+                            <th>{{ __('messages.fullname') }}</th>
+                            <th>{{ __('messages.attendance') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,13 +29,13 @@
                                 <td>{{ $student->name }}</td>
                                 <td>
                                     <select name="attendance[{{ $student->id }}]" class="form-select">
-                                        <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>Present</option>
-                                        <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}>Absent</option>
-                                        <option value="Late" {{ $status == 'Late' ? 'selected' : '' }}>Late</option>
+                                        <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>{{ __('messages.present') }}</option>
+                                        <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}>{{ __('messages.absent') }}</option>
+                                        <option value="Late" {{ $status == 'Late' ? 'selected' : '' }}>{{ __('messages.late') }}</option>
                                         <option value="MC" {{ $status == 'MC' ? 'selected' : '' }}>MC</option>
-                                        <option value="Unwell" {{ $status == 'Unwell' ? 'selected' : '' }}>Unwell</option>
-                                        <option value="School Activity" {{ $status == 'School Activity' ? 'selected' : '' }}>School Activity</option>
-                                        <option value="Others" {{ $status == 'Others' ? 'selected' : '' }}>Others</option>
+                                        <option value="Unwell" {{ $status == 'Unwell' ? 'selected' : '' }}>{{ __('messages.unwell') }}</option>
+                                        <option value="School Activity" {{ $status == 'School Activity' ? 'selected' : '' }}>{{ __('messages.schoolactivity') }}</option>
+                                        <option value="Others" {{ $status == 'Others' ? 'selected' : '' }}>{{ __('messages.others') }}</option>
                                     </select>
                                 </td>
                             </tr>
@@ -44,7 +44,7 @@
                 </table>
             </div>
 
-            <button type="submit" class="btn btn-success mt-3">Update Attendance</button>
+            <button type="submit" class="btn btn-success mt-3">{{ __('messages.update') }}</button>
         </form>
     </x-card>
 </x-app-layout>

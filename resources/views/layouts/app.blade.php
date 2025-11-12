@@ -15,6 +15,7 @@
     <meta property="og:url" content="https://keenthemes.com/metronic" />
     <meta property="og:site_name" content="Keenthemes | Metronic" />
 
+<link rel="stylesheet" href="{{ asset('css/app.css') }}"><script src="{{ asset('js/app.js') }}"></script>
 
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="{{ url('assets/media/logos/favicon.ico') }}" />
@@ -29,7 +30,7 @@
     <link href="{{ url('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 
-    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="(assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <script src="assets/plugins/global/plugins.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
 
@@ -222,9 +223,11 @@
                                             <!--end::Avatar-->
                                             <!--begin::Username-->
                                             <div class="d-flex flex-column">
-                                                <div class="fw-bold d-flex align-items-center fs-5">{{auth()->user()->name }}
+                                                <div class="fw-bold d-flex align-items-center fs-5">{{ Auth::user()->name ?? 'Guest' }}
+
                                                 </div>
-                                                <div class="fw-semibold text-muted fs-7">{{auth()->user()->email }}</div>
+                                                <div class="fw-semibold text-muted fs-7">{{ auth()->user()->email ?? 'Guest' }}
+</div>
                                             </div>
                                             <!--end::Username-->
                                         </div>

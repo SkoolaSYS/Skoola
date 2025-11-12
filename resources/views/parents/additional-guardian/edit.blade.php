@@ -122,9 +122,14 @@
 							<div class="col-lg-8 fv-row">
 								<select name="relationship" class="form-control form-control-lg form-control-solid" required>
 									<option value="">{{ __('messages.selectrelay') }}</option>
-									<option value="Father" {{ $guardian->relationship == 'Father' ? 'selected' : '' }}>{{ __('messages.father') }}</option>
-									<option value="Mother" {{ $guardian->relationship == 'Mother' ? 'selected' : '' }}>{{ __('messages.mother') }}</option>
-									<option value="Guardian" {{ $guardian->relationship == 'Guardian' ? 'selected' : '' }}>{{ __('messages.guardian') }}</option>
+									<option value="Father" {{ (isset($user['relationship']) && $user['relationship'] == 'Father') ? 'selected' : '' }}>
+    									{{ __('messages.father') }}</option>
+
+									<option value="Mother" {{ (isset($user['relationship']) && $user['relationship'] == 'Mother') ? 'selected' : '' }}>
+    								{{ __('messages.mother') }}</option>
+
+									<option value="Guardian" {{ (isset($user['relationship']) && $user['relationship'] == 'Guardian') ? 'selected' : '' }}>
+    								{{ __('messages.guardian') }}</option>
 								</select>
 							</div>
 						</div>

@@ -14,13 +14,18 @@ class AttendancesExport implements FromCollection,WithHeadings
     * @return \Illuminate\Support\Collection
     */
     public function collection()
-    { 
-        $parent_id = Auth::user()->id;
+    {
+        $parent_id = Auth::id();
 
-        $attendances = Attendance::whereHas('student', function ($query) use ($parent_id) {
-            $query->where('parent_id', $parent_id);
-        })->get();
-        
+        // Get all student IDs linked to this parent
+        $studentIds = \DB::table('parent_student')
+            ->where('parent_id', $parent_id)
+            ->pluck('student_id');
+
+        // Get attendances for those students
+        $attendances = Attendance::whereIn('student_id', $studentIds)->get();
+
+        // Map data for Excel
         $data = $attendances->map(function ($attendance) {
             $student = Student::find($attendance->student_id);
             return [
@@ -35,22 +40,24 @@ class AttendancesExport implements FromCollection,WithHeadings
                 $attendance->updated_at,
             ];
         });
-        //dd($this->headings());
-        return $data;
-    }
+
+    return $data;
+}
+
 
     public function headings(): array
-    {
-        return [
-            'Student Name',
-            'Check In',
-            'Check Out',
-            'Date',
-            'Status',
-            'Remarks',
-            'Remarks Description',
-            'Created at',
-            'Updated at',
-        ];
-    }
+{
+    return [
+        __('messages.studentname'),
+        __('messages.checkin'),
+        __('messages.checkout'),
+        __('messages.date'),
+        __('messages.status'),
+        __('messages.remarks'),
+        __('messages.remarks_desc'),
+        __('messages.created_at'),
+        __('messages.updated_at'),
+    ];
+}
+
 }

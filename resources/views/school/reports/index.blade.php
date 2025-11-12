@@ -8,9 +8,9 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Student Name</th>
-                    <th>Card ID</th>
-                    <th>Time</th>
+                    <th>{{ __('messages.fullname') }}</th>
+                    <th>{{ __('messages.cardid') }}</th>
+                    <th>{{ __('messages.time') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,7 +23,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center">No records found.</td>
+                        <td colspan="4" class="text-center">{{ __('messages.norecords') }}</td>
                     </tr>
                 @endforelse
             </tbody>

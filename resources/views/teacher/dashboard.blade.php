@@ -5,7 +5,7 @@
     <x-card title="Attendance Dashboard">
         <div class="app-toolbar-wrapper d-flex align-items-center flex-stack flex-wrap gap-2 py-4 w-100">
             <div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
-                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">Teacher Dashboard</h1>
+                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.teacherdashboard') }}</h1>
             </div>
         </div>
 
@@ -14,14 +14,15 @@
             <h4 class="fw-semibold text-dark mb-4">{{ $grade }} - {{ $className }}</h4>
             <div class="row g-3 justify-content-center">
                 @foreach(['daily','weekly','monthly'] as $period)
-                    <div class="col-lg-4 col-md-6 col-12 text-center mb-4">
-                        <h6 class="mb-2 text-muted text-uppercase">{{ ucfirst($period) }}</h6>
-                        <div id="chart-{{ $className }}-{{ $period }}" 
-                            class="attendance-chart" 
-                            style="width: 100%; height: 250px;">
-                        </div>
-                    </div>
-                @endforeach
+            <div class="col-lg-4 col-md-6 col-12 text-center mb-4">
+                <h6 class="mb-2 text-muted text-uppercase">{{ __('messages.' . $period) }}</h6>
+                <div id="chart-{{ $className }}-{{ $period }}" 
+                    class="attendance-chart" 
+                    style="width: 100%; height: 250px;">
+                </div>
+            </div>
+        @endforeach
+
             </div>
         </div>
 
@@ -47,7 +48,11 @@
                         colors: ['#50cd89','#f1416c','#f5d70f'], // green, red, yellow
                         legend: { show: true, position: 'bottom' },
                         plotOptions: { pie: { size: '70%' } },
-                        labels: ['Present','Absent','Late'],
+                        labels: [
+                        "{{ __('messages.present') }}",
+                        "{{ __('messages.absent') }}",
+                        "{{ __('messages.late') }}"
+                    ],
                         responsive: [
                             { breakpoint: 1024, options: { chart: { height: 220 } } },
                             { breakpoint: 768, options: { chart: { height: 200 } } },

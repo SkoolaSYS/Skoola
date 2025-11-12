@@ -8,43 +8,43 @@
             <input type="hidden" name="school_id" value="{{ $school->id }}">
 
             <div class="mb-3">
-                <label class="form-label">Student Name</label>
+                <label class="form-label">{{ __('messages.fullname') }}</label>
                 <input type="text" class="form-control" name="name" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">NRIC</label>
+                <label class="form-label">{{ __('messages.ic') }}</label>
                 <input type="text" class="form-control" name="ic" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Birth Certificate Number</label>
+                <label class="form-label">{{ __('messages.birthcertno') }}</label>
                 <input type="text" class="form-control" name="birth_cert_no">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Address</label>
+                <label class="form-label">{{ __('messages.address') }}</label>
                 <input type="textarea" class="form-control" name="address" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Date of Birth</label>
+                <label class="form-label">{{ __('messages.dob') }}</label>
                 <input type="date" class="form-control" name="dob" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Gender</label>
+                <label class="form-label">{{ __('messages.gender') }}</label>
                 <select name="gender" class="form-select" required>
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="">{{ __('messages.selectgender') }}</option>
+                    <option value="Male">{{ __('messages.male') }}</option>
+                    <option value="Female">{{ __('messages.female') }}</option>
                 </select>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Darjah/Tingkatan</label>
+                <label class="form-label">{{ __('messages.grade') }}</label>
                 <select name="grade" class="form-select" required>
-                    <option value="">Select Darjah/Tingkatan</option>
+                    <option value="">{{ __('messages.selectgrade') }}</option>
                     <option value="Darjah 1">Darjah 1</option>
                     <option value="Darjah 2">Darjah 2</option>
                     <option value="Darjah 3">Darjah 3</option>
@@ -61,62 +61,62 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Class</label>
+                <label class="form-label">{{ __('messages.class') }}</label>
                 <input type="text" class="form-control" name="class_name" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Race</label>
+                <label class="form-label">{{ __('messages.race') }}</label>
                 <select name="race" class="form-select" required>
-                    <option value="">Select Race</option>
-                    <option value="Malay">Malay</option>
-                    <option value="Chinese">Chinese</option>
-                    <option value="Indian">Indian</option>
-                    <option value="Others">Others</option>
+                    <option value="">{{ __('messages.selectrace') }}</option>
+                    <option value="Malay">{{ __('messages.malay') }}</option>
+                    <option value="Chinese">{{ __('messages.chinese') }}</option>
+                    <option value="Indian">{{ __('messages.indian') }}</option>
+                    <option value="Others">{{ __('messages.others') }}</option>
                 </select>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Religion</label>
+                <label class="form-label">{{ __('messages.religion') }}</label>
                 <select name="religion" class="form-select" required>
-                    <option value="">Select Religion</option>
+                    <option value="">{{ __('messages.selectreligion') }}</option>
                     <option value="Islam">Islam</option>
                     <option value="Christianity">Christianity</option>
                     <option value="Buddhism">Buddhism</option>
                     <option value="Hinduism">Hinduism</option>
-                    <option value="Others">Others</option>
+                    <option value="Others">{{ __('messages.others') }}</option>
                 </select>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Nationality</label>
+                <label class="form-label">{{ __('messages.nationality') }}</label>
                 <select name="nationality" class="form-select" required>
-                    <option value="">Select Nationality</option>
+                    <option value="">{{ __('messages.selectnationality') }}</option>
                     <option value="Malaysian">Malaysian</option>
                     <option value="Non-Malaysian">Non-Malaysian</option>
                 </select>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Orphan</label>
+                <label class="form-label">{{ __('messages.orphan') }}</label>
                 <select name="orphan" class="form-select" required>
-                    <option value="">Select</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
+                    <option value="">{{ __('messages.select') }}</option>
+                    <option value="Yes">{{ __('messages.yes') }}</option>
+                    <option value="No">{{ __('messages.no') }}</option>
                 </select>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">OKU</label>
                 <select name="oku" class="form-select" required>
-                    <option value="">Select</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
+                    <option value="">{{ __('messages.select') }}</option>
+                    <option value="Yes">{{ __('messages.yes') }}</option>
+                    <option value="No">{{ __('messages.no') }}</option>
                 </select>
             </div>
 
 
-            <button type="submit" class="btn btn-primary">Add Student</button>
+            <button type="submit" class="btn btn-primary">{{ __('messages.addstudent') }}</button>
             <a href="{{ route('dashboard.school', ['school' => $school->id]) }}" class="btn btn-secondary">Cancel</a>
         </form>
     </x-card>

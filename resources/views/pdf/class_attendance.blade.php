@@ -12,21 +12,21 @@
     </style>
 </head>
 <body>
-    <h3>Class Attendance Report</h3>
+    <h3>{{ __('messages.classattendancereport') }}</h3>
     <p>
-        <strong>Grade:</strong> {{ $grade }} |
-        <strong>Class:</strong> {{ $class_name }} |
-        <strong>Date:</strong> {{ $date }}
+        <strong>{{ __('messages.grade') }}:</strong> {{ $grade }} |
+        <strong>{{ __('messages.class') }}:</strong> {{ $class_name }} |
+        <strong>{{ __('messages.date') }}:</strong> {{ $date }}
     </p>
     <p>
-        <strong>Teacher:</strong> {{ $teacher }}
+        <strong>{{ __('messages.teacher') }}:</strong> {{ $teacher }}
     </p>
 
     <table>
         <thead>
             <tr>
                 <th>No.</th>
-                <th>Student Name</th>
+                <th>{{ __('messages.studentname') }}</th>
                 @foreach($subjects as $subject)
                     <th>{{ $subject }}</th>
                 @endforeach

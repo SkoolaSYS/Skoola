@@ -26,9 +26,9 @@
             <form method="GET" action="{{ route('class_attendance.index') }}">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label for="grade" class="form-label">Tingkatan/Darjah</label>
+                        <label for="grade" class="form-label">{{ __('messages.grade') }}</label>
                         <select name="grade" id="grade" class="form-select" onchange="filterClasses()" required>
-                            <option value="">-- Select Grade --</option>
+                            <option value="">-- {{ __('messages.selectgrade') }} --</option>
                             @foreach(['Tingkatan 1','Tingkatan 2','Tingkatan 3','Tingkatan 4','Tingkatan 5','Tingkatan 6',
                                       'Darjah 1','Darjah 2','Darjah 3','Darjah 4','Darjah 5','Darjah 6'] as $grade)
                                 <option value="{{ $grade }}" {{ $selectedGrade == $grade ? 'selected' : '' }}>{{ $grade }}</option>
@@ -37,9 +37,9 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="class_name" class="form-label">Class</label>
+                        <label for="class_name" class="form-label">{{ __('messages.class') }}</label>
                         <select name="class_name" id="class_name" class="form-select" required>
-                            <option value="">-- Select Class --</option>
+                            <option value="">-- {{ __('messages.selectclass') }} --</option>
                             @foreach($allClasses as $class)
                                 <option value="{{ $class }}" {{ $selectedClass == $class ? 'selected' : '' }}>{{ $class }}</option>
                             @endforeach
@@ -47,9 +47,9 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="subject" class="form-label">Subject</label>
+                        <label for="subject" class="form-label">{{ __('messages.subject') }}</label>
                         <select name="subject" id="subject" class="form-select" required>
-                            <option value="">-- Select Subject --</option>
+                            <option value="">-- {{ __('messages.selectsubject') }} --</option>
                             @foreach(['Mathematics','Science','English','Bahasa Melayu','Sejarah','Geografi'] as $subject)
                                 <option value="{{ $subject }}" {{ $selectedSubject == $subject ? 'selected' : '' }}>{{ $subject }}</option>
                             @endforeach
@@ -58,19 +58,19 @@
                 </div>
 
                 <div class="mt-3">
-                    <button type="submit" class="btn btn-primary">Show Students</button>
+                    <button type="submit" class="btn btn-primary">{{ __('messages.showstudents') }}</button>
                 </div>
             </form>
         </div>
 
        @if(isset($students) && count($students) > 0)
 <div class="mt-5">
-    <h5>Student List - {{ $selectedClass }} ({{ $selectedGrade }})</h5>
+    <h5>{{ __('messages.studentlist') }} - {{ $selectedClass }} ({{ $selectedGrade }})</h5>
 
     <div class="text-end mb-3 d-flex justify-content-end gap-2">
     <a href="{{ route('class_attendance.add', ['grade' => $selectedGrade, 'class_name' => $selectedClass, 'subject' => $selectedSubject]) }}"
        class="btn btn-primary">
-        Add Attendance
+        {{ __('messages.addattendance') }}
     </a>
 
     @php
@@ -88,7 +88,7 @@
             'class_name' => $selectedClass,
             'subject' => $selectedSubject
         ]) }}" class="btn btn-warning">
-            Edit Attendance
+            {{ __('messages.editattendance') }}
         </a>
         
     @endif
@@ -99,7 +99,7 @@
     'subject' => $selectedSubject
 ]) }}" 
    class="btn btn-danger" target="_blank">
-   Download PDF
+   {{ __('messages.downloadpdf') }}
 </a>
 
 
@@ -113,7 +113,7 @@
             <thead class="table-light">
                 <tr>
         <th>No.</th>
-        <th>Name</th>
+        <th>{{ __('messages.fullname') }}</th>
         @foreach($subjectOrder as $subject => $num)
             <th>{{ $num }}</th>
         @endforeach
@@ -169,47 +169,61 @@
     </style>
 
     <script>
-        function filterClasses() {
-            let grade = document.getElementById("grade").value;
-            let classSelect = document.getElementById("class_name");
+    // Pass translations from Laravel to JS
+    const translations = {
+        present: "{{ __('messages.present') }}",
+        absent: "{{ __('messages.absent') }}",
+        others: "{{ __('messages.others') }}",
+    };
 
-            for (let i = 0; i < classSelect.options.length; i++) {
-                let option = classSelect.options[i];
+    function filterClasses() {
+        let grade = document.getElementById("grade").value;
+        let classSelect = document.getElementById("class_name");
 
-                if (option.value === "") { option.style.display = ""; continue; }
+        for (let i = 0; i < classSelect.options.length; i++) {
+            let option = classSelect.options[i];
 
-                if ((grade.includes("Tingkatan") && option.value.startsWith(grade.replace("Tingkatan ",""))) ||
-                    (grade.includes("Darjah") && option.value.startsWith(grade.replace("Darjah ",""))) ||
-                    option.value.startsWith(grade)) {
-                    option.style.display = "";
-                } else {
-                    option.style.display = "none";
-                }
+            if (option.value === "") { 
+                option.style.display = ""; 
+                continue; 
             }
-            classSelect.value = "{{ $selectedClass ?? '' }}";
-        }
 
-        // Color logic
-        function updateSelectColor(select) {
-            select.classList.remove('attendance-present', 'attendance-absent', 'attendance-others');
-            let value = select.value.toLowerCase();
-            if (value === 'present') {
-                select.classList.add('attendance-present');
-            } else if (value === 'absent') {
-                select.classList.add('attendance-absent');
-            } else if (value === 'others') {
-                select.classList.add('attendance-others');
+            if (
+                (grade.includes("Tingkatan") && option.value.startsWith(grade.replace("Tingkatan ",""))) ||
+                (grade.includes("Darjah") && option.value.startsWith(grade.replace("Darjah ",""))) ||
+                option.value.startsWith(grade)
+            ) {
+                option.style.display = "";
             } else {
-                // for MC, Unwell, etc., default to yellow as "others"
-                select.classList.add('attendance-others');
+                option.style.display = "none";
             }
         }
+        classSelect.value = "{{ $selectedClass ?? '' }}";
+    }
 
-        // Apply color on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.attendance-select').forEach(updateSelectColor);
-            filterClasses();
-        });
-    </script>
+    // Color logic
+    function updateSelectColor(select) {
+        select.classList.remove('attendance-present', 'attendance-absent', 'attendance-others');
+        let value = select.value.toLowerCase();
+
+        if (['present', 'hadir'].includes(value)) {
+            select.classList.add('attendance-present');
+        } else if (['absent', 'tidak hadir'].includes(value)) {
+            select.classList.add('attendance-absent');
+        } else if (['others', 'lain-lain'].includes(value)) {
+            select.classList.add('attendance-others');
+        } else {
+            select.classList.add('attendance-others');
+        }
+
+    }
+
+    // Apply color on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.attendance-select').forEach(updateSelectColor);
+        filterClasses();
+    });
+</script>
+
 </x-app-layout>
 @endrole

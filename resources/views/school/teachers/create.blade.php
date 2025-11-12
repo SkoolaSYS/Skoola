@@ -8,27 +8,27 @@
                     @csrf
 
                     <div class="form-group mb-3">
-                        <label for="name">Full Name</label>
+                        <label for="name">{{ __('messages.fullname') }}</label>
                         <input type="text" name="name" class="form-control" required>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="teacher_id">Teacher ID</label>
+                        <label for="teacher_id">{{ __('messages.teacherid') }}</label>
                         <input type="text" name="teacher_id" class="form-control" required>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="ic">Identification Card Number</label>
+                        <label for="ic">{{ __('messages.ic') }}</label>
                         <input type="text" name="ic" class="form-control" required>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="address">Address</label>
+                        <label for="address">{{ __('messages.address') }}</label>
                         <textarea name="address" class="form-control" rows="2" required></textarea>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="phone_num">Phone Number</label>
+                        <label for="phone_num">{{ __('messages.phonenum') }}</label>
                         <input type="text" name="phone_num" class="form-control" required>
                     </div>
 
@@ -38,12 +38,12 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="password">Password</label>
+                        <label for="password">{{ __('messages.password') }}</label>
                         <input type="password" name="password" class="form-control" required>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="password_confirmation">Confirm Password</label>
+                        <label for="password_confirmation">{{ __('messages.repeatpass') }}</label>
                         <input type="password" name="password_confirmation" class="form-control" required>
                     </div>
 
@@ -51,7 +51,7 @@
                     <input type="hidden" name="school_id" value="{{ auth()->user()->school_id }}">
 
                     <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-success">Register Teacher</button>
+                        <button type="submit" class="btn btn-success">{{ __('messages.registerteacher') }}</button>
                         <a href="{{ route('school.teachers.index') }}" class="btn btn-light">Cancel</a>
                     </div>
                 </form>

@@ -7,7 +7,7 @@
             <!--begin::Page title-->
             <div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
                 <!--begin::Title-->
-                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ $student->name }}'s Dashboard</h1>
+                <h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 m-0">{{ __('messages.dashboardstudent', ['student' => $student->name]) }}</h1>
                 <!--end::Title-->
             </div>
             <!--end::Page title-->
@@ -26,9 +26,9 @@
                     <div class="card-toolbar">
                         <!--begin::Toolbar-->
                         <div class="card-toolbar" data-kt-buttons="true">
-                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary active px-4 me-1" id="">Year</a>
-                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1" id="">Month</a>
-                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4" id="">Week</a>
+                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary active px-4 me-1" id="">{{ __('messages.year') }}</a>
+                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1" id="">{{ __('messages.month') }}</a>
+                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4" id="">{{ __('messages.week') }}</a>
                         </div>
                         <!--end::Toolbar-->
                     </div>
@@ -45,7 +45,7 @@
                                 <!--begin::Container-->
                                 <div class="d-flex justify-content-between flex-column w-225px w-md-600px mx-auto mx-md-0 pt-3 pb-10">
                                     <!--begin::Title-->
-                                    <div class="fs-4 fw-bold text-gray-900 text-center mb-5">{{ $student->name }}'s Attendance<br /></div>
+                                    <div class="fs-4 fw-bold text-gray-900 text-center mb-5">{{ __('messages.attendancestudent', ['student' => $student->name]) }}<br /></div>
                                     <!--end::Title-->
                                     <div class="mx-auto mb-4" id="pie_chart_{{ $student->id }}"></div>
                                     <div class="mx-auto">
@@ -57,7 +57,7 @@
                                                     <div class="bullet bullet-dot w-8px h-7px bg-success me-2" style="color:#50cd89;"></div>
                                                     <!--end::Bullet-->
                                                     <!--begin::Label-->
-                                                    <div class="fs-8 fw-semibold text-muted">Present</div>
+                                                    <div class="fs-8 fw-semibold text-muted">{{ __('messages.present') }}</div>
                                                     <!--end::Label-->
                                                 </div>
                                                 <!--end::Label-->
@@ -67,7 +67,7 @@
                                                     <div class="bullet bullet-dot w-8px h-7px bg-danger me-2" style="color:#f1416c;"></div>
                                                     <!--end::Bullet-->
                                                     <!--begin::Label-->
-                                                    <div class="fs-8 fw-semibold text-muted">Absent</div>
+                                                    <div class="fs-8 fw-semibold text-muted">{{ __('messages.absent') }}</div>
                                                     <!--end::Label-->
                                                 </div>
                                             </div>
@@ -106,7 +106,7 @@
                         <div class="card-header cursor-pointer">
                             <!--begin::Card title-->
                             <div class="card-title m-0">
-                                <h3 class="fw-bold m-0">List of {{ $student->name }}'s Attendance</h3>
+                                <h3 class="fw-bold m-0">{{ __('messages.listof', ['student' => $student->name]) }}</h3>
                             </div>
                             <!--end::Card title-->
                         </div>
@@ -121,13 +121,13 @@
                                         <!--begin::Thead-->
                                         <thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
                                             <tr>
-                                                <th class="min-w-125px ps-9">Date</th>
-                                                <th class="min-w-125px ps-9">Check-In</th>
-                                                <th class="min-w-125px ps-9">Check-Out</th>
-                                                <th class="min-w-150px px-0">Name</th>
-                                                <th class="min-w-150px px-0">School</th>
+                                                <th class="min-w-125px ps-9">{{ __('messages.date') }}</th>
+                                                <th class="min-w-125px ps-9">{{ __('messages.checkin') }}</th>
+                                                <th class="min-w-125px ps-9">{{ __('messages.checkout') }}</th>
+                                                <th class="min-w-150px px-0">{{ __('messages.fullname') }}</th>
+                                                <th class="min-w-150px px-0">{{ __('messages.school') }}</th>
                                                 <th class="min-w-150px ps-5">Status</th>
-                                                <th class="min-w-150px ps-5">Remarks</th>
+                                                <th class="min-w-150px ps-5">{{ __('messages.remarks') }}</th>
                                             </tr>
                                         </thead>
                                         <!--end::Thead-->
@@ -143,11 +143,11 @@
 
                                                 @if ($attendance->status == 'attend')
                                                 <td class="text-center">
-                                                    <a class="badge status-badge" style="background-color:#50cd89;">Present</a>
+                                                    <a class="badge status-badge" style="background-color:#50cd89;">{{ __('messages.present') }}</a>
                                                 </td>
                                                 @else
                                                 <td class="text-center">
-                                                    <a class="badge status-badge" style="background-color:#f1416c;">Absent</a>
+                                                    <a class="badge status-badge" style="background-color:#f1416c;">{{ __('messages.absent') }}</a>
                                                 </td>
                                                 @endif
                                                 @if ($attendance->remarks == NULL)
@@ -159,7 +159,7 @@
                                             </tr>
                                             @empty
                                             <tr>
-                                                <td class="text-center" colspan="8">No attendances found.</td>
+                                                <td class="text-center" colspan="8">{{ __('messages.noattendance') }}</td>
                                             </tr>
                                             @endforelse
                                         </tbody>
