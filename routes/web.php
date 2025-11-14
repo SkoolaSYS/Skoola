@@ -221,15 +221,11 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
 
     $payload = $request->all();
 
-    // If payload is a single object
     if (isset($payload['card_no'])) {
 
         DB::table('records')->insert([
-            'card_id' => $payload['card_no'],      // FIXED
-            'name'    => $payload['nama'] ?? null, // optional
-            'time'    => $payload['time'],         // FIXED
-            'created_at' => now(),
-            'updated_at' => now(),
+            'card_id' => $payload['card_no'], 
+            'time'    => $payload['time'],
         ]);
     }
 
@@ -237,7 +233,6 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
         'payload' => $payload,
     ]);
 });
-
 
 
 
