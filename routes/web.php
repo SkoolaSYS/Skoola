@@ -217,20 +217,22 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
 
     
 
-    Route::post('/receive', function (\Illuminate\Http\Request $request) {
-    // Get JSON payload
-    $payload = $request->all(); // assuming the ASP sends JSON array
+    Route::post('/receive', function (Request $request) {
 
-    if (isset($payload) && is_array($payload)) {
-        foreach ($payload as $item) {
-            DB::table('records')->insert([
-                'card_id' => $item['card_id'] ?? null,
-                'time' => $item['time'] ?? now(),
-            ]);
-        }
+    $payload = $request->all();
+
+    // If payload is a single object
+    if (isset($payload['card_no'])) {
+
+        DB::table('records')->insert([
+            'card_id' => $payload['card_no'],      // FIXED
+            'name'    => $payload['nama'] ?? null, // optional
+            'time'    => $payload['time'],         // FIXED
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
-    // Pass data to Blade view
     return view('receive', [
         'payload' => $payload,
     ]);

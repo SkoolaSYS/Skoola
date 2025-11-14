@@ -83,6 +83,8 @@
             
 
             <a href="{{ url()->previous() }}" class="btn btn-secondary mt-3">Back</a>
+<a href="{{ route('school.students.edit', $student->id) }}" class="btn btn-primary mt-3 ms-2">Edit</a>
+
         </div>
     </div>
 </x-app-layout>

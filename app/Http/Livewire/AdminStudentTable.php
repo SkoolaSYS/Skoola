@@ -95,7 +95,6 @@ class AdminStudentTable extends DataTableComponent
                 : "<button wire:click='toggleStatus({$row->id})' class='btn btn-sm btn-success me-1'>" . __('messages.activate') . "</button>";
 
             $buttons .= "
-                <a href='" . route('school.students.edit', $row) . "' class='btn btn-sm btn-warning me-1'>" . __('messages.edit') . "</a>
                 {$toggleButton}
             ";
         }
