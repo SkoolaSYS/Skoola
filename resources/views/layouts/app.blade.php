@@ -15,7 +15,6 @@
     <meta property="og:url" content="https://keenthemes.com/metronic" />
     <meta property="og:site_name" content="Keenthemes | Metronic" />
 
-<link rel="stylesheet" href="{{ asset('css/app.css') }}"><script src="{{ asset('js/app.js') }}"></script>
 
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="{{ url('assets/media/logos/favicon.ico') }}" />
@@ -30,7 +29,7 @@
     <link href="{{ url('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 
-    <link href="(assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <script src="assets/plugins/global/plugins.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
 
@@ -78,17 +77,6 @@
     </script>
     <!--end::Theme mode setup on page load-->
     <!--begin::App-->
-
-    <div class="dropdown">
-    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        {{ strtoupper(app()->getLocale()) }}
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="{{ route('lang.switch', 'en') }}">English</a></li>
-        <li><a class="dropdown-item" href="{{ route('lang.switch', 'ms') }}">Bahasa Melayu</a></li>
-    </ul>
-</div>
-
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
@@ -107,8 +95,6 @@
                     </div>
                     <!--end::Header mobile toggle-->
                     <!--begin::Logo-->
-
-                    
                     <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
                         <a>
                             <img alt="Logo" src="{{ url('assets/media/logos/default-dark.svg')}}" class="h-25px d-none d-lg-inline')}}" />
@@ -127,8 +113,7 @@
                                 <a href="{{route('dashboard')}}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <span class="menu-link">
-                                        <span class="menu-title">{{ __('messages.dashboard') }}</span>
-
+                                        <span class="menu-title">Dashboards</span>
                                     </span>
                                     <!--end:Menu link-->
                                 </a>
@@ -137,7 +122,7 @@
                                 <a href="{{route('attendance.show')}}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <span class="menu-link">
-                                        <span class="menu-title">{{ __('messages.attendance') }}</span>
+                                        <span class="menu-title">Attendance</span>
                                     </span>
                                     <!--end:Menu link-->
                                 </a>
@@ -147,7 +132,7 @@
                                 <a href="{{route('dashboard')}}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <span class="menu-link">
-                                        <span class="menu-title">{{ __('messages.dashboard') }}</span>
+                                        <span class="menu-title">Dashboards</span>
                                     </span>
                                     <!--end:Menu link-->
                                 </a>
@@ -157,7 +142,7 @@
                                 class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                     <!--begin:Menu link-->
                                     <span class="menu-link">
-                                        <span class="menu-title">{{ __('messages.attendance') }}</span>
+                                        <span class="menu-title">Class Attendance</span>
                                     </span>
                                     <!--end:Menu link-->
                                 </a>
@@ -167,7 +152,7 @@
                                     {{-- Common menu for all roles --}}
                                     <a href="{{ route('dashboard') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                         <span class="menu-link">
-                                            <span class="menu-title">{{ __('messages.dashboard') }}</span>
+                                            <span class="menu-title">Dashboards</span>
                                         </span>
                                     </a>
                                 @endrole
@@ -176,7 +161,7 @@
                                 @role('school')
                                     <a href="{{ route('school.teachers.index') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                         <span class="menu-link">
-                                            <span class="menu-title">{{ __('messages.teacher') }}</span>
+                                            <span class="menu-title">Teacher</span>
                                         </span>
                                     </a>
                                 @endrole
@@ -184,7 +169,7 @@
                                 @role('school')
                                     <a href="{{ route('school.reports.index') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                         <span class="menu-link">
-                                            <span class="menu-title">{{ __('messages.touch') }}</span>
+                                            <span class="menu-title">Laporan Sentuhan</span>
                                         </span>
                                     </a>
                                 @endrole
@@ -223,11 +208,9 @@
                                             <!--end::Avatar-->
                                             <!--begin::Username-->
                                             <div class="d-flex flex-column">
-                                                <div class="fw-bold d-flex align-items-center fs-5">{{ Auth::user()->name ?? 'Guest' }}
-
+                                                <div class="fw-bold d-flex align-items-center fs-5">{{auth()->user()->name }}
                                                 </div>
-                                                <div class="fw-semibold text-muted fs-7">{{ auth()->user()->email ?? 'Guest' }}
-</div>
+                                                <div class="fw-semibold text-muted fs-7">{{auth()->user()->email }}</div>
                                             </div>
                                             <!--end::Username-->
                                         </div>
@@ -239,19 +222,19 @@
                                     <!--end::Menu separator-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-5">
-                                        <a href="{{route('profile.show')}}" class="menu-link px-5">{{ __('messages.profile') }}</a>
+                                        <a href="{{route('profile.show')}}" class="menu-link px-5">My Profile</a>
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-5">
-                                        <a href="{{ route('student.show') }}" class="menu-link px-5">{{ __('messages.children') }}</a>
+                                        <a href="{{ route('student.show') }}" class="menu-link px-5">My Children</a>
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-5">
                                         <form action="{{ route('logout') }}" method="POST" class="menu-item px-4">
                                             @csrf
-                                            <button type="submit" class="menu-link px-5">{{ __('messages.logout') }}</button>
+                                            <button type="submit" class="menu-link px-5">Log Out</button>
                                         </form>
                                     </div>
                                     <!--end::Menu item-->
@@ -259,7 +242,7 @@
                                     <div class="menu-item px-5">
                                         <form action="{{ route('logout') }}" method="POST" class="menu-item px-4">
                                             @csrf
-                                            <button type="submit" class="menu-link px-5">{{ __('messages.logout') }}</button>
+                                            <button type="submit" class="menu-link px-5">Log Out</button>
                                         </form>
                                     </div>
                                     @endrole
@@ -346,6 +329,3 @@
             <!--end::Javascript-->
 </body>
 <!--end::Body-->
-
-</html>
-
