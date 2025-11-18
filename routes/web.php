@@ -31,10 +31,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\ParentController;
 
-Route::get('/debug', function () {
-    return 'Debug route is working!';
-});
+
 
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
@@ -56,6 +55,12 @@ Route::get('/attendance-parent/verify/{token}', [EmailVerificationController::cl
 // ✅ Parent dashboard (PWA iframe)
 Route::get('/attendance-parent', [DashboardController::class, 'pwaParentDashboard'])
     ->name('attendance.parent');
+
+    Route::get('parent/dashboard', [ParentController::class, 'dashboard'])->name('parent.dashboard');
+Route::get('attendance-parent', [ParentController::class, 'attendancePage']);
+Route::get('attendance-parent-verify', [ParentController::class, 'verifyEmail']);
+Route::post('attendance-parent-request', [ParentController::class, 'sendVerificationLink']);
+
 
 
 Route::middleware(['auth:sanctum'])->group(function () {

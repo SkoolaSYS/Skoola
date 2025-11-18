@@ -106,9 +106,18 @@ class SchoolController extends Controller
     }
 
     public function export($school_id)
-    {
-        $school = School::find($school_id);
-        $schoolName = $school->name;
-        return Excel::download(new AdminStudentExport($school_id, $schoolName), 'list_of_students.xlsx');
-    }
+{
+    $school = School::find($school_id);
+    $schoolName = $school->name;
+
+    // Get current app language
+    $lang = app()->getLocale(); // 'ms' or 'en'
+
+    // Pass the language to the export class
+    return Excel::download(
+        new AdminStudentExport($school_id, $schoolName, $lang),
+        'list_of_students.xlsx'
+    );
+}
+
 }

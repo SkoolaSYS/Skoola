@@ -128,118 +128,19 @@ if ($user->hasRole('teacher')) {
     return view('teacher.dashboard', compact('attendanceData', 'classes'));
 }
 
+$user = auth()->user();
 
-
-    // -------------------------------
-    // Parent dashboard section
-    // -------------------------------
-    $parent = $user; // logged in parent
-
-    // Get all student IDs linked to this parent from pivot
-    $allStudentIds = $parent->students()->pluck('students.id')->toArray();
-
-    // Student names
-    $students = Student::whereIn('id', $allStudentIds)
-        ->pluck('name', 'id')
-        ->toArray();
-
-    // Attendance list
-    $attendanceList = Attendance::whereIn('student_id', $allStudentIds)
-        ->take(5)
-        ->orderByDesc('id')
-        ->get();
-
-    // Absent count
-    $attendancesAbsent = Attendance::whereIn('student_id', $allStudentIds)
-        ->where('status', 'absent')
-        ->groupBy('student_id')
-        ->select('student_id', DB::raw('count(*) as total'))
-        ->pluck('total', 'student_id');
-
-    // Attend count
-    $attendancesAttend = Attendance::whereIn('student_id', $allStudentIds)
-        ->where('status', 'attend')
-        ->groupBy('student_id')
-        ->select('student_id', DB::raw('count(*) as total'))
-        ->pluck('total', 'student_id');
-
-    // Format chart data
-    $attendanceData = [];
-    foreach ($students as $id => $name) {
-        $attend = $attendancesAttend[$id] ?? 0;
-        $absent = $attendancesAbsent[$id] ?? 0;
-        $attendanceData[$id] = json_encode([$attend, $absent]);
-    }
-
-    return view('parents.dashboard', compact('parent', 'attendanceData', 'students', 'attendanceList'));
+if ($user->hasRole('parent')) {
+    return redirect()->route('parent.dashboard');
 }
 
-public function pwaParentDashboard(Request $request)
-{
-    // Capture email from query string
-    $email = $request->query('email');
 
-    // Optional: show message if no email provided
-    if (!$email) {
-        $email = ''; // or "No email provided"
-    }
 
-    // Check if email is verified
-    $verified = false;
-    if ($email) {
-        $verified = DB::table('email_verifications')
-            ->where('email', $email)
-            ->whereNotNull('verified_at')
-            ->exists();
-    }
 
-    // Load parent data if email exists
-    $parent = null;
-    $students = [];
-    $attendanceList = [];
-    $attendanceData = [];
-
-    if ($email && $verified) {
-        $parent = User::where('email', $email)->first();
-        if ($parent) {
-            $studentIds = $parent->students()->pluck('students.id')->toArray();
-            $students = Student::whereIn('id', $studentIds)->pluck('name', 'id')->toArray();
-
-            $attendanceList = Attendance::whereIn('student_id', $studentIds)
-                ->orderByDesc('id')
-                ->take(5)
-                ->get();
-
-            $attendancesAbsent = Attendance::whereIn('student_id', $studentIds)
-                ->where('status', 'absent')
-                ->groupBy('student_id')
-                ->select('student_id', DB::raw('count(*) as total'))
-                ->pluck('total', 'student_id');
-
-            $attendancesAttend = Attendance::whereIn('student_id', $studentIds)
-                ->where('status', 'attend')
-                ->groupBy('student_id')
-                ->select('student_id', DB::raw('count(*) as total'))
-                ->pluck('total', 'student_id');
-
-            foreach ($students as $id => $name) {
-                $attend = $attendancesAttend[$id] ?? 0;
-                $absent = $attendancesAbsent[$id] ?? 0;
-                $attendanceData[$id] = json_encode([$attend, $absent]);
-            }
-        }
-    }
-
-    // Pass email to Blade
-    return view('parents.dashboard', compact(
-        'email',
-        'verified',
-        'parent',
-        'students',
-        'attendanceList',
-        'attendanceData'
-    ));
+    
 }
+
+
 
 
 

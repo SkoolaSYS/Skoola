@@ -153,6 +153,10 @@ return [
     'remarks_desc' => 'Penerangan Catatan',
     'created_at' => 'Dicipta Pada',
     'updated_at' => 'Dikemaskini Pada',
+    'student_info_in' => 'Maklumat Pelajar di',
+    'school_name' => 'Nama Sekolah',
+    'total_students' => 'Jumlah Pelajar',
+    'average_percentage' => 'Peratusan Kehadiran (%)',
 
     
 ];

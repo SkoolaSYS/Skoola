@@ -4,33 +4,39 @@ namespace App\Exports;
 
 use App\Models\Student;
 use App\Models\Attendance;
-use App\Models\School;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class AdminStudentExport implements FromCollection,WithHeadings //Export list of students in each school (school level view)
+class AdminStudentExport implements FromCollection, WithHeadings
 {
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     protected $school_id;
     protected $schoolName;
+    protected $lang;
 
-    public function __construct($school_id, $schoolName)
+    public function __construct($school_id, $schoolName, $lang = 'en')
     {
         $this->school_id = $school_id;
         $this->schoolName = $schoolName;
+        $this->lang = $lang;
+
+        // Set language
+        app()->setLocale($lang);
     }
 
     public function registerEvents(): array
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                // Set the school name as title
-                $event->sheet->mergeCells('A1:C1'); // Adjust column range as needed
-                $event->sheet->setCellValue('A1', 'Student Information in ' . $this->schoolName);
+
+                $event->sheet->mergeCells('A1:B1');
+
+                $event->sheet->setCellValue(
+                    'A1',
+                    __('messages.student_info_in') . ' ' . $this->schoolName
+                );
+
                 $event->sheet->getStyle('A1')->applyFromArray([
                     'alignment' => [
                         'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -39,39 +45,45 @@ class AdminStudentExport implements FromCollection,WithHeadings //Export list of
             },
         ];
     }
-    
+
     public function collection()
     {
         $students = Student::where('school_id', $this->school_id)->get();
 
         $data = collect([
-            ['Student Information in ' . $this->schoolName, ''], // Header row
-            ['Student Name', 'Average Percentage (%)'],
+            [__('messages.student_info_in') . ' ' . $this->schoolName, ''],
+            [
+                __('messages.studentname'),
+                __('messages.average_percentage'),
+            ],
         ]);
 
-        $data = $data->merge($students->map(function ($student) {
-            $attendancesAttend = Attendance::where('student_id', $student->id)
-                ->where('status', 'attend')
-                ->count();
+        $data = $data->merge(
+            $students->map(function ($student) {
 
-            $attendancesAbsent = Attendance::where('student_id', $student->id)
-                ->where('status', 'absent')
-                ->count();
+                $attend = Attendance::where('student_id', $student->id)
+                    ->where('status', 'attend')
+                    ->count();
 
-            $totalAttendances = $attendancesAttend + $attendancesAbsent;
-            $attendancePercentage = 0;
+                $absent = Attendance::where('student_id', $student->id)
+                    ->where('status', 'absent')
+                    ->count();
 
-            if ($totalAttendances > 0) {
-                $attendancePercentage = ($attendancesAttend / $totalAttendances) * 100;
-                $attendancePercentage = number_format($attendancePercentage, 1);
-            }
+                $total = $attend + $absent;
 
-            //dd($student, $attendancePercentage,$schoolName->name);
-            return [
-                $student->name,
-                $attendancePercentage,
-            ];
-        }));
+                $percentage = 0;
+
+                if ($total > 0) {
+                    $percentage = number_format(($attend / $total) * 100, 1);
+                }
+
+                return [
+                    $student->name,
+                    $percentage,
+                ];
+            })
+        );
+
         return $data;
     }
 

@@ -153,4 +153,8 @@ return [
     'remarks_desc' => 'Remarks Description',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
+    'student_info_in' => 'Student Information in',
+    'school_name' => 'School Name',
+    'total_students' => 'Total Students',
+    'average_percentage' => 'Attendance Percentage (%)',
 ];
