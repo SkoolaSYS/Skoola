@@ -166,8 +166,7 @@
 
     <h3>{{ __('messages.schooldetails') }}</h3>
     
-   @livewire('ppd-dropdown', ['prefix' => $prefix], key('ppd-'.$key))
-
+   @livewire('ppd-dropdown', ['prefix' => $prefix], key('ppd-'.$key.'-'.uniqid()))
 </div>
     </div>
 </div>

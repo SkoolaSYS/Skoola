@@ -15,7 +15,7 @@
     <meta property="og:url" content="https://keenthemes.com/metronic" />
     <meta property="og:site_name" content="Keenthemes | Metronic" />
 
-<link rel="stylesheet" href="{{ asset('css/app.css') }}"><script src="{{ asset('js/app.js') }}"></script>
+
 
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="{{ url('assets/media/logos/favicon.ico') }}" />
@@ -323,7 +323,7 @@
             <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
             <!--end::Vendors Javascript-->
             <!--begin::Custom Javascript(used for this page only)-->
-            <script src="assets/js/widgets.bundle.js"></script>
+            <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
             <script src="assets/js/custom/widgets.js"></script>
             <script src="assets/js/custom/apps/chat/chat.js"></script>
             <script src="assets/js/custom/utilities/modals/upgrade-plan.js"></script>
