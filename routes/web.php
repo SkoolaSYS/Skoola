@@ -60,6 +60,9 @@ Route::get('/attendance-parent', [DashboardController::class, 'pwaParentDashboar
 Route::get('attendance-parent', [ParentController::class, 'attendancePage']);
 Route::get('attendance-parent-verify', [ParentController::class, 'verifyEmail']);
 Route::post('attendance-parent-request', [ParentController::class, 'sendVerificationLink']);
+Route::get('/parents/email-test', function () {
+    return view('parents.email_test');
+})->name('parents.email_test');
 
 
 
