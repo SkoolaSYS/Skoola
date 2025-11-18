@@ -47,16 +47,17 @@ class PpdDropdown extends Component
     }
 
     public function updatedSelectedState($state)
-    {
-        if (!is_null($state)) {
-            $this->districts = District::where('state_id', $state)->get();
-        }
-    }
+{
+    $this->districts = $state ? District::where('state_id', $state)->get() : collect();
+    $this->selectedDistrict = null; // reset
+    $this->schools = collect();      // reset
+    $this->selectedSchool = null;    // reset
+}
 
-    public function updatedSelectedDistrict($districtId)
-    {
-        if (!is_null($districtId)) {
-            $this->schools = School::where('district_id', $districtId)->get();
-        }
-    }
+public function updatedSelectedDistrict($districtId)
+{
+    $this->schools = $districtId ? School::where('district_id', $districtId)->get() : collect();
+    $this->selectedSchool = null;    // reset
+}
+
 }
