@@ -157,6 +157,8 @@ return [
     'school_name' => 'Nama Sekolah',
     'total_students' => 'Jumlah Pelajar',
     'average_percentage' => 'Peratusan Kehadiran (%)',
+    'district' => 'Daerah',
+    'selectdistrict' => 'Pilih Daerah',
 
     
 ];
