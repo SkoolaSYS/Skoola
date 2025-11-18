@@ -15,28 +15,26 @@
     <meta property="og:url" content="https://keenthemes.com/metronic" />
     <meta property="og:site_name" content="Keenthemes | Metronic" />
 
-<!-- App CSS & JS -->
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<script src="{{ asset('js/app.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/app.css') }}"><script src="{{ asset('js/app.js') }}"></script>
 
-<!-- Favicon & Canonical -->
-<link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}">
-<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
+    <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
+    <link rel="shortcut icon" href="{{ url('assets/media/logos/favicon.ico') }}" />
+    <!--begin::Fonts(mandatory for all pages)-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <!--end::Fonts-->
+    <!--begin::Vendor Stylesheets(used for this page only)-->
+    <link href="{{ url('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('assets/plugins/custom/vis-timeline/vis-timeline.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <!--end::Vendor Stylesheets-->
+    <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
+    <link href="{{ url('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 
-<!-- Fonts (mandatory for all pages) -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <link href="(assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <script src="assets/plugins/global/plugins.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
 
-<!-- Vendor Stylesheets (used for this page only) -->
-<link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('assets/plugins/custom/vis-timeline/vis-timeline.bundle.css') }}" rel="stylesheet" type="text/css" />
-
-<!-- Global Stylesheets Bundle (mandatory for all pages) -->
-<link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-
-<!-- ApexCharts & AlpineJS -->
-<script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
 
     <style>
@@ -303,16 +301,14 @@
 
             <!--begin::Javascript-->
             <script>
-                var hostUrl = "{{ asset('assets/') }}/";
+                var hostUrl = "assets/";
             </script>
-
-            <!--begin::Global Javascript Bundle (mandatory for all pages)-->
-            <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
-            <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+            <!--begin::Global Javascript Bundle(mandatory for all pages)-->
+            <script src="assets/plugins/global/plugins.bundle.js"></script>
+            <script src="assets/js/scripts.bundle.js"></script>
             <!--end::Global Javascript Bundle-->
-
-            <!--begin::Vendors Javascript (used for this page only)-->
-            <script src="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
+            <!--begin::Vendors Javascript(used for this page only)-->
+            <script src="assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
             <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
             <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
             <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
@@ -324,33 +320,32 @@
             <script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
             <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
             <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
-            <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+            <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
             <!--end::Vendors Javascript-->
+            <!--begin::Custom Javascript(used for this page only)-->
+            <script src="assets/js/widgets.bundle.js"></script>
+            <script src="assets/js/custom/widgets.js"></script>
+            <script src="assets/js/custom/apps/chat/chat.js"></script>
+            <script src="assets/js/custom/utilities/modals/upgrade-plan.js"></script>
+            <script src="assets/js/custom/utilities/modals/create-campaign.js"></script>
+            <script src="assets/js/custom/utilities/modals/users-search.js"></script>
+            <script src="assets/js/custom/apps/customers/list/export.js"></script>
+            <script src="assets/js/custom/apps/customers/list/list.js"></script>
+            <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
 
-            <!--begin::Custom Javascript (used for this page only)-->
-            <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
-            <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
-            <script src="{{ asset('assets/js/custom/apps/chat/chat.js') }}"></script>
-            <script src="{{ asset('assets/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
-            <script src="{{ asset('assets/js/custom/utilities/modals/create-campaign.js') }}"></script>
-            <script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>
-            <script src="{{ asset('assets/js/custom/apps/customers/list/export.js') }}"></script>
-            <script src="{{ asset('assets/js/custom/apps/customers/list/list.js') }}"></script>
             <!--end::Custom Javascript-->
-
-            <!-- External Libraries -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-            <!-- Livewire & Stacks -->
+
             @stack('scripts')
             @stack('remarks')
             @stack('json')
             <x-livewiremodal-base />
             @livewireScripts
             <!--end::Javascript-->
-
 </body>
 <!--end::Body-->
 
 </html>
+
