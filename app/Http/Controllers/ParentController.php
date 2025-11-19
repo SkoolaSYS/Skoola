@@ -130,7 +130,7 @@ public function verifyEmail(Request $request)
         ->update(['verified_at' => now()]);
 
     // Set cookie for 1 year and redirect to dashboard
-    return redirect()->route('parent.dashboard')
+    return redirect()->route('parent.pwa')
         ->cookie('verified_email', $request->email, 60*24*365);
 }
 
