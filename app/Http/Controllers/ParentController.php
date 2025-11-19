@@ -149,6 +149,11 @@ public function pwaDashboard(Request $request)
         return "Parent not found";
     }
 
+    // ✅ Mark user as verified automatically
+    if ($parent->verified !== '01') {
+        $parent->update(['verified' => '01']);
+    }
+
     // SAME logic as dashboard, but WITHOUT auth()
     $studentIds = $parent->students()->pluck('students.id')->toArray();
 
@@ -185,6 +190,7 @@ public function pwaDashboard(Request $request)
         'attendanceData'
     ));
 }
+
 
 
 
