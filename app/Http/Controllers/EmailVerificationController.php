@@ -80,70 +80,29 @@ class EmailVerificationController extends Controller
 }
 
 public function show(Request $request)
-    {
-        // Capture email from query string
-    $email = $request->query('email');
+{
+    // PWA sends the email via query string or POST
+    $email = $request->query('email') ?? $request->input('email');
 
-    // Optional: show message if no email provided
     if (!$email) {
-        $email = ''; // or "No email provided"
+        return "Email not provided.";
     }
 
-    // Check if email is verified
-    $verified = false;
-    if ($email) {
-        $verified = DB::table('email_verifications')
-            ->where('email', $email)
-            ->whereNotNull('verified_at')
-            ->exists();
+    // Check verified email in DB
+    $verification = DB::table('email_verifications')
+        ->where('email', $email)
+        ->whereNotNull('verified_at')
+        ->first();
+
+    if ($verification) {
+        // Set a cookie for 1 year
+        return redirect()->route('parent.pwa')
+    ->cookie('verified_email', $email, 525600);
+
     }
 
-    // Load parent data if email exists
-    $parent = null;
-    $students = [];
-    $attendanceList = [];
-    $attendanceData = [];
-
-    if ($email && $verified) {
-        $parent = User::where('email', $email)->first();
-        if ($parent) {
-            $studentIds = $parent->students()->pluck('students.id')->toArray();
-            $students = Student::whereIn('id', $studentIds)->pluck('name', 'id')->toArray();
-
-            $attendanceList = Attendance::whereIn('student_id', $studentIds)
-                ->orderByDesc('id')
-                ->take(5)
-                ->get();
-
-            $attendancesAbsent = Attendance::whereIn('student_id', $studentIds)
-                ->where('status', 'absent')
-                ->groupBy('student_id')
-                ->select('student_id', DB::raw('count(*) as total'))
-                ->pluck('total', 'student_id');
-
-            $attendancesAttend = Attendance::whereIn('student_id', $studentIds)
-                ->where('status', 'attend')
-                ->groupBy('student_id')
-                ->select('student_id', DB::raw('count(*) as total'))
-                ->pluck('total', 'student_id');
-
-            foreach ($students as $id => $name) {
-                $attend = $attendancesAttend[$id] ?? 0;
-                $absent = $attendancesAbsent[$id] ?? 0;
-                $attendanceData[$id] = json_encode([$attend, $absent]);
-            }
-        }
-    }
-
-    // Pass email to Blade
-    return view('parents.email', compact(
-        'email',
-        'verified',
-        'parent',
-        'students',
-        'attendanceList',
-        'attendanceData'
-    ));
-    }
+    // Email not verified → show page with instructions
+    return view('parents.email', compact('email'));
+}
 
 }
