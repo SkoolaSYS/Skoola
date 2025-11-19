@@ -81,7 +81,9 @@ class ParentController extends Controller
 
     if ($verification) {
         // Set a cookie for 1 year
-        return redirect()->route('parent.dashboard')->cookie('verified_email', $email, 60*24*365);
+        return redirect()->route('parent.pwa')
+    ->cookie('verified_email', $email, 525600);
+
     }
 
     // Email not verified → show page with instructions
@@ -130,6 +132,58 @@ public function verifyEmail(Request $request)
     // Set cookie for 1 year and redirect to dashboard
     return redirect()->route('parent.dashboard')
         ->cookie('verified_email', $request->email, 60*24*365);
+}
+
+public function pwaDashboard(Request $request)
+{
+    $email = $request->cookie('verified_email');
+
+    if (!$email) {
+        return "Unauthorized: no verified email.";
+    }
+
+    // Parent by email (not auth)
+    $parent = User::where('email', $email)->first();
+
+    if (!$parent) {
+        return "Parent not found";
+    }
+
+    // SAME logic as dashboard, but WITHOUT auth()
+    $studentIds = $parent->students()->pluck('students.id')->toArray();
+
+    $students = Student::whereIn('id', $studentIds)->pluck('name', 'id')->toArray();
+
+    $attendanceList = Attendance::whereIn('student_id', $studentIds)
+        ->orderByDesc('id')
+        ->take(5)
+        ->get();
+
+    $attendancesAbsent = Attendance::whereIn('student_id', $studentIds)
+        ->where('status', 'absent')
+        ->groupBy('student_id')
+        ->select('student_id', DB::raw('count(*) as total'))
+        ->pluck('total', 'student_id');
+
+    $attendancesAttend = Attendance::whereIn('student_id', $studentIds)
+        ->where('status', 'attend')
+        ->groupBy('student_id')
+        ->select('student_id', DB::raw('count(*) as total'))
+        ->pluck('total', 'student_id');
+
+    $attendanceData = [];
+    foreach ($students as $id => $name) {
+        $attend = $attendancesAttend[$id] ?? 0;
+        $absent = $attendancesAbsent[$id] ?? 0;
+        $attendanceData[$id] = json_encode([$attend, $absent]);
+    }
+
+    return view('parents.dashboard_pwa', compact(
+        'parent',
+        'students',
+        'attendanceList',
+        'attendanceData'
+    ));
 }
 
 

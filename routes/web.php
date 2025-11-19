@@ -45,16 +45,16 @@ Route::get('/parent-email', [EmailVerificationController::class, 'show'])
     ->name('parent.email');
 
 // ✅ Send verification email (PWA)
-Route::post('/attendance-parent/send', [EmailVerificationController::class, 'sendVerification'])
-    ->name('attendance.send');
+//Route::post('/attendance-parent/send', [EmailVerificationController::class, 'sendVerification'])
+    //->name('attendance.send');
 
 // ✅ Handle verification link from email
-Route::get('/attendance-parent/verify/{token}', [EmailVerificationController::class, 'verifyEmail'])
-    ->name('attendance.verify');
+//Route::get('/attendance-parent/verify/{token}', [EmailVerificationController::class, 'verifyEmail'])
+    //->name('attendance.verify');
 
 // ✅ Parent dashboard (PWA iframe)
-Route::get('/attendance-parent', [DashboardController::class, 'pwaParentDashboard'])
-    ->name('attendance.parent');
+//Route::get('/attendance-parent', [DashboardController::class, 'pwaParentDashboard'])
+    //->name('attendance.parent');
 
     Route::get('parent/dashboard', [ParentController::class, 'dashboard'])->name('parent.dashboard');
 Route::get('attendance-parent', [ParentController::class, 'attendancePage']);
@@ -63,6 +63,9 @@ Route::post('attendance-parent-request', [ParentController::class, 'sendVerifica
 Route::get('/parents/email-test', function () {
     return view('parents.email_test');
 })->name('parents.email_test');
+Route::get('parent/pwa-dashboard', [ParentController::class, 'pwaDashboard'])
+    ->name('parent.pwa');
+
 
 
 
