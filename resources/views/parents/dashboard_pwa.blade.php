@@ -12,7 +12,7 @@
 			<div class="page-title d-flex flex-column justify-content-center gap-2 me-3">
 				<!--begin::Title-->
 				<div class="mb-3 text-center">
-    <p>Email sent from PWA: <strong>{{ $email ?: 'No email provided' }}</strong></p>
+    
 </div>
 
 
