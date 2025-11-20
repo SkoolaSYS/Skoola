@@ -62,6 +62,14 @@ Route::get('/test-query', function (Request $request) {
     return $request->all();
 });
 
+Route::get('/debug-email', function (Request $request) {
+    return [
+        'full_url' => $request->fullUrl(),
+        'query' => $request->query(),
+        'raw_query' => $_SERVER['QUERY_STRING'] ?? null
+    ];
+});
+
 
 Route::match(['GET', 'POST'], '/attendance-parent', [ParentController::class, 'attendancePage'])
     ->name('parent.attendancePage');
