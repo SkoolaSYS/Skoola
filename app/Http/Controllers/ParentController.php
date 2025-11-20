@@ -138,9 +138,13 @@ class ParentController extends Controller
 
     // ⭐ CASE 1: Already verified → ALWAYS allow dashboard
     if ($verified) {
-        return redirect()->route('parent.dashboard')
-            ->cookie('verified_email', $email, 525600); // 1 year
-    }
+    $parent = User::where('email', $email)->first();
+    Auth::login($parent); // ✅ ensure full session auth
+
+    return redirect()->route('parent.dashboard')
+        ->cookie('verified_email', $email, 525600); // 1 year
+}
+
 
     // ⭐ CASE 2: Not verified → send verification link
     $token = Str::random(32);
@@ -180,6 +184,10 @@ public function verifyEmail(Request $request)
     DB::table('email_verifications')
         ->where('email', $request->email)
         ->update(['verified_at' => now()]);
+
+    // ✅ Log the user in so all routes recognize them
+    $parent = User::where('email', $request->email)->first();
+    Auth::login($parent);
 
     // Set cookie for 1 year and redirect to dashboard
     return redirect()->route('parent.dashboard')
