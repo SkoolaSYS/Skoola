@@ -113,19 +113,26 @@ class ParentController extends Controller
 
     public function attendancePage(Request $request)
 {
-    // Debug: see what arrives on server
-    // dd($request->fullUrl(), $request->query(), $request->input(), $_SERVER['QUERY_STRING']);
+    // FORCE read email from query string first
+    $email = $request->query('email');
 
-    // Read email from query string first, then input, then cookie
-    $email = $request->query('email') 
-        ?? $request->input('email') 
-        ?? $request->cookie('verified_email');
-
-    if (!$email) {
-        return "No email provided in the URL. Query: " . json_encode($request->query());
+    // If blank or null → try input
+    if (empty($email)) {
+        $email = $request->input('email');
     }
 
-    // Find parent
+    // If still blank → try cookie
+    if (empty($email)) {
+        $email = $request->cookie('verified_email');
+    }
+
+    // STILL no email
+    if (empty($email)) {
+        return "No email provided in the URL.";
+    }
+
+
+    // Check if parent exists
     $parent = User::where('email', $email)->first();
 
     if (!$parent) {
@@ -138,13 +145,15 @@ class ParentController extends Controller
         ->whereNotNull('verified_at')
         ->exists();
 
+    // CASE 1: Already verified
     if ($verified) {
         Auth::login($parent);
+
         return redirect()->route('parent.dashboard')
             ->cookie('verified_email', $email, 525600); // 1 year
     }
 
-    // Not verified → send verification email
+    // CASE 2: Not verified → send verification email
     $token = Str::random(32);
 
     DB::table('email_verifications')->updateOrInsert(
@@ -164,7 +173,6 @@ class ParentController extends Controller
 
     return view('parents.verify_email_instructions', compact('email'));
 }
-
 
 
 
@@ -262,3 +270,5 @@ public function pwaDashboard(Request $request)
 
 
 }
+
+
