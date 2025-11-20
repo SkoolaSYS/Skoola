@@ -113,40 +113,41 @@ class ParentController extends Controller
 
     public function attendancePage(Request $request)
 {
-    // Read email from: query → input → cookie
-    $email = $request->query('email')
-        ?? $request->input('email')
-        ?? $request->cookie('verified_email');
+    // FORCE read email from query string first
+    $email = $request->get('email'); 
 
-    // No email provided anywhere
+    // If still empty, try input and cookie
     if (!$email) {
-        return view('parents.enter_email');
+        $email = $request->input('email') ?? $request->cookie('verified_email');
     }
 
-    // Check if email exists in users table
-    $userExists = DB::table('users')->where('email', $email)->exists();
+    // STILL no email → show a simple error page (not enter_email)
+    if (!$email) {
+        return "No email provided in the URL.";
+    }
 
-    if (!$userExists) {
+    // Check if parent exists
+    $parent = User::where('email', $email)->first();
+
+    if (!$parent) {
         return view('parents.email_not_found', compact('email'));
     }
 
-    // Check if email is already VERIFIED in the DB
+    // Check verified status
     $verified = DB::table('email_verifications')
         ->where('email', $email)
         ->whereNotNull('verified_at')
         ->exists();
 
-    // ⭐ CASE 1: Already verified → ALWAYS allow dashboard
+    // CASE 1: Already verified
     if ($verified) {
-    $parent = User::where('email', $email)->first();
-    Auth::login($parent); // ✅ ensure full session auth
+        Auth::login($parent);
 
-    return redirect()->route('parent.dashboard')
-        ->cookie('verified_email', $email, 525600); // 1 year
-}
+        return redirect()->route('parent.dashboard')
+            ->cookie('verified_email', $email, 525600); // 1 year
+    }
 
-
-    // ⭐ CASE 2: Not verified → send verification link
+    // CASE 2: Not verified → send verification email
     $token = Str::random(32);
 
     DB::table('email_verifications')->updateOrInsert(
