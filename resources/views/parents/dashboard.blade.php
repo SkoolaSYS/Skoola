@@ -241,4 +241,4 @@
 		@endpush
 	</x-card>
 </x-app-layout>
-@endrole
+@endif
