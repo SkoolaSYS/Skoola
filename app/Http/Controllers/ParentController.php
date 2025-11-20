@@ -185,14 +185,20 @@ public function verifyEmail(Request $request)
         ->where('email', $request->email)
         ->update(['verified_at' => now()]);
 
-    // ✅ Log the user in so all routes recognize them
+    // Log the user in so all routes recognize them
     $parent = User::where('email', $request->email)->first();
     Auth::login($parent);
+
+    // ✅ Assign parent role if not already assigned
+    if (!$parent->hasRole('parent')) {
+        $parent->assignRole('parent');
+    }
 
     // Set cookie for 1 year and redirect to dashboard
     return redirect()->route('parent.dashboard')
         ->cookie('verified_email', $request->email, 60*24*365);
 }
+
 
 public function pwaDashboard(Request $request)
 {
