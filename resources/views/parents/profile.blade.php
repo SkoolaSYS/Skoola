@@ -1,4 +1,4 @@
-@if(isset($parent))
+@role('parent')
 <x-app-layout>
     @slot('title')
     Profile
@@ -261,4 +261,4 @@
         <!--end::Body-->
     </x-card>
 </x-app-layout>
-@endif
+@endrole

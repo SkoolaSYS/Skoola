@@ -81,7 +81,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])
         ->middleware(['require.student.profile'])
         ->name('dashboard');
-        
+
 
     Route::middleware(['auth', 'role:parent', 'can:view-parent-page', 'require.student.profile'])->group(function () { //route for parent role
         Route::prefix('profile')->name('profile.')->group(function () {
@@ -108,7 +108,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('delete/{student}', [StudentController::class, 'delete'])->name('delete');
         });
 
-        
+
 
 
         Route::prefix('attendance')->name('attendance.')->group(function () {
