@@ -1,4 +1,4 @@
-@role('parent')
+@if(isset($parent))
 <x-app-layout>
 	@slot('title')
 	Edit Additional Guardian Profile
