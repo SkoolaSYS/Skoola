@@ -58,6 +58,9 @@ Route::get('/verify-email/{token}', [EmailVerificationController::class, 'verify
 Route::get('parent/dashboard', [ParentController::class, 'dashboard'])
     ->name('parent.dashboard');
 
+Route::get('/test-query', function (Request $request) {
+    return $request->all();
+});
 
 
 Route::match(['GET', 'POST'], '/attendance-parent', [ParentController::class, 'attendancePage'])
