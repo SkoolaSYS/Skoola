@@ -40,9 +40,7 @@ Route::get('/read-json', [JsonReaderController::class, 'readJson']);
 
 Route::get('/verify-email/{token}', [EmailVerificationController::class, 'verify']);
 
-// Show parent email page (from PWA)
-Route::get('/parent-email', [EmailVerificationController::class, 'show'])
-    ->name('parent.email');
+
 
 // ✅ Send verification email (PWA)
 //Route::post('/attendance-parent/send', [EmailVerificationController::class, 'sendVerification'])
@@ -56,17 +54,26 @@ Route::get('/parent-email', [EmailVerificationController::class, 'show'])
 //Route::get('/attendance-parent', [DashboardController::class, 'pwaParentDashboard'])
     //->name('attendance.parent');
 
-    Route::get('parent/dashboard', [ParentController::class, 'dashboard'])->name('parent.dashboard');
-Route::get('attendance-parent', [ParentController::class, 'attendancePage']);
+    // Login-based dashboard (normal auth)
+Route::get('parent/dashboard', [ParentController::class, 'dashboard'])
+    ->name('parent.dashboard');
+
+
+
+Route::match(['GET', 'POST'], '/attendance-parent', [ParentController::class, 'attendancePage'])
+    ->name('parent.attendancePage');
+
 Route::get('attendance-parent-verify', [ParentController::class, 'verifyEmail']);
-Route::post('attendance-parent-request', [ParentController::class, 'sendVerificationLink']);
+
 Route::get('/parents/email-test', function () {
     return view('parents.email_test');
 })->name('parents.email_test');
 Route::get('parent/pwa-dashboard', [ParentController::class, 'pwaDashboard'])
     ->name('parent.pwa');
 
-
+// Show parent email page (from PWA)
+Route::get('/parent-email', [EmailVerificationController::class, 'show'])
+    ->name('parent.email');
 
 
 Route::middleware(['auth:sanctum'])->group(function () {

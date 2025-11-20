@@ -1,4 +1,4 @@
-@role('parent')
+@if(isset($parent))
 <x-app-layout>
 	@slot ('title')
 	Dashboard
@@ -144,8 +144,10 @@
 												<td class="ps-9">{{$attendance->date}}</td>
 												<td class="ps-9">{{$attendance->check_in}}</td>
 												<td class="ps-9">{{$attendance->check_out}}</td>
-												<td class="ps-0">{{$attendance->student->name}}</td>
-												<td class="ps-0">{{$attendance->student->school->name}}</td>
+												<td class="ps-0">{{ $attendance->student->name ?? '-' }}</td>
+												<td class="ps-0">{{ $attendance->student->school->name ?? '-' }}</td>
+
+
 
 												@if ($attendance->status == 'attend')
 												<td class="text-center">
