@@ -114,17 +114,23 @@ class ParentController extends Controller
     public function attendancePage(Request $request)
 {
     // FORCE read email from query string first
-    $email = $request->get('email'); 
+    $email = $request->query('email');
 
-    // If still empty, try input and cookie
-    if (!$email) {
-        $email = $request->input('email') ?? $request->cookie('verified_email');
+    // If blank or null → try input
+    if (empty($email)) {
+        $email = $request->input('email');
     }
 
-    // STILL no email → show a simple error page (not enter_email)
-    if (!$email) {
+    // If still blank → try cookie
+    if (empty($email)) {
+        $email = $request->cookie('verified_email');
+    }
+
+    // STILL no email
+    if (empty($email)) {
         return "No email provided in the URL.";
     }
+
 
     // Check if parent exists
     $parent = User::where('email', $email)->first();
