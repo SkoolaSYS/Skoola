@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\ParentController;
+use App\Http\Controllers\SchoolAuthController;
 
 
 
