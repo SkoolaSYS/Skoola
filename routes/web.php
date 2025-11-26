@@ -48,7 +48,7 @@ Route::get('/debug-session', function () {
     return session()->all();
 });
 
-Route::domain('school.my3sss.com')->group(function () {
+Route::domain('school.my3sss.com')->middleware(['web'])->group(function () {
 
     Route::get('/login', [\App\Http\Controllers\SchoolAuthController::class, 'showLogin'])
         ->name('school.login')
@@ -66,6 +66,7 @@ Route::domain('school.my3sss.com')->group(function () {
             ->name('school.dashboard');
     });
 });
+
 
 
 
