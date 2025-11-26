@@ -47,13 +47,12 @@ class FortifyServiceProvider extends ServiceProvider
 
     // ✅ Override default login view
     Fortify::loginView(function () {
-        // Only show custom school login for school subdomain
-        if (request()->getHost() === 'school.my3sss.com') {
-            return app()->call([SchoolAuthController::class, 'showLogin']);
-        }
+    if (request()->getHost() === 'school.my3sss.com') {
+        // Call the controller method via the container
+        return app()->call([SchoolAuthController::class, 'showLogin']);
+    }
 
-        // Default login for other hosts
-        return view('auth.login'); // Fortify's default login view
-    });
+    return view('auth.login'); // default login for other hosts
+});
 }
 }
