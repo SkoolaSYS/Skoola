@@ -35,6 +35,9 @@ use App\Http\Controllers\ParentController;
 
 
 
+Route::get('/debug-host', function() {
+    return request()->getHost();
+});
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
 
