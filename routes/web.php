@@ -314,9 +314,9 @@ Route::get('auth/{provider}/callback', [SocialController::class, 'callback']);
 
 Route::get('/guardian-form-partial', [GuardianController::class, 'guardianFormPartial'])->name('guardian.form.partial');
 
-Route::get('/login', [AuthenticatedSessionController::class, 'create'])
-    ->middleware('guest')
-    ->name('login');
+//Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    //->middleware('guest')
+    //->name('login');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('guest');
