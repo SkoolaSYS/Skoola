@@ -43,16 +43,17 @@ class FortifyServiceProvider extends ServiceProvider
 
     RateLimiter::for('two-factor', function (Request $request) {
         return Limit::perMinute(5)->by($request->session()->get('login.id'));
-    });
+    }); 
 
     // ✅ Override default login view
     Fortify::loginView(function () {
     if (request()->getHost() === 'school.my3sss.com') {
-        // Call the controller method via the container
-        return app()->call([SchoolAuthController::class, 'showLogin']);
+        $controller = app(SchoolAuthController::class); // resolve via container
+        return $controller->showLogin();
     }
 
-    return view('auth.login'); // default login for other hosts
+    return view('auth.login');
 });
+
 }
 }
