@@ -39,6 +39,11 @@ Route::get('/debug-host', function() {
     return request()->getHost();
 });
 
+Route::domain('school.my3sss.com')->get('/test', function() {
+    return "School subdomain works!";
+});
+
+
 Route::domain('school.my3sss.com')->group(function () {
 
     // Show school login page (new view)
