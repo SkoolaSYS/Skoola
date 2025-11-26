@@ -46,21 +46,36 @@ Route::domain('school.my3sss.com')->get('/test', function() {
 
 Route::domain('school.my3sss.com')->group(function () {
 
-    // Show school login page (new view)
+    // Show school login page (guest only)
     Route::get('/login', function () {
-        return view('school.login');
-    })->name('school.login');
+        return view('school.login'); // create this blade
+    })->name('school.login')->middleware('guest');
 
-    // Use default login post logic
-    Route::post('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store'])
-        ->name('school.login.submit');
+    // Login POST
+    Route::post('/login', function (\Illuminate\Http\Request $request) {
+        $credentials = $request->only('email', 'password');
 
-    // School dashboard (already using SchoolController)
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/dashboard/{school}', [\App\Http\Controllers\SchoolController::class, 'index'])
+        if (auth()->attempt($credentials)) {
+            // check if user is school role
+            if (auth()->user()->hasRole('school')) {
+                $schoolId = auth()->user()->getMeta('user_school_id');
+                return redirect()->route('school.dashboard', $schoolId);
+            } else {
+                auth()->logout();
+                return back()->withErrors(['email' => 'Not a school account.']);
+            }
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials.']);
+    })->name('school.login.submit')->middleware('guest');
+
+    // School dashboard (uses SchoolController)
+    Route::middleware(['auth', 'role:school'])->group(function () {
+        Route::get('/dashboard/{school}', [SchoolController::class, 'index'])
             ->name('school.dashboard');
     });
 });
+
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
 
