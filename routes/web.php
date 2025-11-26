@@ -86,6 +86,25 @@ Route::get('parent/pwa-dashboard', [ParentController::class, 'pwaDashboard'])
 Route::get('/parent-email', [EmailVerificationController::class, 'show'])
     ->name('parent.email');
 
+    Route::domain('school.my3sss.com')->group(function () {
+
+    // Show school login page (new view)
+    Route::get('/login', function () {
+        return view('school.login');
+    })->name('school.login');
+
+    // Use default login post logic
+    Route::post('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store'])
+        ->name('school.login.submit');
+
+    // School dashboard (already using SchoolController)
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/dashboard/{school}', [\App\Http\Controllers\SchoolController::class, 'index'])
+            ->name('school.dashboard');
+    });
+});
+
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
