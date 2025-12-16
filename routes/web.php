@@ -219,6 +219,9 @@ Route::middleware(['auth', 'role:admin|country|state|ppd|school'])->group(functi
 
 Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher/dashboard', [DashboardController::class, 'index'])->name('teacher.dashboard');
+    Route::get('/students', [StudentController::class, 'index'])->name('student.index');
+    Route::get('/students/filter', [StudentController::class, 'filter'])->name('student.filter');
+    Route::post('/students/remarks', [StudentController::class, 'saveRemarks'])->name('student.remarks');
 });
 
 Route::prefix('school')->name('school.')->middleware(['role:school'])->group(function () {

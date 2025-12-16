@@ -157,4 +157,10 @@ return [
     'school_name' => 'School Name',
     'total_students' => 'Total Students',
     'average_percentage' => 'Attendance Percentage (%)',
+    'students' => 'Students',
+    'selectclass' => 'Select Class',
+    'grade' => 'Grade',
+    'remark' => 'Remarks',
+    'clinic' => 'Clinic',
+    'optionaldetails' => 'Optional Details',
 ];

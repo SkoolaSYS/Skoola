@@ -161,6 +161,14 @@
                                     </span>
                                     <!--end:Menu link-->
                                 </a>
+                                <a href="{{ route('student.index') }}" 
+                                class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                    <!--begin:Menu link-->
+                                    <span class="menu-link">
+                                        <span class="menu-title">{{ __('messages.students') }}</span>
+                                    </span>
+                                    <!--end:Menu link-->
+                                </a>
                                 @endrole
                                 <!--begin:Menu item-->
                                 @role('admin|country|state|ppd|school')

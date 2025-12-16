@@ -16,6 +16,8 @@ use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentsImport;
 use App\Exports\StudentsTemplateExport;
+use App\Models\StudentRemark;
+
 
 class StudentController extends Controller
 {
@@ -343,6 +345,60 @@ public function destroy(Student $student)
         ->route('dashboard.school', ['school' => $student->school_id])
         ->with('success', 'Student deleted successfully');
 }
+
+//teacher's students menu
+
+public function index()
+{
+    return view('student.index');
+}
+
+public function filter(Request $request)
+{
+    $request->validate([
+        'grade' => 'required',
+        'class_name' => 'required',
+    ]);
+
+    $students = Student::where('grade', $request->grade)
+        ->where('class_name', $request->class_name)
+        ->orderBy('name')
+        ->get();
+
+    $remarks = StudentRemark::whereIn('student_id', $students->pluck('id'))
+    ->where('date', now()->toDateString()) // only today's remarks
+    ->get()
+    ->keyBy('student_id');
+
+
+    return view('student.index', [
+        'students' => $students,
+        'selectedGrade' => $request->grade,
+        'selectedClass' => $request->class_name,
+        'allClasses' => [],
+        'remarks' => $remarks,
+    ]);
+}
+
+
+
+public function saveRemarks(Request $request)
+{
+    foreach ($request->remarks as $studentId => $remark) {
+        if (!empty($remark['type'])) {
+            StudentRemark::create([
+                'student_id' => $studentId,
+                'date' => now()->toDateString(),
+                'remark_type' => $remark['type'],
+                'remark_text' => $remark['text'] ?? null,
+            ]);
+        }
+    }
+
+    return back()->with('success', 'Remarks saved successfully');
+}
+
+
 
 
 
