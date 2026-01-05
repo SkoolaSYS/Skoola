@@ -24,109 +24,55 @@
 
         {{-- Filter Form (Grade & Class) --}}
         <div class="mb-5">
-            <form method="GET" action="{{ route('student.filter') }}">
     <!-- Remove @csrf for GET -->
 
                 
 
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.grade') }}</label>
-                        <select name="grade" id="grade" class="form-select" onchange="updateClasses()" required>
-                            <option value="">-- {{ __('messages.selectgrade') }} --</option>
-                            @foreach([
-                                'Darjah 1','Darjah 2','Darjah 3','Darjah 4','Darjah 5','Darjah 6',
-                                'Tingkatan 1','Tingkatan 2','Tingkatan 3','Tingkatan 4','Tingkatan 5','Tingkatan 6'
-                            ] as $grade)
-                                <option value="{{ $grade }}"
-                                    {{ ($selectedGrade ?? '') == $grade ? 'selected' : '' }}>
-                                    {{ $grade }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                
 
-                    <div class="col-md-6">
-                        <label class="form-label">{{ __('messages.class') }}</label>
-                        <select name="class_name" id="class_name" class="form-select" required>
-                            <option value="">-- {{ __('messages.selectclass') }} --</option>
-                            @foreach($allClasses ?? [] as $class)
-                                <option value="{{ $class }}"
-                                    {{ ($selectedClass ?? '') == $class ? 'selected' : '' }}>
-                                    {{ $class }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <div class="mb-4">
+                    <label class="form-label">Cari Pelajar</label>
+                    <input type="text"
+                        id="studentSearch"
+                        class="form-control"
+                        placeholder="Taipkan nama pelajar...">
+
+                    <div id="searchResults" class="list-group mt-2 d-none"></div>
                 </div>
 
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        {{ __('messages.showstudents') }}
-                    </button>
                 </div>
-            </form>
+
+                
         </div>
 
         {{-- Students Table --}}
-        @if(isset($students) && count($students) > 0)
             <div class="mt-4">
-                <h5>
-                    {{ __('messages.studentlist') }} – {{ $selectedClass }} ({{ $selectedGrade }})
-                </h5>
 
-                <form method="POST" action="{{ route('student.remarks') }}">
+
+                <form method="POST" action="{{ route('student.remarks.store') }}">
                     @csrf
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover align-middle text-center mt-3">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>No.</th>
-                                    <th>{{ __('messages.fullname') }}</th>
-                                    <th>{{ __('messages.remark') }}</th>
-                                    <th>{{ __('messages.details') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($students as $student)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td class="text-start">{{ $student->name }}</td>
-
-                                        <td>
-                                        <select name="remarks[{{ $student->id }}][type]"
-                                                class="form-select attendance-select"
-                                                onchange="updateSelectColor(this)">
-                                            <option value="">-- None --</option>
-                                            <option value="activity" {{ ($remarks[$student->id]->remark_type ?? '') === 'activity' ? 'selected' : '' }}>{{ __('messages.schoolactivity') }}</option>
-                                            <option value="clinic" {{ ($remarks[$student->id]->remark_type ?? '') === 'clinic' ? 'selected' : '' }}>{{ __('messages.clinic') }}</option>
-                                            <option value="others" {{ ($remarks[$student->id]->remark_type ?? '') === 'others' ? 'selected' : '' }}>{{ __('messages.others') }}</option>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <input type="text"
-                                            name="remarks[{{ $student->id }}][text]"
-                                            class="form-control"
-                                            placeholder="{{ __('messages.optionaldetails') }}"
-                                            value="{{ $remarks[$student->id]->remark_text ?? '' }}">
-                                    </td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Alasan</th>
+                                <th>Butiran</th>
+                                <th>Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="selectedStudents">
+                            {{-- Added dynamically --}}
+                        </tbody>
+                    </table>
 
                     <div class="text-end mt-3">
-                        <button type="submit" class="btn btn-success">
-                            {{ __('messages.save') }}
-                        </button>
+                        <button class="btn btn-success">Simpan</button>
                     </div>
-                </form>
+                    </form>
+
             </div>
-        @endif
 
     </x-card>
 
@@ -147,50 +93,129 @@
     </style>
 
     <script>
-    function updateClasses(selectedClass = null) {
-        const grade = document.getElementById('grade').value;
-        const classSelect = document.getElementById('class_name');
+let addedStudents = [];
 
-        classSelect.innerHTML = '<option value="">-- Select Class --</option>';
+/* =========================
+   STUDENT SEARCH
+========================= */
+document.getElementById('studentSearch').addEventListener('keyup', function () {
+    const q = this.value.trim();
+    const resultBox = document.getElementById('searchResults');
 
-        if (!grade) return;
+    if (q.length < 2) {
+        resultBox.classList.add('d-none');
+        resultBox.innerHTML = '';
+        return;
+    }
 
-        const gradeNumber = grade.replace(/\D/g, '');
+    fetch(`/teacher/students/search?q=${q}`)
+        .then(res => res.json())
+        .then(data => {
+            resultBox.innerHTML = '';
+            resultBox.classList.remove('d-none');
 
-        const classes = [
-            gradeNumber + 'A',
-            gradeNumber + 'B'
-        ];
-
-        classes.forEach(cls => {
-            const option = document.createElement('option');
-            option.value = cls;
-            option.text = cls;
-
-            if (selectedClass && selectedClass === cls) {
-                option.selected = true;
+            if (data.length === 0) {
+                resultBox.innerHTML =
+                    `<div class="list-group-item text-muted">No students found</div>`;
+                return;
             }
 
-            classSelect.appendChild(option);
+            data.forEach(student => {
+                resultBox.innerHTML += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${student.name}</strong><br>
+                            <small>${student.grade} - ${student.class_name}</small>
+                        </div>
+                        <button type="button"
+                            class="btn btn-sm btn-primary"
+                            onclick="addStudent(${student.id}, '${student.name}', '${student.grade}', '${student.class_name}')">
+                            Add
+                        </button>
+                    </div>
+                `;
+            });
         });
+});
+
+/* =========================
+   ADD STUDENT
+========================= */
+function addStudent(id, name, grade, className) {
+    if (addedStudents.includes(id)) {
+        alert('Student already added');
+        return;
     }
 
-    function updateSelectColor(select) {
-        select.classList.remove('attendance-present','attendance-absent','attendance-others');
+    addedStudents.push(id);
 
-        if (select.value === 'activity') {
-            select.classList.add('attendance-present');
-        } else if (select.value === 'clinic') {
-            select.classList.add('attendance-absent');
-        } else if (select.value === 'others') {
-            select.classList.add('attendance-others');
-        }
-    }
+    const table = document.getElementById('selectedStudents');
+    const rowCount = table.rows.length + 1;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        updateClasses(@json($selectedClass ?? null));
-    });
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td class="row-no">${rowCount}</td>
+        <td class="text-start">
+            ${name}<br>
+            <small class="text-muted">${grade} - ${className}</small>
+            <input type="hidden" name="student_ids[]" value="${id}">
+        </td>
+        <td>
+            <select name="remarks[${id}][type]" class="form-select" required>
+                <option value="">-- Pilih --</option>
+                <option value="school activity">Aktiviti Sekolah</option>
+                <option value="clinic">Klinik</option>
+                <option value="others">Lain Lain</option>
+            </select>
+        </td>
+        <td>
+            <input type="text"
+                name="remarks[${id}][text]"
+                class="form-control"
+                placeholder="Optional justification">
+        </td>
+        <td>
+            <button type="button"
+                class="btn btn-sm btn-danger"
+                onclick="removeStudent(this, ${id})">
+                Remove
+            </button>
+        </td>
+    `;
+
+    table.appendChild(row);
+
+    // Reset search
+    document.getElementById('studentSearch').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+    document.getElementById('searchResults').classList.add('d-none');
+}
+
+/* =========================
+   REMOVE STUDENT
+========================= */
+function removeStudent(button, studentId) {
+    // Optional confirm
+    if (!confirm('Remove this student?')) return;
+
+    // Remove from array
+    addedStudents = addedStudents.filter(id => id !== studentId);
+
+    // Remove row
+    const row = button.closest('tr');
+    row.remove();
+
+    // Re-number rows
+    document.querySelectorAll('#selectedStudents .row-no')
+        .forEach((cell, index) => {
+            cell.textContent = index + 1;
+        });
+}
 </script>
+
+
+
+
 
 
 </x-app-layout>

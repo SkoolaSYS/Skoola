@@ -398,6 +398,32 @@ public function saveRemarks(Request $request)
     return back()->with('success', 'Remarks saved successfully');
 }
 
+public function search(Request $request)
+{
+    return Student::where('name', 'LIKE', '%' . $request->q . '%')
+        ->select('id', 'name', 'grade', 'class_name')
+        ->limit(10)
+        ->get();
+}
+
+public function studentStore(Request $request)
+{
+    foreach ($request->student_ids as $studentId) { // $studentId is actual students.id
+        $remarkData = $request->remarks[$studentId] ?? [];
+
+        StudentRemark::create([
+            'student_id' => $studentId,
+            'date' => now()->toDateString(),
+            'remark_type' => $remarkData['type'] ?? null,
+            'remark_text' => $remarkData['text'] ?? null,
+        ]);
+    }
+
+    return back()->with('success', 'Remarks saved successfully');
+}
+
+
+
 
 
 

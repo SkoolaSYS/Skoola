@@ -222,6 +222,12 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');
     Route::get('/students/filter', [StudentController::class, 'filter'])->name('student.filter');
     Route::post('/students/remarks', [StudentController::class, 'saveRemarks'])->name('student.remarks');
+    Route::get('/teacher/students/search', [StudentController::class, 'search'])
+    ->name('teacher.students.search');
+    Route::post('/teacher/student-remarks', [StudentController::class, 'studentStore'])
+    ->name('student.remarks.store');
+
+
 });
 
 Route::prefix('school')->name('school.')->middleware(['role:school'])->group(function () {
