@@ -31,11 +31,11 @@
                 
 
                     <div class="mb-4">
-                    <label class="form-label">Cari Pelajar</label>
+                    <label class="form-label">{{ __('messages.searchstudents') }}</label>
                     <input type="text"
                         id="studentSearch"
                         class="form-control"
-                        placeholder="Taipkan nama pelajar...">
+                        placeholder="{{ __('messages.searchstudent') }}">
 
                     <div id="searchResults" class="list-group mt-2 d-none"></div>
                 </div>
@@ -56,10 +56,10 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama</th>
-                                <th>Alasan</th>
-                                <th>Butiran</th>
-                                <th>Tindakan</th>
+                                <th>{{ __('messages.fullname') }}</th>
+                                <th>{{ __('messages.reason') }}</th>
+                                <th>{{ __('messages.details') }}</th>
+                                <th>{{ __('messages.action') }}</th>
                             </tr>
                         </thead>
                         <tbody id="selectedStudents">
@@ -68,7 +68,7 @@
                     </table>
 
                     <div class="text-end mt-3">
-                        <button class="btn btn-success">Simpan</button>
+                        <button class="btn btn-success">{{ __('messages.save') }}</button>
                     </div>
                     </form>
 
@@ -108,7 +108,8 @@ document.getElementById('studentSearch').addEventListener('keyup', function () {
         return;
     }
 
-    fetch(`/teacher/students/search?q=${q}`)
+    fetch(`{{ route('teacher.students.search') }}?q=${q}`)
+
         .then(res => res.json())
         .then(data => {
             resultBox.innerHTML = '';

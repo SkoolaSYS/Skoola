@@ -90,7 +90,8 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
             return new class implements RegisterResponse {
                 public function toResponse($request)
                 {
-                    return redirect()->away('http://pwa.komeps.co.uk/#/pre-register-maya');
+                    //return redirect()->away('http://pwa.komeps.co.uk/#/pre-register-maya');
+                    return redirect('/student');
                 }
             };
         }

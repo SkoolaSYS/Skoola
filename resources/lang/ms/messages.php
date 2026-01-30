@@ -159,11 +159,13 @@ return [
     'average_percentage' => 'Peratusan Kehadiran (%)',
     'district' => 'Daerah',
     'selectdistrict' => 'Pilih Daerah',
-    'students' => 'Pelajar',
+    'students' => 'Outing',
+    'searchstudents' => 'Cari Pelajar',
     'selectclass' => 'Pilih Kelas',
     'remark' => 'Alasan',
     'clinic' => 'Klinik',
     'optionaldetails' => 'Butiran Pilihan',
+    'reason' => 'Alasan',
 
     
 ];
