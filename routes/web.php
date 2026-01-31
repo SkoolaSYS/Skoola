@@ -290,24 +290,46 @@ Route::post('/class-attendance/save', [ClassAttendanceController::class, 'saveCl
 Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'show'])
     ->name('class_attendance.show');
 
-    
+      
+    Route::post('/receive', function (\Illuminate\Http\Request $request) {
+    // Get JSON payload
+    $payload = $request->all(); // assuming the ASP sends JSON array
 
-    Route::post('/receive', function (Request $request) {
-
-    $payload = $request->all();
-
-    if (isset($payload['card_no'])) {
-
-        DB::table('records')->insert([
-            'card_id' => $payload['card_no'], 
-            'time'    => $payload['time'],
-        ]);
+    // $data is an array of objects
+    // For example: [{"card_id":"0000135566","time":"2025-10-29 07:30:12.001"}, {...}]
+    if (isset($payload) && is_array($payload)) {
+        foreach ($payload as $item) {
+            DB::table('records')->insert([
+                'card_id' => $item['card_id'] ?? null,
+                'time' => $item['time'] ?? now(),
+            ]);
+        }
     }
 
+    // Pass data to Blade view
     return view('receive', [
         'payload' => $payload,
     ]);
 });
+
+    
+
+    //Route::post('/receive', function (Request $request) {
+
+    //$payload = $request->all();
+
+    //if (isset($payload['card_no'])) {
+
+        //DB::table('records')->insert([
+            //'card_id' => $payload['card_no'], 
+            //'time'    => $payload['time'],
+        //]);
+    //}
+
+   // return view('receive', [
+     //   'payload' => $payload,
+    //]);
+//});
 
 
 
