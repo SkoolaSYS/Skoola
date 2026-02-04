@@ -300,9 +300,11 @@ Route::get('/class-attendance/{classId}', [ClassAttendanceController::class, 'sh
     if (isset($payload) && is_array($payload)) {
         foreach ($payload as $item) {
             DB::table('records')->insert([
-                'card_id' => $item['card_id'] ?? null,
-                'time' => $item['time'] ?? now(),
+                'card_id'       => $item['card_id'] ?? null,
+                'time'          => $item['time'] ?? now(),
+                'nama_pelajar'  => $item['nama_pelajar'] ?? null,
             ]);
+
         }
     }
 
