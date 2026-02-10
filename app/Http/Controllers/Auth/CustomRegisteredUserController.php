@@ -78,6 +78,7 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
             $student->state_id = $studentData['state'] ?? null;
             $student->district_id = $studentData['district'] ?? null;
             $student->school_id = $studentData['school'] ?? null;
+            $student->session = $studentData['session'] ?? null;
             $student->save();
 
             // Attach ALL guardians (main + additional) to student via pivot

@@ -32,5 +32,11 @@ class School extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    // New relationship specifically for management page
+    public function allStudents()
+    {
+        return $this->hasMany(Student::class);
+    }
 }
 

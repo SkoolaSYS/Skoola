@@ -10,30 +10,29 @@ use Illuminate\Database\Seeder;
 
 class AttendanceSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $startDate = Carbon::create(2023, 8, 1);
-        $endDate = Carbon::create(2023, 8, 31);
+        // CLEAR old data first
+        Attendance::truncate();
 
-        $studentCount = 1000;
+        // Full year 2026
+        $startDate = Carbon::create(2026, 1, 1);
+        $endDate   = Carbon::create(2026, 12, 31);
+
         $status = ['attend', 'absent'];
+        $students = Student::all();
 
-        $students = Student::inRandomOrder()->get();
-
-        for ($date = clone $startDate; $date->lte($endDate); $date->addDay()) {
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
             foreach ($students as $student) {
                 Attendance::create([
-                    'check_in' => '08:00',
-                    'check_out' => '12:00',
-                    'date' => $date->format('Y-m-d'),
-                    'status' => $status[rand(0, 1)], // attend / absent,
+                    'check_in'   => '08:00',
+                    'check_out'  => '12:00',
+                    'date'       => $date->format('Y-m-d'),
+                    'status'     => $status[array_rand($status)],
                     'student_id' => $student->id,
                 ]);
             }
         }
-        
     }
 }
+

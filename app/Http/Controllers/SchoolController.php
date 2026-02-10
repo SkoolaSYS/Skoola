@@ -17,15 +17,18 @@ class SchoolController extends Controller
     {
         $students = Student::where('school_id', $school->id)->get();
         $totalPelajar = Student::where('school_id', $school->id)->count(); //count total students in 1 school
+        $currentYear = now()->year;
 
         $attendancesAttend = Attendance::whereIn('student_id', $students->pluck('id'))
             ->where('status', 'attend')
+            ->whereYear('created_at', $currentYear)
             ->groupBy('student_id')
             ->select('student_id', DB::raw('count(*) as total'))
             ->pluck('total', 'student_id');
 
         $attendancesAbsent = Attendance::whereIn('student_id', $students->pluck('id'))
             ->where('status', 'absent')
+            ->whereYear('created_at', $currentYear)
             ->groupBy('student_id')
             ->select('student_id', DB::raw('count(*) as total'))
             ->pluck('total', 'student_id');
@@ -119,5 +122,13 @@ class SchoolController extends Controller
         'list_of_students.xlsx'
     );
 }
+
+    public function studentManagement($school_id)
+{
+    $school = School::findOrFail($school_id);
+    $students = $school->allStudents; // or $school->student() relationship
+    return view('school.students.management', compact('school', 'school_id', 'students'));
+}
+
 
 }

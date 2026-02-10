@@ -51,7 +51,7 @@ class DashboardController extends Controller
 // Teacher dashboard (Dynamic classes)
 // -------------------------------
 if ($user->hasRole('teacher')) {
-    $teacherId = $user->id; // use logged-in teacher
+    $teacherId = $user->id; // logged-in teacher
     $attendanceData = [];
 
     // Get all unique grade + class_name combinations for this teacher
@@ -59,7 +59,7 @@ if ($user->hasRole('teacher')) {
         ->select('grade', 'class_name')
         ->distinct()
         ->get()
-        ->pluck('grade', 'class_name') // creates ['3A' => 'Darjah 3']
+        ->pluck('grade', 'class_name') // ['3A' => 'Darjah 3']
         ->toArray();
 
     foreach ($classes as $className => $grade) {
@@ -67,66 +67,44 @@ if ($user->hasRole('teacher')) {
             ->where('class_name', $className)
             ->pluck('id');
 
-        // --- Daily ---
-        $dailyPresent = ClassAttendance::whereIn('student_id', $students)
-            ->where('teacher_id', $teacherId)
-            ->whereDate('attendance_time', now()->toDateString())
-            ->where('status', 'Present')
-            ->count();
-        $dailyAbsent = ClassAttendance::whereIn('student_id', $students)
-            ->where('teacher_id', $teacherId)
-            ->whereDate('attendance_time', now()->toDateString())
-            ->where('status', 'Absent')
-            ->count();
-        $dailyLate = ClassAttendance::whereIn('student_id', $students)
-            ->where('teacher_id', $teacherId)
-            ->whereDate('attendance_time', now()->toDateString())
-            ->where('status', 'Late')
-            ->count();
+        // Helper to calculate counts for a period
+        $calculateCounts = function($query) use ($students, $teacherId) {
+            $present = (clone $query)->where('status', 'Present')->count();
+            $absent  = (clone $query)->where('status', 'Absent')->count();
+            $total   = $query->count();
+            $others  = $total - $present - $absent;
 
-        // --- Weekly ---
-        $weeklyPresent = ClassAttendance::whereIn('student_id', $students)
-            ->where('teacher_id', $teacherId)
-            ->whereBetween('attendance_time', [now()->startOfWeek(), now()->endOfWeek()])
-            ->where('status', 'Present')
-            ->count();
-        $weeklyAbsent = ClassAttendance::whereIn('student_id', $students)
-            ->where('teacher_id', $teacherId)
-            ->whereBetween('attendance_time', [now()->startOfWeek(), now()->endOfWeek()])
-            ->where('status', 'Absent')
-            ->count();
-        $weeklyLate = ClassAttendance::whereIn('student_id', $students)
-            ->where('teacher_id', $teacherId)
-            ->whereBetween('attendance_time', [now()->startOfWeek(), now()->endOfWeek()])
-            ->where('status', 'Late')
-            ->count();
+            return [$present, $absent, $others];
+        };
 
-        // --- Monthly ---
-        $monthlyPresent = ClassAttendance::whereIn('student_id', $students)
+        // Daily
+        $dailyQuery = ClassAttendance::whereIn('student_id', $students)
             ->where('teacher_id', $teacherId)
-            ->whereMonth('attendance_time', now()->month)
-            ->where('status', 'Present')
-            ->count();
-        $monthlyAbsent = ClassAttendance::whereIn('student_id', $students)
+            ->whereDate('attendance_time', now()->toDateString());
+        $dailyCounts = $calculateCounts($dailyQuery);
+
+        // Weekly
+        $weeklyQuery = ClassAttendance::whereIn('student_id', $students)
             ->where('teacher_id', $teacherId)
-            ->whereMonth('attendance_time', now()->month)
-            ->where('status', 'Absent')
-            ->count();
-        $monthlyLate = ClassAttendance::whereIn('student_id', $students)
+            ->whereBetween('attendance_time', [now()->startOfWeek(), now()->endOfWeek()]);
+        $weeklyCounts = $calculateCounts($weeklyQuery);
+
+        // Monthly
+        $monthlyQuery = ClassAttendance::whereIn('student_id', $students)
             ->where('teacher_id', $teacherId)
-            ->whereMonth('attendance_time', now()->month)
-            ->where('status', 'Late')
-            ->count();
+            ->whereMonth('attendance_time', now()->month);
+        $monthlyCounts = $calculateCounts($monthlyQuery);
 
         $attendanceData[$className] = [
-            'daily'   => [$dailyPresent, $dailyAbsent, $dailyLate],
-            'weekly'  => [$weeklyPresent, $weeklyAbsent, $weeklyLate],
-            'monthly' => [$monthlyPresent, $monthlyAbsent, $monthlyLate],
+            'daily'   => $dailyCounts,
+            'weekly'  => $weeklyCounts,
+            'monthly' => $monthlyCounts,
         ];
     }
 
     return view('teacher.dashboard', compact('attendanceData', 'classes'));
 }
+
 
 $user = auth()->user();
 

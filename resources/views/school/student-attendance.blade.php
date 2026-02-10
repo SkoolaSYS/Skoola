@@ -27,8 +27,8 @@
                         <!--begin::Toolbar-->
                         <div class="card-toolbar" data-kt-buttons="true">
                             <a class="btn btn-sm btn-color-muted btn-active btn-active-primary active px-4 me-1" id="">{{ __('messages.year') }}</a>
-                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1" id="">{{ __('messages.month') }}</a>
-                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4" id="">{{ __('messages.week') }}</a>
+                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4 me-1" id="">{{ __('messages.monthly') }}</a>
+                            <a class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4" id="">{{ __('messages.weekly') }}</a>
                         </div>
                         <!--end::Toolbar-->
                     </div>

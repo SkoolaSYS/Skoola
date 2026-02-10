@@ -158,11 +158,23 @@
 													<a class="badge status-badge" style="background-color:#f1416c;">{{ __('messages.absent') }}</a>
 												</td>
 												@endif
-												@if ($attendance->remarks == NULL)
-												<td class="ps-9">-</td>
+												<td class="ps-9">
+												@if ($attendance->status === 'absent')
+													<div class="d-flex flex-column">
+														<span>{{ $attendance->remarks ?? '-' }}</span>
+														<a href="javascript:void(0);" 
+														class="text-primary fw-semibold mt-1"
+														style="font-size: 12px;"
+														onclick="openRemarksModal({{ $attendance->id }})">
+															Edit Remarks
+														</a>
+													</div>
 												@else
-												<td class="ps-9">{{$attendance->remarks}}</td>
+													-
 												@endif
+											</td>
+
+
 												<td class="ps-9">
 											</tr>
 											@empty
@@ -237,6 +249,18 @@
 					charts[key].render();
 				}
 			});
+
+			function openRemarksModal(attendanceId) {
+    window.dispatchEvent(new CustomEvent('open-x-modal', {
+        detail: {
+            title: 'Edit Remarks',
+            modal: 'edit-remarks',
+            args: { attendanceId: attendanceId },
+            lg: true
+        }
+    }));
+}
+
 		</script>
 		@endpush
 	</x-card>

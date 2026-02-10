@@ -213,6 +213,12 @@ Route::middleware(['auth', 'role:admin|country|state|ppd|school'])->group(functi
             Route::get('/school/{school}', [SchoolController::class, 'index'])->name('school');
             Route::get('/student-attendance/{student}', [SchoolController::class, 'showStudentAttendance'])->name('student-attendance');
             Route::get('/school_export/{school_id}', [SchoolController::class, 'export'])->name('school_export');
+            Route::get('/school/{school}/students/management',
+                [SchoolController::class, 'studentManagement']
+            )->name('school.students.management');
+
+
+
         });
     });
 });

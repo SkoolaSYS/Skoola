@@ -27,9 +27,10 @@ class EditRemarks extends Component
 
     protected function rules(): array
     {
-        return[
-            'attendance.remarks' => ['required','string'],
-            'attendance.remarks_desc' => ['nullable','string']
+        return [
+            'attendance.remarks' => ['required', 'string'],
+            // 'attendance.remarks_desc' => ['nullable','string'] 
         ];
     }
+
 }

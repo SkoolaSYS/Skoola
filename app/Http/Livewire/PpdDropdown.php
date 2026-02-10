@@ -17,8 +17,9 @@ class PpdDropdown extends Component
     public $selectedSchool = null;
     public $prefix;
     public $key;
+    public $selectedSesi;
 
-    public function mount($selectedSchool = null, $prefix = '', $key = null)
+    public function mount($selectedSchool = null, $prefix = '', $key = null, $selectedSesi = null)
     {
         $this->prefix = $prefix;
         $this->key = $key;
@@ -26,6 +27,7 @@ class PpdDropdown extends Component
         $this->districts = collect();
         $this->schools = collect();
         $this->selectedSchool = $selectedSchool;
+        $this->selectedSesi = $selectedSesi; // now defined
 
         if (!is_null($selectedSchool)) {
             $school = School::find($selectedSchool);
@@ -37,6 +39,7 @@ class PpdDropdown extends Component
             }
         }
     }
+
 
     public function render()
     {

@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
+
 
 
 class ParentController extends Controller
@@ -17,6 +20,8 @@ class ParentController extends Controller
     
     public function dashboard(Request $request)
 {
+
+$currentYear = Carbon::now()->year;
     // 1️⃣ Logged-in parent
     if (auth()->check()) {
         $parent = auth()->user();
@@ -63,26 +68,30 @@ class ParentController extends Controller
 
     // Last 5 attendance records (eager load student and school)
     $attendanceList = Attendance::whereIn('student_id', $allStudentIds)
+        ->whereDate('date', Carbon::today())
         ->with(['student.school'])
-        ->take(5)
-        ->orderByDesc('id')
+        ->orderBy('student_id')
         ->get();
+
     info('Attendance list', $attendanceList->toArray());
 
     // Count absences and attendances
     $attendancesAbsent = Attendance::whereIn('student_id', $allStudentIds)
-        ->where('status', 'absent')
-        ->groupBy('student_id')
-        ->select('student_id', \DB::raw('count(*) as total'))
-        ->pluck('total', 'student_id')
-        ->toArray();
+    ->whereYear('date', $currentYear)
+    ->where('status', 'absent')
+    ->groupBy('student_id')
+    ->select('student_id', \DB::raw('count(*) as total'))
+    ->pluck('total', 'student_id')
+    ->toArray();
 
-    $attendancesAttend = Attendance::whereIn('student_id', $allStudentIds)
-        ->where('status', 'attend')
-        ->groupBy('student_id')
-        ->select('student_id', \DB::raw('count(*) as total'))
-        ->pluck('total', 'student_id')
-        ->toArray();
+$attendancesAttend = Attendance::whereIn('student_id', $allStudentIds)
+    ->whereYear('date', $currentYear)
+    ->where('status', 'attend')
+    ->groupBy('student_id')
+    ->select('student_id', \DB::raw('count(*) as total'))
+    ->pluck('total', 'student_id')
+    ->toArray();
+
 
     info('Attendances (attend)', $attendancesAttend);
     info('Attendances (absent)', $attendancesAbsent);
@@ -103,6 +112,8 @@ class ParentController extends Controller
         'attendanceData'
     ));
 }
+
+
 
 
 

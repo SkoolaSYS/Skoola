@@ -1,12 +1,13 @@
 <?php
 return [
     'dashboard' => 'Papan Pemuka',
-    'attendance' => 'Kehadiran',
+    'attendance' => 'Database Kehadiran',
     'student_list' => 'Senarai Pelajar',
     'add_student' => 'Tambah Pelajar',
     'save' => 'Simpan',
     'teacher' => 'Guru',
-    'touch' => 'Laporan Sentuhan',
+    'touch' => 'Laporan Kehadiran',
+    'yearly' => 'Tahun',
     'profile' => 'Profil',
     'children' => 'Anak',
     'logout' => 'Log Keluar',
@@ -92,7 +93,7 @@ return [
     'dashboardstudent' => 'Papan Pemuka :student',
     'schoollevel' => 'Tahap Sekolah',
     'totalstudents' => 'Jumlah Pelajar',
-    'avgattendance' => 'Jumlah Peratus Pelajar',
+    'avgattendance' => 'Jumlah Peratus Kehadiran Pelajar',
     'listofstudents' => 'SENARAI PELAJAR DI :school',
     'addstudent' => 'Tambah Pelajar',
     'addmanually' => 'Tambah Pelajar Secara Manual',
@@ -166,6 +167,15 @@ return [
     'clinic' => 'Klinik',
     'optionaldetails' => 'Butiran Pilihan',
     'reason' => 'Alasan',
+    'session' => 'Sesi',
+    'selectsession' => 'Pilih Sesi',
+    'morning' => 'Pagi',
+    'noon' => 'Petang',
+    'studentmanagement' => 'Pengurusan Pelajar',
+    'month' => 'Bulan',
+    'week' => 'Minggu',
+    'filter' => 'Tapis',
+    'reset' => 'Reset',
 
     
 ];

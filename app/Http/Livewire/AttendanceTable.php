@@ -7,11 +7,17 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class AttendanceTable extends DataTableComponent
 {
     protected $model = Attendance::class;
     public $attendanceId;
+    public $remarks;
+    public $year;
+    public $month;
+
+
 
     public function configure(): void
     {
@@ -23,16 +29,23 @@ class AttendanceTable extends DataTableComponent
         $user = Auth::user();
 
         return Attendance::query()
-    ->whereHas('student.parents', function ($query) use ($user) {
-        $query->where('users.id', $user->id);
-    })
-
+            ->whereHas('student.parents', function ($query) use ($user) {
+                $query->where('users.id', $user->id);
+            })
             ->when($this->columnSearch['student.name'] ?? null, function ($query, $studentName) {
                 return $query->whereHas('student', function ($subquery) use ($studentName) {
                     $subquery->where('name', 'like', '%' . $studentName . '%');
                 });
+            })
+            ->when($this->year, function ($query, $year) {
+                return $query->whereYear('date', $year);
+            })
+            ->when($this->month, function ($query, $month) {
+                return $query->whereMonth('date', $month);
             });
     }
+
+
 
     public function columns(): array
     {
@@ -52,18 +65,84 @@ class AttendanceTable extends DataTableComponent
                 ->sortable(),
             Column::make(__('messages.remarks'), "remarks")
                 ->sortable(),
-            Column::make('')
-                ->label(function ($row, Column $column) {
-                    $html = "<div class='btn-group'>";
-                    $html .= "<a class='btn btn-primary btn-sm text-white' wire:click='editRemarks($row->id)'>Edit Remarks</a>";
-                    $html .= "<div>";
-                    return $html;
-                })->html(),
+            
         ];
     }
 
     public function editRemarks($attendanceId)
     {
-        $this->dispatchBrowserEvent('open-x-modal', ['title' => 'Edit Remarks', 'modal' => 'edit-remarks', 'args' => ['attendanceId' => $attendanceId],'lg']);
+        $attendance = Attendance::find($attendanceId);
+        $this->attendanceId = $attendanceId;
+        $this->remarks = $attendance->remarks; // prefill existing remarks
+        
+        $this->dispatchBrowserEvent('open-x-modal', [
+            'title' => 'Edit Remarks',
+            'modal' => 'edit-remarks',
+            'args' => ['attendanceId' => $attendanceId],
+            'lg'
+        ]);
     }
+
+    public function saveRemarks()
+{
+    $attendance = Attendance::find($this->attendanceId);
+    if ($attendance) {
+        $attendance->remarks = $this->remarks; // take whatever is typed
+        $attendance->save();
+        $this->dispatchBrowserEvent('close-x-modal', ['modal' => 'edit-remarks']);
+        $this->emit('alert', ['type' => 'success', 'message' => 'Remarks updated']);
+    }
+}
+
+
+
+    public function filters(): array
+    {
+        $years = range(date('Y'), 2020);
+        $yearOptions = ['' => 'All Years'] + array_combine($years, $years);
+
+        $monthOptions = [
+            ''  => 'All Months',
+            '1' => 'January',
+            '2' => 'February',
+            '3' => 'March',
+            '4' => 'April',
+            '5' => 'May',
+            '6' => 'June',
+            '7' => 'July',
+            '8' => 'August',
+            '9' => 'September',
+            '10' => 'October',
+            '11' => 'November',
+            '12' => 'December',
+        ];
+
+        return [
+            SelectFilter::make('Year')
+                ->options($yearOptions)
+                ->filter(function ($builder, $value) {
+                    if ($value) {
+                        $this->year = $value;
+                    }
+                }),
+
+            SelectFilter::make('Month')
+                ->options($monthOptions)
+                ->filter(function ($builder, $value) {
+                    if ($value) {
+                        $this->month = $value;
+                    }
+                }),
+        ];
+    }
+
+
+    public function mount()
+    {
+        $this->year = date('Y');
+        $this->month = date('m');
+    }
+
+
+
 }

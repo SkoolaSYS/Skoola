@@ -190,6 +190,16 @@
                                 @endrole
 
                                 @role('school')
+                                <a href="{{ route('dashboard.school.students.management', ['school' => auth()->user()->getMeta('user_school_id')]) }}" 
+                                class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                    <span class="menu-link">
+                                        <span class="menu-title">{{ __('messages.studentmanagement') }}</span>
+                                    </span>
+                                </a>
+                                @endrole
+
+
+                                @role('school')
                                     <a href="{{ route('school.reports.index') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                                         <span class="menu-link">
                                             <span class="menu-title">{{ __('messages.touch') }}</span>

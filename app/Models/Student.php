@@ -14,7 +14,7 @@ class Student extends Model
     protected $fillable = [
     'name', 'ic', 'birth_cert_no', 'dob', 'gender', 'grade',
     'race', 'religion', 'nationality', 'orphan', 'address', 'oku',
-    'state_id', 'district_id', 'school_id', 'age', 'class_name', 'status',
+    'state_id', 'district_id', 'school_id', 'age', 'class_name', 'status', 'session'
 ];
 
     public function state()

@@ -23,13 +23,7 @@
                 @error('attendance.remarks') <span class="error">{{ $message }}</span> @enderror
             </div>
         </div>
-        <div class="row mb-6">
-            <label class="col-lg-4 col-form-label fw-semibold fs-6">Remarks Description</label>
-            <div class="col-lg-8 fv-row">
-                <input wire:model.defer="attendance.remarks_desc" type="text" class="form-control form-control-lg form-control-solid"></input>
-                @error('attendance.remarks_desc') <span class="error">{{ $message }}</span> @enderror
-            </div>
-        </div>
+        
         <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Save</button>
         <button data-bs-dismiss="modal" type="button" class="btn btn-secondary">Cancel</button>
     </form>

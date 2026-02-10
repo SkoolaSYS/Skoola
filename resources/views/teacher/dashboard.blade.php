@@ -51,7 +51,7 @@
                         labels: [
                         "{{ __('messages.present') }}",
                         "{{ __('messages.absent') }}",
-                        "{{ __('messages.late') }}"
+                        "{{ __('messages.others') }}"
                     ],
                         responsive: [
                             { breakpoint: 1024, options: { chart: { height: 220 } } },
