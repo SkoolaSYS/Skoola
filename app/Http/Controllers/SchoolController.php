@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Student;
+use App\Models\SchoolGrade;
+use App\Models\SchoolClass;
 use App\Models\School;
 use App\Models\District;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Exports\AdminStudentExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -129,6 +132,159 @@ class SchoolController extends Controller
     $students = $school->allStudents; // or $school->student() relationship
     return view('school.students.management', compact('school', 'school_id', 'students'));
 }
+
+    public function classManagement()
+{
+    $schoolId = Auth::user()->school_id;
+
+    // Predefined grades
+    $defaultGrades = [
+        'Darjah 1', 'Darjah 2', 'Darjah 3',
+        'Darjah 4', 'Darjah 5', 'Darjah 6',
+        'Tingkatan 1', 'Tingkatan 2', 'Tingkatan 3',
+        'Tingkatan 4', 'Tingkatan 5', 'Tingkatan 6',
+    ];
+
+    // Grades stored in DB (including newly added special grades)
+    $dbGrades = SchoolGrade::where('school_id', $schoolId)
+                ->pluck('grade_name')
+                ->toArray();
+
+    // Merge and remove duplicates
+    $allGrades = array_unique(array_merge($defaultGrades, $dbGrades));
+
+    // Get activated grades
+    $activatedGrades = SchoolGrade::where('school_id', $schoolId)
+                        ->where('is_active', true)
+                        ->pluck('grade_name')
+                        ->toArray();
+
+    return view('school.class_management', compact('allGrades', 'activatedGrades'));
+}
+
+
+
+    public function activateGrade(Request $request)
+{
+    $request->validate([
+        'grade_name' => 'required|string'
+    ]);
+
+    $schoolId = Auth::user()->school_id;
+
+    $grade = SchoolGrade::firstOrCreate(
+        [
+            'school_id' => $schoolId,
+            'grade_name' => $request->grade_name,
+        ]
+    );
+
+    // Always force activate
+    $grade->is_active = 1;
+    $grade->save();
+
+    return back()->with('success', 'Grade activated successfully.');
+}
+
+
+    public function editClass()
+    {
+        $schoolId = Auth::user()->school_id;
+
+        $activatedGrades = SchoolGrade::with('classes')
+            ->where('school_id', $schoolId)
+            ->where('is_active', true)
+            ->get();
+
+        return view('school.edit_class', compact('activatedGrades'));
+    }
+
+
+    public function updateClassNames(Request $request)
+{
+    $schoolId = Auth::user()->school_id;
+
+    // 🔵 Update existing class names
+    if($request->has('class_name')) {
+        foreach($request->class_name as $classId => $name) {
+            $class = SchoolClass::find($classId);
+            if($class && $class->grade->school_id == $schoolId) {
+                $class->update(['class_name' => $name]);
+            }
+        }
+    }
+
+    // 🟢 Add new classes
+    if($request->has('new_class')) {
+        foreach($request->new_class as $gradeId => $newClasses) {
+            foreach($newClasses as $name) {
+                if(!empty($name)) {
+                    SchoolClass::create([
+                        'school_grade_id' => $gradeId,
+                        'class_name' => $name
+                    ]);
+                }
+            }
+        }
+    }
+
+    // 🔴 Delete classes
+    if($request->has('delete_class')) {
+        foreach($request->delete_class as $classId) {
+            $class = SchoolClass::find($classId);
+            if($class && $class->grade->school_id == $schoolId) {
+                $class->delete();
+            }
+        }
+    }
+
+    return redirect()->route('dashboard.school.edit_class')
+        ->with('success', 'Class names updated successfully!');
+}
+
+public function deactivateGrade(Request $request)
+{
+    $request->validate([
+        'grade_name' => 'required|string'
+    ]);
+
+    $schoolId = auth()->user()->school_id;
+
+    $grade = SchoolGrade::where('school_id', $schoolId)
+        ->where('grade_name', $request->grade_name)
+        ->first();
+
+    if ($grade) {
+        $grade->is_active = false;
+        $grade->save();
+
+        return redirect()->back()->with('success', 'Grade deactivated successfully.');
+    }
+
+    return redirect()->back()->with('success', 'Grade not found.');
+}
+
+public function addGrade(Request $request)
+{
+    $request->validate([
+        'grade_name' => 'required|string|max:50',
+    ]);
+
+    $schoolId = Auth::user()->school_id;
+
+    $grade = SchoolGrade::firstOrCreate(
+        ['school_id' => $schoolId, 'grade_name' => $request->grade_name],
+        ['is_active' => true]
+    );
+
+    // Respond with JSON for AJAX
+    return response()->json(['success' => 'Grade added successfully!']);
+}
+
+
+
+
+
 
 
 }

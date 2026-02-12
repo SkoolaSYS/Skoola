@@ -216,6 +216,19 @@ Route::middleware(['auth', 'role:admin|country|state|ppd|school'])->group(functi
             Route::get('/school/{school}/students/management',
                 [SchoolController::class, 'studentManagement']
             )->name('school.students.management');
+            Route::get('/class-management', [SchoolController::class, 'classManagement'])
+            ->name('school.class_management');
+            Route::post('/activate-grade', [SchoolController::class, 'activateGrade'])
+            ->name('school.activate_grade');
+            Route::delete('/school/deactivate-grade', 
+                [SchoolController::class, 'deactivateGrade']
+            )->name('school.deactivate_grade');
+            Route::post('/dashboard/school/add-grade', [SchoolController::class, 'addGrade'])
+            ->name('school.add_grade');
+        Route::get('/edit-class', [SchoolController::class, 'editClass'])
+            ->name('school.edit_class');
+        Route::post('/update-class-names', [SchoolController::class, 'updateClassNames'])
+            ->name('school.update_class_names');
 
 
 

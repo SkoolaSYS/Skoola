@@ -144,32 +144,42 @@
                                 @endrole
                                 <!--begin:Menu item-->
                                 @role('teacher')
-                                <a href="{{route('dashboard')}}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                                    <!--begin:Menu link-->
-                                    <span class="menu-link">
-                                        <span class="menu-title">{{ __('messages.dashboard') }}</span>
-                                    </span>
-                                    <!--end:Menu link-->
-                                </a>
-                                <!--end:Menu item-->
-                                <!--begin:Menu item-->
+
+                                @php
+                                    // Count assigned classes for the logged-in teacher
+                                    $assignedClassesCount = \DB::table('class_user')
+                                        ->where('user_id', auth()->id())
+                                        ->count();
+                                @endphp
+
+                                @if($assignedClassesCount > 0)
+                                    <!-- Dashboard menu -->
+                                    <a href="{{ route('dashboard') }}" 
+                                    class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                        <span class="menu-link">
+                                            <span class="menu-title">{{ __('messages.dashboard') }}</span>
+                                        </span>
+                                    </a>
+                                @endif
+
+                                <!-- Attendance menu -->
                                 <a href="{{ route('class_attendance.index') }}" 
                                 class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                                    <!--begin:Menu link-->
                                     <span class="menu-link">
                                         <span class="menu-title">{{ __('messages.attendance') }}</span>
                                     </span>
-                                    <!--end:Menu link-->
                                 </a>
+
+                                <!-- Students menu -->
                                 <a href="{{ route('student.index') }}" 
                                 class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                                    <!--begin:Menu link-->
                                     <span class="menu-link">
                                         <span class="menu-title">{{ __('messages.students') }}</span>
                                     </span>
-                                    <!--end:Menu link-->
                                 </a>
+
                                 @endrole
+
                                 <!--begin:Menu item-->
                                 @role('admin|country|state|ppd|school')
                                     {{-- Common menu for all roles --}}
@@ -196,6 +206,12 @@
                                         <span class="menu-title">{{ __('messages.studentmanagement') }}</span>
                                     </span>
                                 </a>
+
+                                <a href="{{ route('dashboard.school.class_management') }}" class="menu-item here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                                        <span class="menu-link">
+                                            <span class="menu-title">{{ __('messages.classmanagement') }}</span>
+                                        </span>
+                                    </a>
                                 @endrole
 
 

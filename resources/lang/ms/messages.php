@@ -176,6 +176,10 @@ return [
     'week' => 'Minggu',
     'filter' => 'Tapis',
     'reset' => 'Reset',
+    'classmanagement' => 'Pengurusan Kelas/Tingkatan',
+    'familymatters' => 'Hal Keluarga',
+    'sick' => 'Sakit',
+    'assignedclasses' => 'Guru Kelas',
 
     
 ];

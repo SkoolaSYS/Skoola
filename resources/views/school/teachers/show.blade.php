@@ -24,6 +24,18 @@
             </div>
 
             <div class="mb-2">
+                <p><strong>Class Assigned:</strong>
+                    @if($teacher->classes->isNotEmpty())
+                        {{ $teacher->classes->map(fn($c) => $c->class_name . ' (' . $c->grade->grade_name . ')')->implode(', ') }}
+                    @else
+                        —
+                    @endif
+                </p>
+            </div>
+
+
+
+            <div class="mb-2">
                 <p><strong>Status:</strong> {{ ucfirst($teacher->status ?? 'N/A') }}</p>
             </div>
 

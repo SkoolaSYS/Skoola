@@ -44,11 +44,8 @@ public function postcode()
 
 public function school()
 {
-    return $this->belongsTo(School::class);
+    return $this->belongsTo(School::class, 'school_id');
 }
-
-
-
 
 
     public function students()
@@ -86,6 +83,12 @@ public function additionalGuardians()
     ->distinct()
     ->get();
 }
+
+public function classes()
+{
+    return $this->belongsToMany(SchoolClass::class, 'class_user', 'user_id', 'school_class_id');
+}
+
 
 
 

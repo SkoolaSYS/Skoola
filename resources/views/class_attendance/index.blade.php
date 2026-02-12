@@ -29,9 +29,10 @@
                         <label for="grade" class="form-label">{{ __('messages.grade') }}</label>
                         <select name="grade" id="grade" class="form-select" onchange="filterClasses()" required>
                             <option value="">-- {{ __('messages.selectgrade') }} --</option>
-                            @foreach(['Tingkatan 1','Tingkatan 2','Tingkatan 3','Tingkatan 4','Tingkatan 5','Tingkatan 6',
-                                      'Darjah 1','Darjah 2','Darjah 3','Darjah 4','Darjah 5','Darjah 6'] as $grade)
-                                <option value="{{ $grade }}" {{ $selectedGrade == $grade ? 'selected' : '' }}>{{ $grade }}</option>
+                            @foreach($grades as $grade)
+                                <option value="{{ $grade }}" {{ ($selectedGrade ?? '') == $grade ? 'selected' : '' }}>
+                                    {{ $grade }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -40,11 +41,16 @@
                         <label for="class_name" class="form-label">{{ __('messages.class') }}</label>
                         <select name="class_name" id="class_name" class="form-select" required>
                             <option value="">-- {{ __('messages.selectclass') }} --</option>
-                            @foreach($allClasses as $class)
-                                <option value="{{ $class }}" {{ $selectedClass == $class ? 'selected' : '' }}>{{ $class }}</option>
+                            @foreach($classes as $class)
+                                <option value="{{ $class->class_name }}" 
+                                    data-grade="{{ $class->grade->grade_name }}" 
+                                    {{ ($selectedClass ?? '') == $class->class_name ? 'selected' : '' }}>
+                                    {{ $class->class_name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
+
 
                     <div class="col-md-4">
                         <label for="subject" class="form-label">{{ __('messages.subject') }}</label>
@@ -182,24 +188,21 @@
 
         for (let i = 0; i < classSelect.options.length; i++) {
             let option = classSelect.options[i];
+            if (option.value === "") continue;
 
-            if (option.value === "") { 
-                option.style.display = ""; 
-                continue; 
-            }
-
-            if (
-                (grade.includes("Tingkatan") && option.value.startsWith(grade.replace("Tingkatan ",""))) ||
-                (grade.includes("Darjah") && option.value.startsWith(grade.replace("Darjah ",""))) ||
-                option.value.startsWith(grade)
-            ) {
+            if (option.dataset.grade === grade) {
                 option.style.display = "";
             } else {
                 option.style.display = "none";
             }
         }
-        classSelect.value = "{{ $selectedClass ?? '' }}";
+
+        // Reset selected value if it doesn't match grade
+        if (classSelect.selectedOptions.length === 0 || classSelect.selectedOptions[0].dataset.grade !== grade) {
+            classSelect.value = "";
+        }
     }
+
 
     // Color logic
     function updateSelectColor(select) {

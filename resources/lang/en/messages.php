@@ -175,4 +175,8 @@ return [
     'studentmanagement' => 'Student Management',
     'filter' => 'Filter',
     'reset' => 'Reset',
+    'classmanagement' => 'Class Management',
+    'familymatters' => 'Family Matters',
+    'sick' => 'Sick',
+    'assignedclasses' => 'Assigned Classes',
 ];

@@ -16,46 +16,62 @@ class ClassAttendanceController extends Controller
      */
     public function index(Request $request)
 {
+    $teacher = auth()->user();
+    $schoolId = $teacher->school_id; // the teacher's school
+
     $selectedGrade = $request->grade ?? null;
     $selectedClass = $request->class_name ?? null;
     $selectedSubject = $request->subject ?? null;
 
-    $allClasses = Student::distinct()->pluck('class_name');
+    // ✅ Get all grades added by this school
+    $grades = \App\Models\SchoolGrade::where('school_id', $schoolId)
+        ->orderBy('id')
+        ->pluck('grade_name');
+
+    // ✅ Get all classes added by this school
+    $classes = \App\Models\SchoolClass::whereHas('grade', function ($q) use ($schoolId) {
+            $q->where('school_id', $schoolId);
+        })
+        ->with('grade')
+        ->orderBy('class_name')
+        ->get();
+
     $students = collect();
     $attendanceRecords = [];
     $subjectOrder = [];
 
     if ($selectedGrade && $selectedClass) {
-        // Get all students for this class and grade
-        $students = Student::where('grade', $selectedGrade)
+        // Get students for this class and grade
+        $students = \App\Models\Student::where('grade', $selectedGrade)
             ->where('class_name', $selectedClass)
             ->orderBy('name')
             ->get();
 
         $today = \Carbon\Carbon::today();
 
-        // ✅ Get all attendance records for this class and grade for today
-        $todayAttendances = ClassAttendance::where('grade', $selectedGrade)
+        // Get all attendance records for this class and grade for today
+        $todayAttendances = \App\Models\ClassAttendance::where('grade', $selectedGrade)
             ->where('class_name', $selectedClass)
             ->whereDate('attendance_time', $today)
             ->orderBy('attendance_time', 'asc')
             ->get();
 
-        // ✅ Determine the order of subjects (1, 2, 3, etc.)
+        // Determine the order of subjects
         $subjects = $todayAttendances->pluck('subject')->unique()->values();
 
         foreach ($subjects as $index => $subject) {
             $subjectOrder[$subject] = $index + 1;
         }
 
-        // ✅ Create a simple lookup: $attendanceRecords[student_id][subject] = status
+        // Lookup: $attendanceRecords[student_id][subject] = status
         foreach ($todayAttendances as $record) {
             $attendanceRecords[$record->student_id][$record->subject] = $record->status;
         }
     }
 
     return view('class_attendance.index', compact(
-        'allClasses',
+        'grades',
+        'classes',
         'students',
         'attendanceRecords',
         'selectedGrade',
@@ -64,6 +80,7 @@ class ClassAttendanceController extends Controller
         'subjectOrder'
     ));
 }
+
 
 public function edit(Request $request)
 {
@@ -229,14 +246,6 @@ public function saveClassAttendance(Request $request)
         ])
         ->with('success', 'Attendance saved successfully!');
 }
-
-
-
-
-
-
-
-
 
     /**
      * Show attendance for a specific class

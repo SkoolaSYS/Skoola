@@ -53,9 +53,15 @@
         data-ic="{{ $teacher->ic ?? '-' }}"
         data-address="{{ $teacher->address ?? '-' }}"
         data-phone="{{ $teacher->phone_num ?? '-' }}"
+        data-classes="{{ $teacher->classes->isNotEmpty() 
+            ? $teacher->classes->map(fn($c) => $c->grade->grade_name . ' ' . $c->class_name)->implode(', ') 
+            : '-' }}"
     >
         {{ __('messages.view') }}
     </button>
+
+
+
 
     <a href="{{ route('school.teachers.edit', $teacher->id) }}" class="btn btn-sm btn-warning me-1">
         {{ __('messages.edit') }}
@@ -100,6 +106,7 @@
                 <p><strong>{{ __('messages.address') }}:</strong> <span id="modal-teacher-address"></span></p>
                 <p><strong>{{ __('messages.phonenum') }}:</strong> <span id="modal-teacher-phone"></span></p>
                 <p><strong>Email:</strong> <span id="modal-teacher-email"></span></p>
+                <p><strong>{{ __('messages.assignedclasses') }}:</strong> <span id="modal-teacher-classes"></span></p>
                 <p><strong>Status:</strong> <span id="modal-teacher-status"></span></p>
             </div>
             
@@ -125,6 +132,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('modal-teacher-phone').textContent = this.dataset.phone;
             document.getElementById('modal-teacher-email').textContent = this.dataset.email;
             document.getElementById('modal-teacher-status').textContent = this.dataset.status;
+            document.getElementById('modal-teacher-classes').textContent = this.dataset.classes || '-';
+
 
             modal.show();
         });

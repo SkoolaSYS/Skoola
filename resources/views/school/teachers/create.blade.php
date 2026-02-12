@@ -4,6 +4,16 @@
             <div class="card-body">
                 <h4 class="card-title mb-4">Register New Teacher</h4>
 
+                @if ($errors->any())
+                    <div class="alert alert-danger mb-4">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('school.teachers.store') }}">
                     @csrf
 

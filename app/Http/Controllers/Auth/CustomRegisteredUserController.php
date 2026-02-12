@@ -92,7 +92,7 @@ class CustomRegisteredUserController extends FortifyRegisteredUserController
                 public function toResponse($request)
                 {
                     //return redirect()->away('http://pwa.komeps.co.uk/#/pre-register-maya');
-                    return redirect('/student');
+                    return redirect('/parent/dashboard');
                 }
             };
         }

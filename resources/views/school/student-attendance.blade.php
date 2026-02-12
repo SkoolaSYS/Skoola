@@ -178,51 +178,83 @@
         </div>
         <!--end::Row-->
         @push('scripts')
-        <script>
-            var attendanceData = @json($attendanceData);
+<script>
+    // Use the full attendance list
+    const attendanceList = @json($attendanceList); // contains date, status, etc.
+    let chart;
 
-            var options = {};
-            var charts = {};
+    // Filter attendance by period
+    function filterAttendance(period) {
+        const now = new Date();
+        let startDate;
 
-            var data = JSON.parse(attendanceData); // Parse the JSON string to an array [attend, absent]
-            console.log(data);
-            var options1 = {
-                series: data,
-                chart: {
-                    type: 'donut',
-                    width: '230', // Adjust the width of the chart
-                    height: '200', // Adjust the height of the chart
-                },
-                colors: ['#50cd89', '#f1416c'], //green, red
-                legend: {
-                    show: false, // Hide the legend
-                },
-                plotOptions: {
-                    pie: {
-                        size: '50%', // Set the size of the pie chart (radius)
-                        //customScale: 1.0,
-                    },
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 150, // Adjust the width of the chart for smaller screens
-                            height: 150, // Adjust the height of the chart for smaller screens
-                        },
-                    }
-                }]
-            };
+        switch(period) {
+            case 'week':
+                startDate = new Date();
+                startDate.setDate(now.getDate() - 7);
+                break;
+            case 'month':
+                startDate = new Date();
+                startDate.setMonth(now.getMonth() - 1);
+                break;
+            case 'year':
+            default:
+                startDate = new Date();
+                startDate.setFullYear(now.getFullYear() - 1);
+                break;
+        }
 
-            options = options1;
+        // Filter by attendance date
+        const filtered = attendanceList.filter(a => new Date(a.date) >= startDate);
 
-            // Render the charts for each student
-            document.addEventListener("DOMContentLoaded", function() {
-                charts = new ApexCharts(document.querySelector("#pie_chart_{{ $student->id }}"), options1);
-                charts.render();
-            });
-        </script>
-        @endpush
+        // Count status
+        const attend = filtered.filter(a => a.status === 'attend').length;
+        const absent = filtered.filter(a => a.status === 'absent').length;
+
+        return [attend, absent];
+    }
+
+    // Render or update chart
+    function renderChart(series) {
+        const options = {
+            series: series,
+            chart: { type: 'donut', width: 230, height: 200 },
+            colors: ['#50cd89', '#f1416c'],
+            legend: { show: false },
+            plotOptions: { pie: { size: '50%' } },
+            responsive: [{ breakpoint: 480, options: { chart: { width: 150, height: 150 } } }]
+        };
+
+        if(chart) {
+            chart.updateSeries(series);
+        } else {
+            chart = new ApexCharts(document.querySelector("#pie_chart_{{ $student->id }}"), options);
+            chart.render();
+        }
+    }
+
+    // Hook buttons
+    const btns = document.querySelectorAll('.card-toolbar a');
+    btns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            let periodKey = 'year';
+            const text = btn.textContent.toLowerCase();
+            if(text.includes('month')) periodKey = 'month';
+            if(text.includes('week')) periodKey = 'week';
+
+            const series = filterAttendance(periodKey);
+            renderChart(series);
+        });
+    });
+
+    // Initial chart: yearly
+    renderChart(filterAttendance('year'));
+</script>
+@endpush
+
 
     </x-card>
 </x-app-layout>

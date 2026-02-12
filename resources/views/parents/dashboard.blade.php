@@ -166,7 +166,7 @@
 														class="text-primary fw-semibold mt-1"
 														style="font-size: 12px;"
 														onclick="openRemarksModal({{ $attendance->id }})">
-															Edit Remarks
+															{{ __('messages.edit') }}
 														</a>
 													</div>
 												@else

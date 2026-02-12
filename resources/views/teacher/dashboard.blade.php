@@ -9,23 +9,29 @@
             </div>
         </div>
 
-        @foreach($classes as $className => $grade)
-        <div class="mb-5 text-center">
-            <h4 class="fw-semibold text-dark mb-4">{{ $grade }} - {{ $className }}</h4>
-            <div class="row g-3 justify-content-center">
-                @foreach(['daily','weekly','monthly'] as $period)
-            <div class="col-lg-4 col-md-6 col-12 text-center mb-4">
-                <h6 class="mb-2 text-muted text-uppercase">{{ __('messages.' . $period) }}</h6>
-                <div id="chart-{{ $className }}-{{ $period }}" 
-                    class="attendance-chart" 
-                    style="width: 100%; height: 250px;">
+        @if($noClassAssigned ?? false)
+            <div class="alert alert-warning text-center">
+                No class assigned.
+            </div>
+        @endif
+
+        @foreach($classes as $className => $gradeName)
+            <h4 class="fw-semibold text-dark mb-4">{{ $gradeName }} - {{ $className }}</h4>
+            
+            @if(isset($attendanceData[$className]) && $attendanceData[$className])
+                <div class="row g-3 justify-content-center">
+                    @foreach(['daily','weekly','monthly'] as $period)
+                        <div class="col-lg-4 col-md-6 col-12 text-center mb-4">
+                            <h6 class="mb-2 text-muted text-uppercase">{{ __('messages.' . $period) }}</h6>
+                            <div id="chart-{{ $className }}-{{ $period }}" class="attendance-chart" style="width: 100%; height: 250px;"></div>
+                        </div>
+                    @endforeach
                 </div>
-            </div>
-        @endforeach
-
-            </div>
-        </div>
-
+            @else
+                <div class="alert alert-info text-center">
+                    Attendance not yet recorded for this class.
+                </div>
+            @endif
         @endforeach
 
         @push('scripts')
@@ -34,10 +40,11 @@
             let attendanceData = @json($attendanceData);
 
             Object.keys(attendanceData).forEach(className => {
-                ['daily','weekly','monthly'].forEach(period => {
-                    let data = attendanceData[className][period]; // [present, absent, late]
+                if (!attendanceData[className]) return; // skip if no attendance
 
-                    // Set dynamic height for mobile
+                ['daily','weekly','monthly'].forEach(period => {
+                    let data = attendanceData[className][period] || [0,0,0]; // fallback
+
                     let chartHeight = 250;
                     if (window.innerWidth < 480) chartHeight = 180;
                     else if (window.innerWidth < 768) chartHeight = 200;
@@ -45,14 +52,14 @@
                     new ApexCharts(document.querySelector("#chart-" + className + "-" + period), {
                         series: data,
                         chart: { type: 'donut', height: chartHeight },
-                        colors: ['#50cd89','#f1416c','#f5d70f'], // green, red, yellow
+                        colors: ['#50cd89','#f1416c','#f5d70f'],
                         legend: { show: true, position: 'bottom' },
                         plotOptions: { pie: { size: '70%' } },
                         labels: [
-                        "{{ __('messages.present') }}",
-                        "{{ __('messages.absent') }}",
-                        "{{ __('messages.others') }}"
-                    ],
+                            "{{ __('messages.present') }}",
+                            "{{ __('messages.absent') }}",
+                            "{{ __('messages.others') }}"
+                        ],
                         responsive: [
                             { breakpoint: 1024, options: { chart: { height: 220 } } },
                             { breakpoint: 768, options: { chart: { height: 200 } } },
@@ -63,12 +70,8 @@
             });
         });
 
-        // Optional: rerender charts on window resize for responsiveness
         window.addEventListener('resize', () => {
-            document.querySelectorAll('.attendance-chart').forEach(chartEl => {
-                chartEl.innerHTML = ''; // clear chart
-            });
-            // Re-run the script to redraw charts
+            document.querySelectorAll('.attendance-chart').forEach(chartEl => chartEl.innerHTML = '');
             document.dispatchEvent(new Event('DOMContentLoaded'));
         });
         </script>
