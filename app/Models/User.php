@@ -48,10 +48,22 @@ public function school()
 }
 
 
+    //public function students()
+//{
+   // return $this->belongsToMany(Student::class, 'parent_student', 'parent_id', 'student_id')
+    //            ->withTimestamps();
+//}
+
     public function students()
 {
-    return $this->belongsToMany(Student::class, 'parent_student', 'parent_id', 'student_id')
-                ->withTimestamps();
+    return $this->hasManyThrough(
+        \App\Models\Student::class,   // Final model
+        \App\Models\Guardian::class,  // Intermediate model
+        'ic',                         // Guardians.ic (foreign key to users.ic)
+        'id',                         // Students.id (local key on final model)
+        'ic',                         // Users.ic (local key on users)
+        'student_id'                  // Guardians.student_id (foreign key to students)
+    );
 }
 
 // Additional students linked via pivot (secondary guardian)
@@ -88,6 +100,11 @@ public function classes()
 {
     return $this->belongsToMany(SchoolClass::class, 'class_user', 'user_id', 'school_class_id');
 }
+
+    public function guardians()
+    {
+        return $this->hasMany(Guardian::class, 'parent_id');
+    }
 
 
 

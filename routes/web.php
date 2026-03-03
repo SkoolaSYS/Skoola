@@ -236,6 +236,21 @@ Route::middleware(['auth', 'role:admin|country|state|ppd|school'])->group(functi
     });
 });
 
+Route::get('/get-students-by-parent-ic', function (\Illuminate\Http\Request $request) {
+
+    $guardians = \App\Models\Guardian::where('ic', $request->ic)->get();
+
+    if ($guardians->isEmpty()) {
+        return response()->json([]);
+    }
+
+    $studentIds = $guardians->pluck('student_id');
+
+    $students = \App\Models\Student::whereIn('id', $studentIds)->get();
+
+    return response()->json($students);
+});
+
 Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher/dashboard', [DashboardController::class, 'index'])->name('teacher.dashboard');
     Route::get('/students', [StudentController::class, 'index'])->name('student.index');

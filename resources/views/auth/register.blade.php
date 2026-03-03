@@ -96,8 +96,7 @@
                                             <h1 class="text-dark fw-bolder mb-3">Register</h1>
                                             <!--end::Title-->
                                         </div>
-                                        <form action="{{ route('register') }}" method="POST">
-										@csrf
+                                        
 										<!-- Main Parent / Guardian (Required) -->
 									<div id="parent-form">
 										<h3>{{ __('messages.parentdetails') }}</h3>
@@ -139,7 +138,7 @@
 											<div class="row mb-6">
 												<label class="col-lg-4 col-form-label required">{{ __('messages.ic') }}</label>
 												<div class="col-lg-8 fv-row">
-													<input type="text" name="ic" class="form-control" placeholder="{{ __('messages.ic') }}" required>
+													<input type="text" id="parent_ic" name="ic" class="form-control" placeholder="{{ __('messages.ic') }}" required>
 												</div>
 											</div>
 
@@ -232,16 +231,28 @@
 										</button>
 
 
-                                    <!-- Student Profile Section -->
-                                    <div class="mb-5">
-                                        <h3 class="fw-bold mb-3">{{ __('messages.studentprofiledetails') }}</h3>
-                                        <div id="student-forms-container">
-                                            @include('student._student-form', ['prefix' => 'students[0]', 'key' => 'student-0'])
-                                        </div>
+                                    {{-- 
+									<div class="mb-5">
+										<h3 class="fw-bold mb-3">{{ __('messages.studentprofiledetails') }}</h3>
+
+										<div id="student-forms-container">
+											@include('student._student-form', ['prefix' => 'students[0]', 'key' => 'student-0'])
+										</div>
+
 										<hr>
-                                        <button type="button" class="btn btn-secondary mt-1 w-100" id="add-student-btn">{{ __('messages.addmore') }}</button>
-										<hr>
-                                    </div>
+
+										<button type="button" 
+												class="btn btn-secondary mt-1 w-100" 
+												id="add-student-btn">
+											{{ __('messages.addmore') }}
+										</button>
+
+										<hr> 
+									</div> 
+									--}}
+
+									<div id="student-forms-container"></div>
+
 									<!--begin::Submit button-->
 									<div class="d-grid mb-10">
 										<button type="submit" id="kt_sign_up_submit" class="btn btn-primary">
@@ -285,66 +296,113 @@
 		<!--end::Javascript-->
 		<script>
 document.addEventListener('DOMContentLoaded', function() {
-    let guardianIndex = 1; // start after the first one
-    const addBtn = document.getElementById('add-guardian-btn');
-    const container = document.getElementById('additional-guardians-container'); // corrected ID
 
-    addBtn.addEventListener('click', function() {
-        fetch('/guardian-form-partial?index=' + guardianIndex)
-            .then(response => response.text())
-            .then(html => {
-                const div = document.createElement('div');
-                div.classList.add('guardian-form-wrapper', 'mb-4');
-                div.innerHTML = html + '<button type="button" class="btn btn-danger remove-guardian-btn mt-2 mb-2 w-100">Remove</button>';
-                container.appendChild(div);
-                guardianIndex++;
+    /* ==============================
+       GUARDIAN ADD / REMOVE
+    ============================== */
 
-                if (window.Livewire) {
-                    window.Livewire.rescan();
-                }
-            });
-    });
+    let guardianIndex = 1;
+    const addGuardianBtn = document.getElementById('add-guardian-btn');
+    const guardianContainer = document.getElementById('additional-guardians-container');
 
-	document.querySelectorAll('[data-kt-password-meter="true"]').forEach(function (element) {
-    // Avoid duplicate init
-    if (!element.hasAttribute("data-kt-password-meter-initialized")) {
-        new KTPasswordMeter(element);
-        element.setAttribute("data-kt-password-meter-initialized", "true");
+    if (addGuardianBtn && guardianContainer) {
+        addGuardianBtn.addEventListener('click', function() {
+            fetch('/guardian-form-partial?index=' + guardianIndex)
+                .then(response => response.text())
+                .then(html => {
+                    const div = document.createElement('div');
+                    div.classList.add('guardian-form-wrapper', 'mb-4');
+                    div.innerHTML = html + 
+                        '<button type="button" class="btn btn-danger remove-guardian-btn mt-2 mb-2 w-100">Remove</button>';
+                    guardianContainer.appendChild(div);
+                    guardianIndex++;
+
+                    if (window.Livewire) {
+                        window.Livewire.rescan();
+                    }
+                });
+        });
+
+        guardianContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-guardian-btn')) {
+                e.target.closest('.guardian-form-wrapper').remove();
+            }
+        });
     }
-});
 
+    /* ==============================
+       PASSWORD METER INIT
+    ============================== */
 
-    container.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-guardian-btn')) {
-            e.target.closest('.guardian-form-wrapper').remove();
+    document.querySelectorAll('[data-kt-password-meter="true"]').forEach(function (element) {
+        if (!element.hasAttribute("data-kt-password-meter-initialized")) {
+            new KTPasswordMeter(element);
+            element.setAttribute("data-kt-password-meter-initialized", "true");
         }
     });
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-				let studentIndex = 1;
-				const addBtn = document.getElementById('add-student-btn');
-				const container = document.getElementById('student-forms-container');
-				addBtn.addEventListener('click', function() {
-					fetch('/student-form-partial?index=' + studentIndex)
-						.then(response => response.text())
-						.then(html => {
-							const div = document.createElement('div');
-							div.classList.add('student-form-wrapper');
-							div.innerHTML = html + '<button type="button" class="btn btn-danger remove-student-btn mt-2 mb-2 w-100">Remove</button>';
-							container.appendChild(div);
-							studentIndex++;
-							if (window.Livewire) {
-								window.Livewire.rescan();
-							}
-						});
-				});
-				container.addEventListener('click', function(e) {
-					if (e.target.classList.contains('remove-student-btn')) {
-						e.target.closest('.student-form-wrapper').remove();
-					}
-				});
-			});
+    /* ==============================
+       AUTO FETCH STUDENTS BY IC
+    ============================== */
+
+    const icInput = document.getElementById('parent_ic');
+    const studentContainer = document.getElementById('student-forms-container');
+
+    if (icInput && studentContainer) {
+
+        let timeout = null;
+
+        icInput.addEventListener('input', function() {
+
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+
+                let icValue = icInput.value;
+
+                // If Malaysian IC must be 12 digits
+                if (icValue.length !== 12) {
+                    studentContainer.innerHTML = '';
+                    return;
+                }
+
+                fetch('/get-students-by-parent-ic?ic=' + icValue)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        studentContainer.innerHTML = '';
+
+                        if (data.length === 0) {
+                            studentContainer.innerHTML = `
+                                <div class="alert alert-warning">
+                                    No children found for this IC.
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        data.forEach((student, index) => {
+
+                            let html = `
+                                <div class="card p-4 mb-3">
+                                    <h5>Child ${index + 1}</h5>
+                                    <p><strong>Name:</strong> ${student.name}</p>
+                                    <p><strong>IC:</strong> ${student.ic}</p>
+                                    <p><strong>Grade:</strong> ${student.grade}</p>
+                                    <p><strong>Class:</strong> ${student.class_name}</p>
+                                </div>
+                            `;
+
+                            studentContainer.innerHTML += html;
+                        });
+                    });
+
+            }, 500);
+
+        });
+    }
+
+});
 </script>
 
 

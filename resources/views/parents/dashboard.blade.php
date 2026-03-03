@@ -123,17 +123,19 @@
 							<div id="kt_referrals_1" class="card-body p-0 tab-pane fade show active" role="tabpanel">
 								<div class="table-responsive">
 									<!--begin::Table-->
-									<table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9">
+									<table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9 text-nowrap">
 										<!--begin::Thead-->
 										<thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
 											<tr>
-												<th class="min-w-125px ps-9">{{ __('messages.date') }}</th>
-												<th class="min-w-125px ps-9">{{ __('messages.checkin') }}</th>
-												<th class="min-w-125px ps-9">{{ __('messages.checkout') }}</th>
-												<th class="min-w-150px px-0">{{ __('messages.name') }}</th>
-												<th class="min-w-150px px-0">{{ __('messages.school') }}</th>
-												<th class="min-w-150px ps-5">{{ __('messages.status') }}</th>
-												<th class="min-w-150px ps-5">{{ __('messages.remarks') }}</th>
+												<th class="ps-4">{{ __('messages.date') }}</th>
+												<th class="ps-4">{{ __('messages.checkin') }}</th>
+												<th class="ps-4">{{ __('messages.checkout') }}</th>
+												<th class="ps-4">{{ __('messages.name') }}</th>
+												<th class="ps-4">{{ __('messages.school') }}</th>
+												<th class="ps-4">{{ __('messages.grade') }}</th>
+												<th class="ps-4">{{ __('messages.class') }}</th>
+												<th class="ps-4">{{ __('messages.status') }}</th>
+												<th class="ps-4">{{ __('messages.remarks') }}</th>
 											</tr>
 										</thead>
 										<!--end::Thead-->
@@ -146,6 +148,8 @@
 												<td class="ps-9">{{$attendance->check_out}}</td>
 												<td class="ps-0">{{ $attendance->student->name ?? '-' }}</td>
 												<td class="ps-0">{{ $attendance->student->school->name ?? '-' }}</td>
+												<td class="ps-0">{{ $attendance->student->grade ?? '-' }}</td>
+												<td class="ps-0">{{ $attendance->student->class_name ?? '-' }}</td>
 
 
 

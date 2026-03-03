@@ -100,11 +100,18 @@ class StudentController extends Controller
 {
     $user = Auth::user();
 
-    // students linked to this parent
-    $students = $user->students;
+    // 1️⃣ Get all guardians linked to this parent IC
+    $guardianRecords = \App\Models\Guardian::where('ic', $user->ic)->get();
 
+    // 2️⃣ Collect all student IDs from guardians
+    $studentIds = $guardianRecords->pluck('student_id')->unique()->toArray();
+
+    // 3️⃣ Fetch students using those IDs
+    $students = \App\Models\Student::whereIn('id', $studentIds)->get();
+
+    // 4️⃣ Calculate age for each student
     foreach ($students as $student) {
-        $ic = $student->ic;
+        $ic = $student->ic; // Assuming student IC is stored in students.ic
         $birthdate = $this->extractBirthDateFromIC($ic);
         $student->age = $birthdate ? $this->calculateAge($birthdate) : null;
     }
@@ -276,6 +283,7 @@ public function schoolStore(Request $request)
         'grade'          => 'required|string|max:50',
         'class_name'     => 'required|string|max:50',
         'school_id'      => 'required|integer',
+        // You can also validate father/mother/guardian fields if you want
     ]);
 
     // Auto-calculate age if dob is provided
@@ -283,12 +291,49 @@ public function schoolStore(Request $request)
         $validated['age'] = \Carbon\Carbon::parse($validated['dob'])->age;
     }
 
+    // Save student
     $student = new \App\Models\Student();
     $student->fill($validated);
     $student->save();
 
+    // ======================
+    // Save Guardians
+    // ======================
+    // Father
+    if ($request->filled('father_name')) {
+        $student->guardians()->create([
+            'type'  => 'father',
+            'name'  => $request->father_name,
+            'ic'    => $request->father_ic,
+            'phone' => $request->father_phone,
+            'email' => $request->father_email,
+        ]);
+    }
+
+    // Mother
+    if ($request->filled('mother_name')) {
+        $student->guardians()->create([
+            'type'  => 'mother',
+            'name'  => $request->mother_name,
+            'ic'    => $request->mother_ic,
+            'phone' => $request->mother_phone,
+            'email' => $request->mother_email,
+        ]);
+    }
+
+    // Guardian / Penjaga
+    if ($request->filled('guardian_name')) {
+        $student->guardians()->create([
+            'type'  => 'guardian',
+            'name'  => $request->guardian_name,
+            'ic'    => $request->guardian_ic,
+            'phone' => $request->guardian_phone,
+            'email' => $request->guardian_email,
+        ]);
+    }
+
     return redirect()
-        ->route('dashboard.school', ['school' => $request->school_id])
+        ->route('dashboard.school.students.management', ['school' => $request->school_id])
         ->with('success', 'Student added successfully.');
 }
 

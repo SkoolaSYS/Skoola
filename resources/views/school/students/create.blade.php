@@ -115,6 +115,87 @@
                 </select>
             </div>
 
+            <hr class="my-5">
+
+            <h3 class="mb-4 fw-bold">Maklumat Ibu Bapa/Penjaga</h3>
+
+            <!-- ================= BAPA ================= -->
+            <div class="mb-5">
+                <h4 class="mb-4 fw-semibold">Bapa</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Nama Bapa</label>
+                    <input type="text" class="form-control form-control-lg" name="father_name">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">IC Bapa</label>
+                    <input type="text" class="form-control form-control-lg" name="father_ic">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">No. Telefon Bapa</label>
+                    <input type="text" class="form-control form-control-lg" name="father_phone">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Bapa</label>
+                    <input type="email" class="form-control form-control-lg" name="father_email">
+                </div>
+            </div>
+
+
+            <!-- ================= IBU ================= -->
+            <div class="mb-5">
+                <h4 class="mb-4 fw-semibold">Ibu</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Nama Ibu</label>
+                    <input type="text" class="form-control form-control-lg" name="mother_name">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">IC Ibu</label>
+                    <input type="text" class="form-control form-control-lg" name="mother_ic">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">No. Telefon Ibu</label>
+                    <input type="text" class="form-control form-control-lg" name="mother_phone">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Ibu</label>
+                    <input type="email" class="form-control form-control-lg" name="mother_email">
+                </div>
+            </div>
+
+
+            <!-- ================= PENJAGA ================= -->
+            <div class="mb-5">
+                <h4 class="mb-4 fw-semibold">Penjaga</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Nama Penjaga</label>
+                    <input type="text" class="form-control form-control-lg" name="guardian_name">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">IC Penjaga</label>
+                    <input type="text" class="form-control form-control-lg" name="guardian_ic">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">No. Telefon Penjaga</label>
+                    <input type="text" class="form-control form-control-lg" name="guardian_phone">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Penjaga</label>
+                    <input type="email" class="form-control form-control-lg" name="guardian_email">
+                </div>
+            </div>
+
 
             <button type="submit" class="btn btn-primary">{{ __('messages.addstudent') }}</button>
             <a href="{{ route('dashboard.school', ['school' => $school->id]) }}" class="btn btn-secondary">Cancel</a>

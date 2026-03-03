@@ -22,9 +22,9 @@
 			<!--end::Page title-->
 			<!-- Add Student button -->
 			<div class="ms-auto">
-				<a href="{{ route('student.create') }}" class="btn btn-primary">
+				<!-- <a href="{{ route('student.create') }}" class="btn btn-primary">
 					<i class="ki-duotone ki-plus fs-2"></i>{{ __('messages.addstudent') }}
-				</a>
+				</a> -->
 			</div>
 		</div>
 		<!--end::Toolbar wrapper-->

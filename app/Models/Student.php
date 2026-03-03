@@ -44,9 +44,14 @@ class Student extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    //public function guardians()
+//{
+   // return $this->belongsToMany(User::class, 'parent_student', 'student_id', 'parent_id')
+    //            ->withTimestamps();
+//}
+
     public function guardians()
-{
-    return $this->belongsToMany(User::class, 'parent_student', 'student_id', 'parent_id')
-                ->withTimestamps();
-}
+    {
+        return $this->hasMany(Guardian::class, 'student_id');
+    }
 }

@@ -6,7 +6,12 @@
 
     <x-card title=''>
         <div class="app-toolbar-wrapper d-flex align-items-center flex-stack flex-wrap gap-2 py-4 w-100"></div>
-
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <!--begin::Row-->
         <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
             <div class="card h-xl-100 shadow-sm p-3 mb-5 bg-white rounded">

@@ -26,7 +26,7 @@ class StudentTable extends DataTableComponent
 
     return Student::query()
         ->whereHas('guardians', function ($query) use ($user) {
-            $query->where('users.id', $user->id);
+            $query->where('ic', $user->ic); // use parent's IC to match guardians
         })
         ->when($this->columnSearch['name'] ?? null, function ($query, $name) {
             return $query->where('name', 'like', '%' . $name . '%');
