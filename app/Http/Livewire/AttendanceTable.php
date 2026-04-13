@@ -29,8 +29,8 @@ class AttendanceTable extends DataTableComponent
         $user = Auth::user();
 
         return Attendance::query()
-            ->whereHas('student', function ($query) use ($user) {
-                $query->where('ic', $user->ic);
+            ->whereHas('student.guardians', function ($query) use ($user) {
+                $query->where('ic', $user->ic); // match parent IC
             })
             ->when($this->columnSearch['student.name'] ?? null, function ($query, $studentName) {
                 return $query->whereHas('student', function ($subquery) use ($studentName) {
