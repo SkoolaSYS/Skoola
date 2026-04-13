@@ -114,14 +114,6 @@ $attendancesAttend = Attendance::whereIn('student_id', $allStudentIds)
 }
 
 
-
-
-
-
-
-
-
-
     public function attendancePage(Request $request)
 {
     // FORCE read email from query string first
