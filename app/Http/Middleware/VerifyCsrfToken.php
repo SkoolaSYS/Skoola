@@ -16,8 +16,8 @@ class VerifyCsrfToken extends Middleware
 //];
 
 protected $except = [
-    '/indirect'
+    '/indirect',
+    '/direct'
 ];
-
 
 }
