@@ -11,8 +11,12 @@ class VerifyCsrfToken extends Middleware
      *
      * @var array<int, string>
      */
-    protected $except = [
-    'receive', // or 'receive/*' if needed
+    //protected $except = [
+    //'receive', // or 'receive/*' if needed
+//];
+
+protected $except = [
+    '/indirect'
 ];
 
 
