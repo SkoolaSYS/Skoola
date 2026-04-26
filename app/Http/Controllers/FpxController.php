@@ -37,15 +37,33 @@ class FpxController extends Controller
         $status = 'Failed (' . $code . ')';
     }
 
+    // Build redirect query
+    $query = http_build_query([
+        'status'        => $status,
+        'txnId'         => $txnId,
+        'sellerOrder'   => $sellerOrder,
+        'sellerExOrder' => $sellerExOrder,
+        'datetime'      => $datetime,
+        'bank'          => $bank,
+        'amount'        => $amount,
+        'buyerEmail'    => $buyerEmail,
+        'productDesc'   => $productDesc
+    ]);
+
+    $redirectUrl = "https://pwa.komeps.co.uk/#/indirect?$query";
+
     return view('indirect', compact(
         'status',
         'txnId',
         'sellerOrder',
+        'sellerExOrder',
         'amount',
         'bank',
         'buyerEmail',
         'productDesc',
-        'datetime'
+        'datetime',
+        'redirectUrl'
+
     ));
 }
 }

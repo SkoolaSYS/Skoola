@@ -13,5 +13,13 @@
     <p>Email: {{ $buyerEmail }}</p>
     <p>Description: {{ $productDesc }}</p>
     <p>Date: {{ $datetime }}</p>
+
+    @if($status === 'Payment Success')
+    <a href="{{ $redirectUrl }}">
+        <button>Continue</button>
+    </a>
+@else
+    <p>Payment failed. Please try again.</p>
+@endif
 </body>
 </html>
