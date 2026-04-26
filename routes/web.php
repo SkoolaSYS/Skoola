@@ -68,6 +68,13 @@ Route::domain('school.my3sss.com')->middleware(['web'])->group(function () {
 });
 
 
+Route::get('/direct', function () {
+    return view('direct');
+})->name('direct');
+
+Route::get('/indirect', function () {
+    return view('indirect');
+})->name('indirect');
 
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
