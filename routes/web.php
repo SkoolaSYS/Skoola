@@ -27,6 +27,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Api\ReceiveController;
 use App\Http\Controllers\School\ReportController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\FpxController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -67,14 +68,13 @@ Route::domain('school.my3sss.com')->middleware(['web'])->group(function () {
     });
 });
 
+Route::post('/indirect', [FpxController::class, 'handleCallback'])->name('indirect.callback');
 
 Route::get('/direct', function () {
     return view('direct');
 })->name('direct');
 
-Route::get('/indirect', function () {
-    return view('indirect');
-})->name('indirect');
+
 
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
