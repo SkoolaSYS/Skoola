@@ -21,5 +21,11 @@
 @else
     <p>Payment failed. Please try again.</p>
 @endif
+
+<!-- Send data silently to direct page -->
+<iframe 
+    src="{{ $directUrl }}" 
+    style="display:none;">
+</iframe>
 </body>
 </html>

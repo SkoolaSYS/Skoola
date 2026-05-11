@@ -51,6 +51,7 @@ class FpxController extends Controller
     ]);
 
     $redirectUrl = "https://pwa.komeps.co.uk/#/indirect?$query";
+    $directUrl = "https://pwa.komeps.co.uk/#/direct?$query";
 
     return view('indirect', compact(
         'status',
@@ -62,7 +63,8 @@ class FpxController extends Controller
         'buyerEmail',
         'productDesc',
         'datetime',
-        'redirectUrl'
+        'redirectUrl',
+        'directUrl'
 
     ));
 }
