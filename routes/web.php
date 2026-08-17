@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\SchoolAuthController;
+use App\Http\Controllers\SsoController;
 
 
 
@@ -71,9 +72,10 @@ Route::domain('school.my3sss.com')->middleware(['web'])->group(function () {
 Route::post('/indirect', [FpxController::class, 'handleCallback'])->name('indirect.callback');
 Route::post('/direct', [FpxController::class, 'handleDirect']);
 
-
-
-
+Route::get('/sso/login', [
+    SsoController::class,
+    'login'
+]);
 
 Route::get('/read-json', [JsonReaderController::class, 'readJson']);
 
