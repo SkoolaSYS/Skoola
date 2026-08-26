@@ -1,0 +1,232 @@
+@role('teacher')
+<x-app-layout>
+    @slot('title')
+        Class Attendance
+    @endslot
+
+    <x-card title="Class Attendance">
+        <div class="mb-3 text-end text-muted">
+            {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}
+        </div>
+
+        <!-- Success Message -->
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
+        <!-- Form to select Grade, Class, Subject -->
+        <div class="mb-5">
+            <form method="GET" action="{{ route('class_attendance.index') }}">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="grade" class="form-label">{{ __('messages.grade') }}</label>
+                        <select name="grade" id="grade" class="form-select" onchange="filterClasses()" required>
+                            <option value="">-- {{ __('messages.selectgrade') }} --</option>
+                            @foreach($grades as $grade)
+                                <option value="{{ $grade }}" {{ ($selectedGrade ?? '') == $grade ? 'selected' : '' }}>
+                                    {{ $grade }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="class_name" class="form-label">{{ __('messages.class') }}</label>
+                        <select name="class_name" id="class_name" class="form-select" required>
+                            <option value="">-- {{ __('messages.selectclass') }} --</option>
+                            @foreach($classes as $class)
+                                <option value="{{ $class->class_name }}" 
+                                    data-grade="{{ $class->grade->grade_name }}" 
+                                    {{ ($selectedClass ?? '') == $class->class_name ? 'selected' : '' }}>
+                                    {{ $class->class_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <label for="subject" class="form-label">{{ __('messages.subject') }}</label>
+                        <select name="subject" id="subject" class="form-select" required>
+                            <option value="">-- {{ __('messages.selectsubject') }} --</option>
+                            @foreach(['Mathematics','Science','English','Bahasa Melayu','Sejarah','Geografi'] as $subject)
+                                <option value="{{ $subject }}" {{ $selectedSubject == $subject ? 'selected' : '' }}>{{ $subject }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">{{ __('messages.showstudents') }}</button>
+                </div>
+            </form>
+        </div>
+
+       @if(isset($students) && count($students) > 0)
+<div class="mt-5">
+    <h5>{{ __('messages.studentlist') }} - {{ $selectedClass }} ({{ $selectedGrade }})</h5>
+
+    <div class="text-end mb-3 d-flex justify-content-end gap-2">
+    <a href="{{ route('class_attendance.add', ['grade' => $selectedGrade, 'class_name' => $selectedClass, 'subject' => $selectedSubject]) }}"
+       class="btn btn-primary">
+        {{ __('messages.addattendance') }}
+    </a>
+
+    @php
+        $teacherHasAttendance = \App\Models\ClassAttendance::where('grade', $selectedGrade)
+            ->where('class_name', $selectedClass)
+            ->where('subject', $selectedSubject)
+            ->where('teacher_id', auth()->id())
+            ->whereDate('attendance_time', now()->toDateString())
+            ->exists();
+    @endphp
+
+    @if($teacherHasAttendance)
+        <a href="{{ route('class_attendance.edit', [
+            'grade' => $selectedGrade,
+            'class_name' => $selectedClass,
+            'subject' => $selectedSubject
+        ]) }}" class="btn btn-warning">
+            {{ __('messages.editattendance') }}
+        </a>
+        
+    @endif
+
+        <a href="{{ route('class_attendance.pdf', [
+    'grade' => $selectedGrade,
+    'class_name' => $selectedClass,
+    'subject' => $selectedSubject
+]) }}" 
+   class="btn btn-danger" target="_blank">
+   {{ __('messages.downloadpdf') }}
+</a>
+
+
+
+</div>
+
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover mt-3 align-middle text-center">
+            <thead class="table-light">
+                <tr>
+        <th>No.</th>
+        <th>{{ __('messages.fullname') }}</th>
+        @foreach($subjectOrder as $subject => $num)
+            <th>{{ $num }}</th>
+        @endforeach
+    </tr>
+</thead>
+<tbody>
+    @foreach($students as $student)
+        <tr>
+            <td>{{ $loop->iteration }}</td>
+            <td>{{ $student->name }}</td>
+            @foreach($subjectOrder as $subject => $num)
+                @php
+                    $status = $attendanceRecords[$student->id][$subject] ?? null;
+                    $color = match($status) {
+                        'Present' => 'bg-success',
+                        'Absent' => 'bg-danger',
+                        default => ($status ? 'bg-warning' : '')
+                    };
+                @endphp
+                <td class="{{ $color }}" style="text-align:center;">
+                    {{ $status ? strtoupper(substr($status, 0, 1)) : '-' }}
+                </td>
+            @endforeach
+        </tr>
+    @endforeach
+</tbody>
+        </table>
+    </div>
+</div>
+@endif
+
+
+    </x-card>
+
+    <style>
+        /* Color styling for dropdowns */
+        .attendance-select {
+            transition: background-color 0.3s ease;
+            color: #000;
+        }
+        .attendance-present {
+            background-color: #d4edda !important; /* light green */
+            border-color: #c3e6cb;
+        }
+        .attendance-absent {
+            background-color: #f8d7da !important; /* light red */
+            border-color: #f5c6cb;
+        }
+        .attendance-others {
+            background-color: #fff3cd !important; /* light yellow */
+            border-color: #ffeeba;
+        }
+    </style>
+
+    <script>
+    // Pass translations from Laravel to JS
+    const translations = {
+        present: "{{ __('messages.present') }}",
+        absent: "{{ __('messages.absent') }}",
+        others: "{{ __('messages.others') }}",
+    };
+
+    function filterClasses() {
+        let grade = document.getElementById("grade").value;
+        let classSelect = document.getElementById("class_name");
+
+        for (let i = 0; i < classSelect.options.length; i++) {
+            let option = classSelect.options[i];
+            if (option.value === "") continue;
+
+            if (option.dataset.grade === grade) {
+                option.style.display = "";
+            } else {
+                option.style.display = "none";
+            }
+        }
+
+        // Reset selected value if it doesn't match grade
+        if (classSelect.selectedOptions.length === 0 || classSelect.selectedOptions[0].dataset.grade !== grade) {
+            classSelect.value = "";
+        }
+    }
+
+
+    // Color logic
+    function updateSelectColor(select) {
+        select.classList.remove('attendance-present', 'attendance-absent', 'attendance-others');
+        let value = select.value.toLowerCase();
+
+        if (['present', 'hadir'].includes(value)) {
+            select.classList.add('attendance-present');
+        } else if (['absent', 'tidak hadir'].includes(value)) {
+            select.classList.add('attendance-absent');
+        } else if (['others', 'lain-lain'].includes(value)) {
+            select.classList.add('attendance-others');
+        } else {
+            select.classList.add('attendance-others');
+        }
+
+    }
+
+    // Apply color on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.attendance-select').forEach(updateSelectColor);
+        filterClasses();
+    });
+</script>
+
+</x-app-layout>
+@endrole
