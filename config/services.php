@@ -45,8 +45,4 @@ return [
         'redirect'      => env('FACEBOOK_REDIRECT'),
     ],
 
-    'ewallet' => [
-        'sso_secret' => env('EWALLET_SSO_SECRET'),
-    ],
-
 ];

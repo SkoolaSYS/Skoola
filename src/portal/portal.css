@@ -1,0 +1,28 @@
+/* Metronic's header menu is styled for a dark header bar (white text).
+   The Tailwind theme of the host app leaves it transparent, so restore the
+   dark header background used by the original Blade layout. */
+html body #kt_app_header {
+  background-color: #1e1e2d;
+}
+
+html body #kt_app_header .app-header-menu .menu > .menu-item.here > .menu-link .menu-title {
+  color: var(--bs-primary, #1b84ff) !important;
+}
+
+html body.portal-login-page {
+  background-image: url("/assets/media/auth/bg10.jpeg") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+}
+
+.portal-social-button {
+  border-radius: 8px !important;
+  padding: 10px !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-bs-theme="dark"] body.portal-login-page {
+    background-image: url("/assets/media/auth/bg10-dark.jpeg") !important;
+  }
+}
